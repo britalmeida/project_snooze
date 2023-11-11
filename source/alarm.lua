@@ -8,7 +8,9 @@ function Alarm:init()
 
     self.current_bubble_radius = 0.0
 
-    self:setImage(gfx.image.new('images/clock'))
+    clock_image = gfx.image.new('images/clock')
+    clock_image:setMaskImage(gfx.image.new('images/clock_mask'))
+    self:setImage(clock_image)
     self:addSprite()
 end
 

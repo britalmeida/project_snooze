@@ -29,6 +29,7 @@ function gfx_draw_lines( x, y, width, height )
     -- Draw the sprite bubble circle.
     if CONTEXT.sprite_alarm:isVisible() then
         gfx.pushContext()
+        gfx.setColor(gfx.kColorWhite)
         gfx.setLineWidth(1)
         gfx.drawCircleAtPoint(CONTEXT.sprite_alarm.x, CONTEXT.sprite_alarm.y, CONTEXT.sprite_alarm.current_bubble_radius)
         gfx.popContext()
