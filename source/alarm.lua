@@ -34,7 +34,22 @@ end
 
 function Alarm:isTouched(CONTEXT)
     -- Detect contact between alarm clock and the active hand.
-    return math.abs(CONTEXT.active_hand.x - self.x) < HAND_TOUCH_RADIUS and math.abs(CONTEXT.active_hand.y - self.y) < HAND_TOUCH_RADIUS
+    active_arm = CONTEXT.player_arm_r_current
+    if CONTEXT.is_left_arm_active then
+        active_arm = CONTEXT.player_arm_l_current
+    end
+    self_p = playdate.geometry.point.new(self.x, self.y)
+    hand_p = playdate.geometry.point.new(active_arm.x2, active_arm.y2)
+    -- If self point is more than ARM_EXTEND_SPEED pixels away, no contact.
+    if self_p:squaredDistanceToPoint(hand_p) > ARM_EXTEND_SPEED * ARM_EXTEND_SPEED then
+        return false
+    end
+    closest_p = active_arm:closestPointOnLineToPoint(self_p)
+    -- If closest point on arm from self is more than HAND_TOUCH_RADIUS pixels away, no contact.
+    if self_p:squaredDistanceToPoint(closest_p) > HAND_TOUCH_RADIUS * HAND_TOUCH_RADIUS then
+        return false
+    end
+    return true
 end
 
 function Alarm:start()
