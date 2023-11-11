@@ -1,6 +1,6 @@
 # Playdate Output
 builds/*
-.pdx
+*.pdx
 
 # Dev environment (to be reviewed)
 .sentry-native
