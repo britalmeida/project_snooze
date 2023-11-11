@@ -11,13 +11,15 @@ CONTEXT = {}
 
 function gfx_draw_lines( x, y, width, height )
     gfx.clear(gfx.kColorWhite)
+    
+    CONTEXT.image_bg:draw(0, 0)
 
     gfx.pushContext()
 
     -- Draw the arms.
     gfx.pushContext()
     gfx.setLineCapStyle(gfx.kLineCapStyleRound)
-    gfx.setColor(gfx.kColorBlack)
+    gfx.setColor(gfx.kColorWhite)
     gfx.setLineWidth(5)
     gfx.drawLine(CONTEXT.player_arm_l_current)
     gfx.drawLine(CONTEXT.player_arm_r_current)
@@ -56,6 +58,8 @@ function initialize()
     local image_hand_left = gfx.image.new("images/hand_left")
     local image_hand_right = gfx.image.new("images/hand_right")
 
+    image_bg = gfx.image.new("images/bg")
+
     -- Permanent sprites
     -- Left hand.
     sprite_hand_l = gfx.sprite.new()
@@ -92,6 +96,8 @@ function initialize()
     CONTEXT.player_arm_l_current = player_arm_l
     CONTEXT.player_arm_r_current = player_arm_r
     CONTEXT.active_hand = sprite_hand_r
+
+    CONTEXT.image_bg = image_bg
 
     gfx.sprite.setBackgroundDrawingCallback(gfx_draw_lines)
 end
