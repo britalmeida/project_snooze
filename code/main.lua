@@ -43,6 +43,7 @@ function myGameSetUp()
     -- Alarm clock data.
     alarm_clock = playdate.geometry.arc.new(0, 0, 50, 20, 340)
     is_alarm_clock_on = false
+    alarm_clock_bubble_radius = 0.0
 
 end
 
@@ -177,6 +178,7 @@ function playdate.update()
     if not is_alarm_clock_on then
         return
     end
+    alarm_clock_bubble_radius += 0.1
 
     -- Detect contact between alarm clock and hands (also for inactive one currently).
     is_contact_l = math.abs(player_arm_l_current.x2 - alarm_clock.x) < 5 and math.abs(player_arm_l_current.y2 - alarm_clock.y) < 5
@@ -193,7 +195,15 @@ function playdate.update()
     end
     alarm_clock.radius = alarm_clock_radius
     gfx.drawArc(alarm_clock)
+
+    gfx.setLineWidth(1)
+    gfx.drawCircleAtPoint(alarm_clock.x, alarm_clock.y, alarm_clock_bubble_radius)
     gfx.popContext()
+
+    if is_contact then
+        is_alarm_clock_on = false
+        alarm_clock_bubble_radius = 0
+    end
 
     -- Call the functions below in playdate.update() to draw sprites and keep
     -- timers updated. (We aren't using timers in this example, but in most
