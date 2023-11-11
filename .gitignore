@@ -1,0 +1,5 @@
+builds/*
+.sentry-native
+.vscode*
+Build and Run*
+build_and_run.sh
