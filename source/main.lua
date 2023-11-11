@@ -15,7 +15,7 @@ function initialize()
     min_arm_length = 20
     arm_extend_speed = 2
 
-    alarm_touch_radius = 5
+    touch_radius = 5
 
     left_arm_x, left_arm_y = 120, 120
     right_arm_x, right_arm_y = 280, 120
@@ -52,15 +52,15 @@ function initialize()
     player_arm_r = playdate.geometry.lineSegment.new(0, 0, default_arm_length, 0)
     player_arm_r_angle = 0
 
-    -- Active and inactive arms.
     active_arm = player_arm_r
     inactive_arm = player_arm_l
+
+    active_hand = sprite_hand_l
 
     -- Alarm clock - TODO: Needs ability to have more than one in existence at a time.
     sprite_alarm = Alarm()
 end
 initialize()
-
 
 function playdate.update()
     -- Called before every frame is drawn.
@@ -74,18 +74,6 @@ function playdate.update()
         return
     end
 
-    -- If no alarm clock, give a chance to trigger it.
-    -- Else jitter it around.
-    if not sprite_alarm:isVisible() then
-        if math.random(0, 256) > 250 then
-            sprite_alarm:setVisible(true)
-            -- TODO IMPORTANT: Alarms can spawn in unreachable places!! Need to clamp between arm min/max radius!
-            sprite_alarm:moveTo(math.random(50, 350), math.random(50, 190))
-        end
-    else
-        sprite_alarm:moveTo(sprite_alarm.x + math.random(-1, 1), sprite_alarm.y+math.random(-1, 1))
-    end
-
     -- If A or B button is pressed, define active arm.
     if playdate.buttonIsPressed( playdate.kButtonA ) then
         is_left_arm_active = false
@@ -97,12 +85,14 @@ function playdate.update()
     -- Assign active and resting arms.
     if is_left_arm_active then
         active_arm = player_arm_l
+        active_hand = sprite_hand_l
         inactive_arm = player_arm_r
     else
         active_arm = player_arm_r
+        active_hand = sprite_hand_r
         inactive_arm = player_arm_l
     end
-
+        
     -- Handle active arm length.
     -- If button is pressed, actively lengthen/shorten it.
     -- Else, automatically move back towards rest/default length (also for inactive arm).
@@ -178,32 +168,25 @@ function playdate.update()
     sprite_hand_l:setRotation(player_arm_l_angle * left_arm_sign)
     sprite_hand_r:setRotation(180+player_arm_r_angle * right_arm_sign)
 
-    -- If no active alarm clock, we are done.
+    -- If no alarm clock, give a chance to trigger it.
+    -- Else jitter it around.
     if not sprite_alarm:isVisible() then
-        return
+        if math.random(0, 256) > 250 then
+            sprite_alarm:setVisible(true)
+            -- TODO IMPORTANT: Alarms can spawn in unreachable places!! Need to clamp between arm min/max radius!
+            sprite_alarm:moveTo(math.random(50, 350), math.random(50, 190))
+        end
     end
-    sprite_alarm.current_bubble_radius += 0.1
 
-    -- Detect contact between alarm clock and hands (also for inactive one currently).
-    is_contact_l = math.abs(player_arm_l_current.x2 - sprite_alarm.x) < alarm_touch_radius and math.abs(player_arm_l_current.y2 - sprite_alarm.y) < alarm_touch_radius
-    is_contact_r = math.abs(player_arm_r_current.x2 - sprite_alarm.x) < alarm_touch_radius and math.abs(player_arm_r_current.y2 - sprite_alarm.y) < alarm_touch_radius
-    is_contact = is_contact_l or is_contact_r
+    sprite_alarm:update()
 
-    -- Draw alarm clock, bigger if there is contact with hands.
-    if is_contact then
-        sprite_alarm:setScale(1.5)
-    else
-        sprite_alarm:setScale(1.0)
+    if sprite_alarm:isTouched(active_hand) then
+        sprite_alarm:setScale(1.5) -- NOTE: This will only matter once alarms aren't instantly turned off.
+        sprite_alarm:reset()
     end
 
     gfx.setLineWidth(1)
     gfx.drawCircleAtPoint(sprite_alarm.x, sprite_alarm.y, sprite_alarm.current_bubble_radius)
 
-    if is_contact then
-        sprite_alarm:setVisible(false)
-        sprite_alarm.current_bubble_radius = 0
-    end
-
     playdate.timer.updateTimers()
-
 end
