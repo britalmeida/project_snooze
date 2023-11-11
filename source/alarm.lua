@@ -48,6 +48,9 @@ function Alarm:reset()
     self:setScale(1.0)
     self:setVisible(false)
     SOUND.ALARM6:pause()
+    if SOUND.ALARM6:isPlaying() then
+        SOUND.SLAP_ALARM:play()
+    end
 end
 
 function Alarm:update_logic(CONTEXT)
