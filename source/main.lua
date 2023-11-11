@@ -58,6 +58,19 @@ function gfx_draw_lines( x, y, width, height )
 end
 
 function initialize()
+
+    -- Add custom entries to system menu
+
+    local menu = playdate.getSystemMenu()
+
+    local checkmarkMenuItem, error = menu:addCheckmarkMenuItem("test screen", false, function(value)
+        if value then
+            CONTEXT.image_bg = CONTEXT.image_bg_test2
+        else
+            CONTEXT.image_bg = CONTEXT.image_bg_test1
+        end
+    end)
+
     -- Initialize global constants and permanent entities like the player.
 
     -- Which arm is active, left (true) or right (false).
@@ -65,8 +78,6 @@ function initialize()
 
     local image_hand_left = gfx.image.new("images/hand_left")
     local image_hand_right = gfx.image.new("images/hand_right")
-
-    image_bg = gfx.image.new("images/bg")
 
     -- Permanent sprites
     -- Left hand.
@@ -106,7 +117,10 @@ function initialize()
     CONTEXT.player_arm_r_current = player_arm_r
     CONTEXT.active_hand = sprite_hand_r
 
-    CONTEXT.image_bg = image_bg
+    -- Have 2 images so they can be swapped for test purposes.
+    CONTEXT.image_bg_test1 = gfx.image.new("images/bg")
+    CONTEXT.image_bg_test2 = gfx.image.new("images/test_screen")
+    CONTEXT.image_bg = CONTEXT.image_bg_test1
 
     gfx.sprite.setBackgroundDrawingCallback(gfx_draw_lines)
 end
