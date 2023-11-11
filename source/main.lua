@@ -7,6 +7,33 @@ import "alarm"
 
 gfx = playdate.graphics
 
+CONTEXT = {}
+
+function gfx_draw_lines( x, y, width, height )
+    gfx.clear(gfx.kColorWhite)
+
+    gfx.pushContext()
+
+    -- Draw the arms.
+    gfx.pushContext()
+    gfx.setLineCapStyle(gfx.kLineCapStyleRound)
+    gfx.setColor(gfx.kColorBlack)
+    gfx.setLineWidth(5)
+    gfx.drawLine(CONTEXT.player_arm_l_current)
+    gfx.drawLine(CONTEXT.player_arm_r_current)
+    gfx.popContext()
+
+    -- Draw the sprite bubble circle.
+    if CONTEXT.sprite_alarm:isVisible() then
+        gfx.pushContext()
+        gfx.setLineWidth(1)
+        gfx.drawCircleAtPoint(CONTEXT.sprite_alarm.x, CONTEXT.sprite_alarm.y, CONTEXT.sprite_alarm.current_bubble_radius)
+        gfx.popContext()
+    end
+
+    gfx.popContext()
+end
+
 function initialize()
     -- Initialize global constants and permanent entities like the player.
 
@@ -27,7 +54,7 @@ function initialize()
     is_left_arm_active = false
 
     local image_hand_left = gfx.image.new("images/hand_left")
-    local image_hand_right = gfx.image.new("images/hand_left")
+    local image_hand_right = gfx.image.new("images/hand_right")
 
     -- Permanent sprites
     -- Left hand.
@@ -36,17 +63,18 @@ function initialize()
     sprite_hand_l:setCenter(1.0, 0.5)
     sprite_hand_l:moveTo(left_arm_x-default_arm_length, left_arm_y)
     sprite_hand_l:add()
+    print(sprite_hand_l:isOpaque())
 
     -- Right hand.
     sprite_hand_r = gfx.sprite.new()
     sprite_hand_r:setImage(image_hand_right)
-    sprite_hand_r:setCenter(1.0, 0.5)
+    sprite_hand_r:setCenter(0.0, 0.5)
     sprite_hand_r:moveTo(right_arm_x+default_arm_length, right_arm_y)
     sprite_hand_r:add()
 
     -- Left arm. - TODO: Probably needs to be a sprite, otherwise drawing is out of sync.
-    player_arm_l = playdate.geometry.lineSegment.new(0, 0, -default_arm_length, 0)
-    player_arm_l_angle = 0
+    player_arm_l = playdate.geometry.lineSegment.new(0, 0, default_arm_length, 0)
+    player_arm_l_angle = 180
 
     -- Right arm.
     player_arm_r = playdate.geometry.lineSegment.new(0, 0, default_arm_length, 0)
@@ -57,20 +85,25 @@ function initialize()
 
     active_hand = sprite_hand_l
 
-    -- Alarm clock - TODO: Needs ability to have more than one in existence at a time.
     sprite_alarm = Alarm()
+    sprite_alarm:reset()
+
+    CONTEXT.sprite_alarm = sprite_alarm
+    CONTEXT.player_arm_l_current = player_arm_l
+    CONTEXT.player_arm_r_current = player_arm_r
+    CONTEXT.active_hand = sprite_hand_r
+
+    gfx.sprite.setBackgroundDrawingCallback(gfx_draw_lines)
 end
+
 initialize()
 
 function playdate.update()
     -- Called before every frame is drawn.
 
-    gfx.setLineWidth(2)
-    -- TODO: sprite.update() should be at the end for less input lag, but it wipes non-sprite drawings.
-    gfx.sprite.update()
-
     -- If crank is docked, pause the game.
     if playdate.isCrankDocked() then
+        gfx.sprite.update()
         return
     end
 
@@ -92,42 +125,35 @@ function playdate.update()
         active_hand = sprite_hand_r
         inactive_arm = player_arm_l
     end
-        
+    CONTEXT.active_hand = active_hand
+
     -- Handle active arm length.
     -- If button is pressed, actively lengthen/shorten it.
     -- Else, automatically move back towards rest/default length (also for inactive arm).
-    if playdate.buttonIsPressed( playdate.kButtonRight ) then
+    if playdate.buttonIsPressed( playdate.kButtonUp ) then
         active_arm.x2 += arm_extend_speed
-    elseif playdate.buttonIsPressed( playdate.kButtonLeft ) then
-        active_arm.x2 += -arm_extend_speed
-    elseif math.abs(active_arm.x2) ~= default_arm_length then
-        if active_arm.x2 > 100 then
-            active_arm.x2 -= arm_extend_speed
-        elseif active_arm.x2 > 0 then
-            active_arm.x2 += arm_extend_speed
-        elseif active_arm.x2 < -default_arm_length then
-            active_arm.x2 += arm_extend_speed
-        elseif active_arm.x2 < 0 then
-            active_arm.x2 -= arm_extend_speed
-        end
-    end
-    if math.abs(inactive_arm.x2) ~= default_arm_length then
+    elseif playdate.buttonIsPressed( playdate.kButtonDown ) then
+        active_arm.x2 -= arm_extend_speed
+    elseif active_arm.x2 ~= default_arm_length then
         if active_arm.x2 > default_arm_length then
             active_arm.x2 -= arm_extend_speed
-        elseif active_arm.x2 > 0 then
+        else
             active_arm.x2 += arm_extend_speed
-        elseif active_arm.x2 < -default_arm_length then
-            active_arm.x2 += arm_extend_speed
-        elseif active_arm.x2 < 0 then
-            active_arm.x2 -= arm_extend_speed
+        end
+    end
+    if inactive_arm.x2 ~= default_arm_length then
+        if inactive_arm.x2 > default_arm_length then
+            inactive_arm.x2 -= arm_extend_speed
+        else
+            inactive_arm.x2 += arm_extend_speed
         end
     end
 
     -- Clamp arms length.
-    if player_arm_l.x2 > -min_arm_length then
-        player_arm_l.x2 = -min_arm_length
-    elseif player_arm_l.x2 < -max_arm_length then
-        player_arm_l.x2 = -max_arm_length
+    if player_arm_l.x2 > max_arm_length then
+        player_arm_l.x2 = max_arm_length
+    elseif player_arm_l.x2 < min_arm_length then
+        player_arm_l.x2 = min_arm_length
     end
     if player_arm_r.x2 < min_arm_length then
         player_arm_r.x2 = min_arm_length
@@ -147,46 +173,32 @@ function playdate.update()
     player_arm_l_tx:rotate(player_arm_l_angle * left_arm_sign)
     player_arm_l_tx:translate(left_arm_x, left_arm_y)
     player_arm_l_current = player_arm_l_tx:transformedLineSegment(player_arm_l)
+    CONTEXT.player_arm_l_current = player_arm_l_current
 
     player_arm_r_tx = playdate.geometry.affineTransform.new()
     player_arm_r_tx:rotate(player_arm_r_angle * right_arm_sign)
     player_arm_r_tx:translate(right_arm_x, right_arm_y)
     player_arm_r_current = player_arm_r_tx:transformedLineSegment(player_arm_r)
-
-    -- Draw the arms.
-    gfx.pushContext()
-    gfx.setLineCapStyle(playdate.graphics.kLineCapStyleRound)
-    gfx.setColor(gfx.kColorBlack)
-    gfx.setLineWidth(5)
-    gfx.drawLine(player_arm_l_current)
-    gfx.drawLine(player_arm_r_current)
-    gfx.popContext()
+    CONTEXT.player_arm_r_current = player_arm_r_current
 
     sprite_hand_l:moveTo(player_arm_l_current.x2, player_arm_l_current.y2)
     sprite_hand_r:moveTo(player_arm_r_current.x2, player_arm_r_current.y2)
 
-    sprite_hand_l:setRotation(player_arm_l_angle * left_arm_sign)
-    sprite_hand_r:setRotation(180+player_arm_r_angle * right_arm_sign)
+    sprite_hand_l:setRotation(player_arm_l_angle * left_arm_sign - 180)
+    sprite_hand_r:setRotation(player_arm_r_angle * right_arm_sign)
 
-    -- If no alarm clock, give a chance to trigger it.
-    -- Else jitter it around.
     if not sprite_alarm:isVisible() then
+        -- If no alarm clock, give a chance to trigger it.
         if math.random(0, 256) > 250 then
-            sprite_alarm:setVisible(true)
-            -- TODO IMPORTANT: Alarms can spawn in unreachable places!! Need to clamp between arm min/max radius!
-            sprite_alarm:moveTo(math.random(50, 350), math.random(50, 190))
+            sprite_alarm:start()
         end
+    else
+        -- Else update it (jitter it around, increase its radius, ...).
+        sprite_alarm:update_logic(CONTEXT)
     end
 
-    sprite_alarm:update()
-
-    if sprite_alarm:isTouched(active_hand) then
-        sprite_alarm:setScale(1.5) -- NOTE: This will only matter once alarms aren't instantly turned off.
-        sprite_alarm:reset()
-    end
-
-    gfx.setLineWidth(1)
-    gfx.drawCircleAtPoint(sprite_alarm.x, sprite_alarm.y, sprite_alarm.current_bubble_radius)
+    gfx.sprite.redrawBackground()
+    gfx.sprite.update()
 
     playdate.timer.updateTimers()
 end

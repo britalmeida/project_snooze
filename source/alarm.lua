@@ -8,30 +8,61 @@ function Alarm:init()
 
     self.current_bubble_radius = 0.0
 
-    self:setImage(gfx.image.new('images/alarm'))
+    self:setImage(gfx.image.new('images/clock'))
     self:addSprite()
 end
 
 function Alarm:jitter()
-    self:moveTo(self.x + math.random(-1, 1), self.y+math.random(-1, 1))
+    self:moveTo(self.x + math.random(-1, 1), self.y + math.random(-1, 1))
 end
 
-function Alarm:update()
-    if not self:isVisible() then
-        return
+function Alarm:clampPosition(min_x, min_y, max_x, max_y)
+    if self.x < min_x then
+        self.x = min_x
+    elseif self.x > max_x then
+        self.x = max_x
     end
 
-    self:jitter()
-    self.current_bubble_radius += 0.1
+    if self.y < min_y then
+        self.y = min_y
+    elseif self.y > max_y then
+        self.y = max_y
+    end
+end
+
+function Alarm:isTouched(CONTEXT)
+    -- Detect contact between alarm clock and the active hand.
+    return math.abs(CONTEXT.active_hand.x - self.x) < touch_radius and math.abs(CONTEXT.active_hand.y - self.y) < touch_radius
+end
+
+function Alarm:start()
+    sprite_alarm:moveTo(math.random(50, 350), math.random(50, 190))
+    sprite_alarm:setVisible(true)
 end
 
 function Alarm:reset()
     self.current_bubble_radius = 0.0
-    self:setScale(1)
+    self:setScale(1.0)
     self:setVisible(false)
 end
 
-function Alarm:isTouched(active_hand)
-    -- Detect contact between alarm clock and the active hand.
-    return math.abs(active_hand.x - self.x) < touch_radius and math.abs(active_hand.y - self.y) < touch_radius
+function Alarm:update_logic(CONTEXT)
+    curr_scale = self:getScale()
+    if curr_scale == 1.0 and self:isTouched(CONTEXT) then
+        self:setScale(1.5)
+    elseif curr_scale == 1.5 then
+        self:setScale(1.8)
+    elseif curr_scale == 1.8 then
+        self:setScale(2.0)
+    elseif curr_scale == 2.0 then
+        self:setScale(2.1)
+    elseif curr_scale == 2.1 then
+        self:reset()
+        return
+    end
+
+    self:jitter()
+    self:clampPosition(50, 50, 350, 190)
+
+    self.current_bubble_radius += 0.1
 end
