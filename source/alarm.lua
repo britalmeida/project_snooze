@@ -53,7 +53,11 @@ function Alarm:isTouched(CONTEXT)
 end
 
 function Alarm:start()
-    sprite_alarm:moveTo(math.random(50, 350), math.random(50, 190))
+    if math.random(0, 100) < 50 then
+        sprite_alarm:moveTo(math.random(50, 150), math.random(50, 190))
+    else
+        sprite_alarm:moveTo(math.random(250, 350), math.random(50, 190))
+    end
     sprite_alarm:setVisible(true)
     SOUND.ALARM6:play(0)
 end

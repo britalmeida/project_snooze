@@ -72,7 +72,7 @@ function initialize()
         end
     end)
 
-    -- Initialize global constants and permanent entities like the player.
+    math.randomseed(playdate.getSecondsSinceEpoch())
 
     -- Which arm is active, left (true) or right (false).
     is_left_arm_active = false
