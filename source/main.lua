@@ -116,10 +116,10 @@ function playdate.update()
     end
 
     -- If A or B button is pressed, define active arm.
-    if playdate.buttonIsPressed( playdate.kButtonA ) then
+    if playdate.buttonIsPressed( playdate.kButtonRight ) then
         is_left_arm_active = false
     end
-    if playdate.buttonIsPressed( playdate.kButtonB ) then
+    if playdate.buttonIsPressed( playdate.kButtonLeft ) then
         is_left_arm_active = true
     end
 
