@@ -1,6 +1,11 @@
+# Playdate Output
 builds/*
+*.pdx
+
+# Dev environment (to be reviewed)
 .sentry-native
-.vscode*
 Build and Run*
 build_and_run.sh
-Output.pdx
+
+# OS Specific
+.DS_Store

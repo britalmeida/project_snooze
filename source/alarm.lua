@@ -34,7 +34,7 @@ end
 
 function Alarm:isTouched(CONTEXT)
     -- Detect contact between alarm clock and the active hand.
-    return math.abs(CONTEXT.active_hand.x - self.x) < touch_radius and math.abs(CONTEXT.active_hand.y - self.y) < touch_radius
+    return math.abs(CONTEXT.active_hand.x - self.x) < HAND_TOUCH_RADIUS and math.abs(CONTEXT.active_hand.y - self.y) < HAND_TOUCH_RADIUS
 end
 
 function Alarm:start()
@@ -48,6 +48,9 @@ function Alarm:reset()
     self:setScale(1.0)
     self:setVisible(false)
     SOUND.ALARM6:pause()
+    if SOUND.ALARM6:isPlaying() then
+        SOUND.SLAP_ALARM:play()
+    end
 end
 
 function Alarm:update_logic(CONTEXT)
