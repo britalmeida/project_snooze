@@ -17,10 +17,19 @@ import "CoreLibs/timer"
 
 local gfx <const> = playdate.graphics
 
+local default_arm_length = 100
+local max_arm_length = 180
+local min_arm_length = 20
+
+local left_arm_x, left_arm_y = 120, 120
+local right_arm_x, right_arm_y = 280, 120
+
+local left_arm_sign = -1
+local right_arm_sign = 1
+
 -- A function to set up our game environment.
 
 function myGameSetUp()
-
     -- Set up the player sprite.
     -- The :setCenter() call specifies that the sprite will be anchored at its center.
     -- The :moveTo() call moves our sprite to the center of the display.
@@ -28,12 +37,29 @@ function myGameSetUp()
     -- Which arm is active, left (true) or right (false).
     is_left = false
 
+    local image_hand_left = gfx.image.new("images/hand_left")
+    local image_hand_right = gfx.image.new("images/hand_left")
+
+    -- Left hand
+    sprite_hand_l = gfx.sprite.new()
+    sprite_hand_l:setImage(image_hand_left)
+	sprite_hand_l:setCenter(1.0, 0.5)
+    sprite_hand_l:moveTo(left_arm_x-default_arm_length, left_arm_y)
+    sprite_hand_l:add()
+    
+    -- Right hand
+    sprite_hand_r = gfx.sprite.new()
+    sprite_hand_r:setImage(image_hand_right)
+	sprite_hand_r:setCenter(1.0, 0.5)
+    sprite_hand_r:moveTo(right_arm_x+default_arm_length, right_arm_y)
+    sprite_hand_r:add()
+
     -- Left arm data.
-    player_arm_l = playdate.geometry.lineSegment.new(0, 0, -100, 0)
+    player_arm_l = playdate.geometry.lineSegment.new(0, 0, -default_arm_length, 0)
     player_arm_l_angle = 0
 
     -- Right arm data.
-    player_arm_r = playdate.geometry.lineSegment.new(0, 0, 100, 0)
+    player_arm_r = playdate.geometry.lineSegment.new(0, 0, default_arm_length, 0)
     player_arm_r_angle = 0
 
     -- Active and inactive arms.
@@ -66,7 +92,7 @@ function playdate.update()
 
     -- Default drawing context.
     gfx.setLineWidth(2)
-    gfx.clear(gfx.kColorWhite)
+    gfx.sprite.update()
 
     -- If crank is docked, player is happily sleeping.
     if playdate.isCrankDocked() then
@@ -111,23 +137,23 @@ function playdate.update()
         player_arm.x2 += 2
     elseif playdate.buttonIsPressed( playdate.kButtonLeft ) then
         player_arm.x2 += -2
-    elseif math.abs(player_arm.x2) ~= 100 then
+    elseif math.abs(player_arm.x2) ~= default_arm_length then
         if player_arm.x2 > 100 then
             player_arm.x2 -= 2
         elseif player_arm.x2 > 0 then
             player_arm.x2 += 2
-        elseif player_arm.x2 < -100 then
+        elseif player_arm.x2 < -default_arm_length then
             player_arm.x2 += 2
         elseif player_arm.x2 < 0 then
             player_arm.x2 -= 2
         end
     end
-    if math.abs(player_arm_rest.x2) ~= 100 then
-        if player_arm.x2 > 100 then
+    if math.abs(player_arm_rest.x2) ~= default_arm_length then
+        if player_arm.x2 > default_arm_length then
             player_arm.x2 -= 2
         elseif player_arm.x2 > 0 then
             player_arm.x2 += 2
-        elseif player_arm.x2 < -100 then
+        elseif player_arm.x2 < -default_arm_length then
             player_arm.x2 += 2
         elseif player_arm.x2 < 0 then
             player_arm.x2 -= 2
@@ -135,15 +161,15 @@ function playdate.update()
     end
 
     -- Clamp arms length.
-    if player_arm_l.x2 > -20 then
-        player_arm_l.x2 = -20
-    elseif player_arm_l.x2 < -180 then
-        player_arm_l.x2 = -180
+    if player_arm_l.x2 > -min_arm_length then
+        player_arm_l.x2 = -min_arm_length
+    elseif player_arm_l.x2 < -max_arm_length then
+        player_arm_l.x2 = -max_arm_length
     end
-    if player_arm_r.x2 < 20 then
-        player_arm_r.x2 = 20
-    elseif player_arm_r.x2 > 180 then
-        player_arm_r.x2 = 180
+    if player_arm_r.x2 < min_arm_length then
+        player_arm_r.x2 = min_arm_length
+    elseif player_arm_r.x2 > max_arm_length then
+        player_arm_r.x2 = max_arm_length
     end
 
     -- Read angle from the crank.
@@ -156,23 +182,29 @@ function playdate.update()
 
     -- Compute transforms for both arms
     player_arm_l_tx = playdate.geometry.affineTransform.new()
-    player_arm_l_tx:rotate(player_arm_l_angle)
-    player_arm_l_tx:translate(150, 100)
+    player_arm_l_tx:rotate(player_arm_l_angle * left_arm_sign)
+    player_arm_l_tx:translate(left_arm_x, left_arm_y)
     player_arm_l_current = player_arm_l_tx:transformedLineSegment(player_arm_l)
 
     player_arm_r_tx = playdate.geometry.affineTransform.new()
-    player_arm_r_tx:rotate(player_arm_r_angle)
-    player_arm_r_tx:translate(250, 100)
+    player_arm_r_tx:rotate(player_arm_r_angle * right_arm_sign)
+    player_arm_r_tx:translate(right_arm_x, right_arm_y)
     player_arm_r_current = player_arm_r_tx:transformedLineSegment(player_arm_r)
 
     -- Draw the arms.
     gfx.pushContext()
     gfx.setLineCapStyle(playdate.graphics.kLineCapStyleRound)
     gfx.setColor(gfx.kColorBlack)
-    gfx.setLineWidth(10)
+    gfx.setLineWidth(5)
     gfx.drawLine(player_arm_l_current)
     gfx.drawLine(player_arm_r_current)
     gfx.popContext()
+
+    sprite_hand_l:moveTo(player_arm_l_current.x2, player_arm_l_current.y2)
+    sprite_hand_r:moveTo(player_arm_r_current.x2, player_arm_r_current.y2)
+
+    sprite_hand_l:setRotation(player_arm_l_angle * left_arm_sign)
+    sprite_hand_r:setRotation(180+player_arm_r_angle * right_arm_sign)
 
     -- If no active alarm clock, we are done.
     if not is_alarm_clock_on then
