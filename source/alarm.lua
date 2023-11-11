@@ -38,12 +38,14 @@ end
 function Alarm:start()
     sprite_alarm:moveTo(math.random(50, 350), math.random(50, 190))
     sprite_alarm:setVisible(true)
+    SOUND.ALARM6:play(0)
 end
 
 function Alarm:reset()
     self.current_bubble_radius = 0.0
     self:setScale(1.0)
     self:setVisible(false)
+    SOUND.ALARM6:pause()
 end
 
 function Alarm:update_logic(CONTEXT)

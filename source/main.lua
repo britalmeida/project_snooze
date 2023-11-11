@@ -4,6 +4,7 @@ import "CoreLibs/sprites"
 import "CoreLibs/timer"
 
 import "alarm"
+import "sound"
 
 gfx = playdate.graphics
 
@@ -11,7 +12,7 @@ CONTEXT = {}
 
 function gfx_draw_lines( x, y, width, height )
     gfx.clear(gfx.kColorWhite)
-    
+
     CONTEXT.image_bg:draw(0, 0)
 
     gfx.pushContext()
