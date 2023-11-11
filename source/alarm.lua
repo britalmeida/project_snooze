@@ -34,23 +34,42 @@ end
 
 function Alarm:isTouched(CONTEXT)
     -- Detect contact between alarm clock and the active hand.
-    return math.abs(CONTEXT.active_hand.x - self.x) < HAND_TOUCH_RADIUS and math.abs(CONTEXT.active_hand.y - self.y) < HAND_TOUCH_RADIUS
+    active_arm = CONTEXT.player_arm_r_current
+    if CONTEXT.is_left_arm_active then
+        active_arm = CONTEXT.player_arm_l_current
+    end
+    self_p = playdate.geometry.point.new(self.x, self.y)
+    hand_p = playdate.geometry.point.new(active_arm.x2, active_arm.y2)
+    -- If self point is more than ARM_EXTEND_SPEED pixels away, no contact.
+    if self_p:squaredDistanceToPoint(hand_p) > ARM_EXTEND_SPEED * ARM_EXTEND_SPEED then
+        return false
+    end
+    closest_p = active_arm:closestPointOnLineToPoint(self_p)
+    -- If closest point on arm from self is more than HAND_TOUCH_RADIUS pixels away, no contact.
+    if self_p:squaredDistanceToPoint(closest_p) > HAND_TOUCH_RADIUS * HAND_TOUCH_RADIUS then
+        return false
+    end
+    return true
 end
 
 function Alarm:start()
-    sprite_alarm:moveTo(math.random(50, 350), math.random(50, 190))
+    if math.random(0, 100) < 50 then
+        sprite_alarm:moveTo(math.random(50, 150), math.random(50, 190))
+    else
+        sprite_alarm:moveTo(math.random(250, 350), math.random(50, 190))
+    end
     sprite_alarm:setVisible(true)
-    SOUND.ALARM6:play(0)
+    if TIMER.value % 500 == 0 then
+        SOUND.ALARM1:play(0)
+    end
 end
 
 function Alarm:reset()
     self.current_bubble_radius = 0.0
     self:setScale(1.0)
     self:setVisible(false)
-    SOUND.ALARM6:pause()
-    if SOUND.ALARM6:isPlaying() then
-        SOUND.SLAP_ALARM:play()
-    end
+    SOUND.ALARM1:stop()
+    SOUND.SLAP_ALARM:play()
 end
 
 function Alarm:update_logic(CONTEXT)

@@ -9,20 +9,21 @@ import "sound"
 gfx = playdate.graphics
 
 -- Global static defines
-ARM_LENGTH_DEFAULT = 100
+ARM_LENGTH_DEFAULT = 80
 ARM_LENGTH_MAX = 180
 ARM_LENGTH_MIN = 20
 ARM_EXTEND_SPEED = 20
 
 HAND_TOUCH_RADIUS = 5
 
-ARM_L_X, ARM_L_Y = 120, 120
-ARM_R_X, ARM_R_Y = 280, 120
+ARM_L_X, ARM_L_Y = 190, 100
+ARM_R_X, ARM_R_Y = 225, 110
 
 ARM_L_SIGN = -1
 ARM_R_SIGN = 1
 
 -- Global logic context, storing the game data.
+-- NOTE: All of its variables are defined in #initialize().
 CONTEXT = {}
 
 function gfx_draw_lines( x, y, width, height )
@@ -71,7 +72,7 @@ function initialize()
         end
     end)
 
-    -- Initialize global constants and permanent entities like the player.
+    math.randomseed(playdate.getSecondsSinceEpoch())
 
     -- Which arm is active, left (true) or right (false).
     is_left_arm_active = false
@@ -86,7 +87,6 @@ function initialize()
     sprite_hand_l:setCenter(1.0, 0.5)
     sprite_hand_l:moveTo(ARM_L_X-ARM_LENGTH_DEFAULT, ARM_L_Y)
     sprite_hand_l:add()
-    print(sprite_hand_l:isOpaque())
 
     -- Right hand.
     sprite_hand_r = gfx.sprite.new()
@@ -112,10 +112,12 @@ function initialize()
     sprite_alarm:reset()
 
     CONTEXT.is_active = false
+
     CONTEXT.sprite_alarm = sprite_alarm
+
+    CONTEXT.is_left_arm_active = is_left_arm_active
     CONTEXT.player_arm_l_current = player_arm_l
     CONTEXT.player_arm_r_current = player_arm_r
-    CONTEXT.active_hand = sprite_hand_r
 
     -- Have 2 images so they can be swapped for test purposes.
     CONTEXT.image_bg_test1 = gfx.image.new("images/bg")
@@ -123,6 +125,15 @@ function initialize()
     CONTEXT.image_bg = CONTEXT.image_bg_test1
 
     gfx.sprite.setBackgroundDrawingCallback(gfx_draw_lines)
+    SOUND.BG_LOOP_1:play()
+    TIMER = playdate.timer.new(8000, function()
+        if SOUND.BG_LOOP_1:isPlaying() then
+            SOUND.BG_LOOP_1:stop()
+        end
+        SOUND.BG_LOOP_1:play()
+    end)
+    TIMER.repeats = true;
+
 end
 
 initialize()
@@ -146,6 +157,7 @@ function playdate.update()
     if playdate.buttonIsPressed( playdate.kButtonLeft ) then
         is_left_arm_active = true
     end
+    CONTEXT.is_left_arm_active = is_left_arm_active
 
     -- Assign active and resting arms.
     if is_left_arm_active then
@@ -157,7 +169,6 @@ function playdate.update()
         active_hand = sprite_hand_r
         inactive_arm = player_arm_l
     end
-    CONTEXT.active_hand = active_hand
 
     -- Handle active arm length.
     -- If button is pressed, actively lengthen/shorten it.
