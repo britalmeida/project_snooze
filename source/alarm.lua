@@ -59,17 +59,17 @@ function Alarm:start()
         sprite_alarm:moveTo(math.random(250, 350), math.random(50, 190))
     end
     sprite_alarm:setVisible(true)
-    SOUND.ALARM6:play(0)
+    if TIMER.value % 500 == 0 then
+        SOUND.ALARM1:play(0)
+    end
 end
 
 function Alarm:reset()
     self.current_bubble_radius = 0.0
     self:setScale(1.0)
     self:setVisible(false)
-    SOUND.ALARM6:pause()
-    if SOUND.ALARM6:isPlaying() then
-        SOUND.SLAP_ALARM:play()
-    end
+    SOUND.ALARM1:stop()
+    SOUND.SLAP_ALARM:play()
 end
 
 function Alarm:update_logic(CONTEXT)
