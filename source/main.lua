@@ -3,6 +3,8 @@ import "CoreLibs/graphics"
 import "CoreLibs/sprites"
 import "CoreLibs/timer"
 
+import "alarm"
+
 gfx = playdate.graphics
 
 function initialize()
@@ -55,12 +57,7 @@ function initialize()
     inactive_arm = player_arm_l
 
     -- Alarm clock - TODO: Needs ability to have more than one in existence at a time.
-    local image_alarm = gfx.image.new("images/alarm")
-    sprite_alarm = gfx.sprite.new()
-    sprite_alarm:setImage(image_alarm)
-    sprite_alarm:setVisible(true)
-    sprite_alarm:add()
-    alarm_clock_bubble_radius = 0.0
+    sprite_alarm = Alarm()
 end
 initialize()
 
@@ -185,7 +182,7 @@ function playdate.update()
     if not sprite_alarm:isVisible() then
         return
     end
-    alarm_clock_bubble_radius += 0.1
+    sprite_alarm.current_bubble_radius += 0.1
 
     -- Detect contact between alarm clock and hands (also for inactive one currently).
     is_contact_l = math.abs(player_arm_l_current.x2 - sprite_alarm.x) < alarm_touch_radius and math.abs(player_arm_l_current.y2 - sprite_alarm.y) < alarm_touch_radius
@@ -200,11 +197,11 @@ function playdate.update()
     end
 
     gfx.setLineWidth(1)
-    gfx.drawCircleAtPoint(sprite_alarm.x, sprite_alarm.y, alarm_clock_bubble_radius)
+    gfx.drawCircleAtPoint(sprite_alarm.x, sprite_alarm.y, sprite_alarm.current_bubble_radius)
 
     if is_contact then
         sprite_alarm:setVisible(false)
-        alarm_clock_bubble_radius = 0
+        sprite_alarm.current_bubble_radius = 0
     end
 
     playdate.timer.updateTimers()
