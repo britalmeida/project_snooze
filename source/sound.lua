@@ -13,6 +13,6 @@ SOUND = {
   CAT_MEOW = fp.new("sound/cat_meow"),
   CURTAIN_CLOSE = fp.new("sound/curtain_close"),
   SLAP_ALARM = fp.new("sound/slap_alarm"),
-  SLAP_MOSKITO = fp.new("sound/slap_moskito"),
+  SLAP_MOSQUITO = fp.new("sound/slap_mosquito"),
   WINDOW_OPEN_LOOP = fp.new("sound/window_open_loop"),
 }
