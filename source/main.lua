@@ -173,11 +173,10 @@ function playdate.update()
     end
 
     -- Read angle from the crank.
-    -- TODO: this makes arm jump to angle when switching active arm.
     if is_left then
-        player_arm_l_angle = -playdate.getCrankPosition()
+        player_arm_l_angle -= playdate.getCrankChange()
     else
-        player_arm_r_angle = playdate.getCrankPosition()
+        player_arm_r_angle += playdate.getCrankChange()
     end
 
     -- Compute transforms for both arms
