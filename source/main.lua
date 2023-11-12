@@ -3,10 +3,10 @@ import "CoreLibs/graphics"
 import "CoreLibs/sprites"
 import "CoreLibs/timer"
 
+import "sound"
 import "enemies/enemies"
 import "gameplay"
 import "menu"
-import "sound"
 import "visuals"
 
 gfx = playdate.graphics
