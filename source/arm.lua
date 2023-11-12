@@ -19,7 +19,7 @@ function Arm:init(is_left)
     end
 
     self.hand = gfx.sprite.new()
-    self.hand:setImage(image_hand_left)
+    self.hand:setImage(image_hand)
     self.hand:setZIndex(-1)
 
     self.hand:setCenter(0.0, 0.5)
@@ -52,7 +52,11 @@ function Arm:crank(crank_change)
     self.line_segment.x2 = x
     self.line_segment.y2 = y
     self.hand:moveTo(self.line_segment.x2, self.line_segment.y2)
-    self.hand:setRotation(self.angle_degrees * ARM_L_SIGN - 180)
+    local offset = 0
+    if self.sign == -1 then
+        offset = 180
+    end
+    self.hand:setRotation(self.angle_degrees + offset)
 
 end
 
