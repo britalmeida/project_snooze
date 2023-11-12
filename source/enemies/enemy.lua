@@ -1,5 +1,3 @@
-import "gameplay" -- Needed to access HEAD_X/Y in the constructor.
-
 gfx = playdate.graphics
 local Sprite = gfx.sprite
 
