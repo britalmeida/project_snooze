@@ -1,12 +1,11 @@
 import "enemy" -- Needed to access HEAD_X/Y in the constructor.
 
 gfx = playdate.graphics
-local Sprite = gfx.sprite
 
-class('Alarm').extends(Enemy)
+class('Alarm_Analog').extends(Enemy)
 
-function Alarm:init(sound_name)
-    Alarm.super.init(self, sound_name)
+function Alarm_Analog:init(sound_name)
+    Alarm_Analog.super.init(self, sound_name)
 
     self.sound = SOUND[string.upper(sound_name)]
 
@@ -19,17 +18,17 @@ function Alarm:init(sound_name)
     self:setImage(img)
 end
 
-function Alarm:on_hit()
+function Alarm_Analog:on_hit()
     -- Should be called whenever player hits enemy or enemy hits player
     SOUND.SLAP_ALARM:play()
 
     CONTEXT.enemies_snoozed += 1
     self.current_bubble_radius = 0.0
 
-    Alarm.super.on_hit(self)
+    Alarm_Analog.super.on_hit(self)
 end
 
-function Alarm:update_logic(CONTEXT)
+function Alarm_Analog:update_logic(CONTEXT)
     if self:isVisible() == false then
         return
     end
@@ -50,7 +49,7 @@ function Alarm:update_logic(CONTEXT)
     self.current_bubble_radius += self.bubble_growth_speed
     self:jitter()
 
-    Alarm.super.update_logic(self, CONTEXT)
+    Alarm_Analog.super.update_logic(self, CONTEXT)
     -- Set the image frame to display.
     -- e.g. if chill then self:setImage(img), otherwise walk or ring.
     self:setImage(anim_ring:image())

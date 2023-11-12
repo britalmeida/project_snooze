@@ -9,7 +9,7 @@
 -- lvl2 alarm1-4 3
 --     cat      1
 
-import "alarm"
+import "alarm_analog"
 
 PROGRESSION = {
   LVL1 = 'alarm1', 'alarm2',
@@ -24,7 +24,7 @@ ENEMIES_MANAGER = {
 function ENEMIES_MANAGER:spawnEnemy(category, variant)
   variant = variant or nil
   if category == 'alarm' then
-    local alarm = Alarm(variant)
+    local alarm = Alarm_Analog(variant)
     alarm:start()
     table.insert(self.enemies, alarm)
   elseif category == 'cat' then
