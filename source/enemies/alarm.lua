@@ -120,13 +120,11 @@ function Alarm:update_logic(CONTEXT)
 
     -- TODO: This should be moved into a new mosquito enemy type.
     if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.collision_radius) then
-        print("Mosquito hit!")
         self:snooze()
         CONTEXT.awakeness = 1
     end
 
     if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
-        print("Alarm hit!")
         self:snooze()
         CONTEXT.awakeness = 1
     end
