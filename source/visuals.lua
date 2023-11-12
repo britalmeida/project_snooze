@@ -254,7 +254,7 @@ function draw_game_background( x, y, width, height )
 
         draw_light_areas()
 
-        draw_debug_circle(ENEMIES.ALARM1.x, ENEMIES.ALARM1.y, ENEMIES.ALARM1.collision_radius)
+        -- draw_debug_circle(ENEMIES.ALARM1.x, ENEMIES.ALARM1.y, ENEMIES.ALARM1.collision_radius)
         draw_debug_circle(HEAD_X, HEAD_Y, HEAD_RADIUS)
     gfx.popContext()
 end
