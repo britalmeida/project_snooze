@@ -15,7 +15,7 @@ ARM_EXTEND_SPEED = 20
 
 HAND_TOUCH_RADIUS = 5
 
-ARM_L_X, ARM_L_Y = 190, 100
+ARM_L_X, ARM_L_Y = 180, 110
 ARM_R_X, ARM_R_Y = 225, 110
 
 ARM_L_SIGN = -1
@@ -28,8 +28,8 @@ DRAW_DEBUG = 1
 
 function init_gameplay()
 
-    local image_hand_left = gfx.image.new("images/hand_left")
-    local image_hand_right = gfx.image.new("images/hand_right")
+    local image_hand_right = gfx.image.new("images/hand")
+    local image_hand_left = image_hand_right:scaledImage(-1,1)
 
     -- Permanent sprites
     -- Left hand.
