@@ -211,6 +211,22 @@ function draw_debug_circle(x, y, radius)
     gfx.popContext()
 end
 
+-- Set a pass on Z depth
+
+function setDrawPass(z, drawCallback)
+    local bgsprite = gfx.sprite.new()
+    bgsprite:setSize(playdate.display.getSize())
+    bgsprite:setCenter(0, 0)
+    bgsprite:moveTo(0, 0)
+    bgsprite:setZIndex(z)
+    bgsprite:setIgnoresDrawOffset(true)
+    bgsprite:setUpdatesEnabled(false)
+    bgsprite.draw = function(s, x, y, w, h)
+            drawCallback(x, y, w, h)
+    end
+    bgsprite:add()
+    return bgsprite
+end
 
 -- Draw passes
 
@@ -273,6 +289,20 @@ function draw_arm(arm_line_segment)
     gfx.popContext()
 end
 
+
+function draw_arms()
+    draw_arm(CONTEXT.player_arm_l_current)
+    draw_arm(CONTEXT.player_arm_r_current)
+end
+
+
+function draw_character()
+    TEXTURES.armpit:draw(173, 103)
+    TEXTURES.armpit:draw(211, 105)
+    TEXTURES.body:draw(0, 0)
+end
+
+
 function draw_game_background( x, y, width, height )
     if CONTEXT.test_screen then
         TEXTURES.bg_test2:draw(0, 0)
@@ -289,24 +319,6 @@ function draw_game_background( x, y, width, height )
     if CONTEXT.test_dither then
         draw_test_dither_patterns()
     end
-
-    draw_dream_world()
-
-
-    TEXTURES.armpit:draw(173, 103)
-    TEXTURES.armpit:draw(211, 105)
-
-    TEXTURES.body:draw(0, 0)
-
-    draw_arm(CONTEXT.player_arm_l_current)
-    draw_arm(CONTEXT.player_arm_r_current)
-
-
-
-    draw_light_areas()
-
-    -- draw_debug_circle(ENEMIES.ALARM1.x, ENEMIES.ALARM1.y, ENEMIES.ALARM1.collision_radius)
-    --draw_debug_circle(HEAD_X, HEAD_Y, HEAD_RADIUS)
 end
 
 
@@ -334,7 +346,11 @@ function init_visuals()
     -- Screen sized texture where the light bubbles and sun render to.
     TEXTURES.light_areas = gfxi.new(400, 240, gfx.kColorClear)
 
-    gfx.sprite.setBackgroundDrawingCallback(draw_game_background)
-
+    -- Set the multiple things in their Z order of what overlaps what.
+    setDrawPass(-32768, draw_game_background)
+    setDrawPass(-30, draw_dream_world)
+    setDrawPass(-20, draw_character)
+    setDrawPass(-10, draw_arms)
+    setDrawPass(  0, draw_light_areas) -- light bubbles are 0, so its easy to remember.
 end
 
