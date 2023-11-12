@@ -157,7 +157,11 @@ end
 
 function manage_enemies()
     -- print(TIMER.currentTime)
-    if TIMER.currentTime % 2000 == 0 then
+    if
+        TIMER.currentTime >= 1500 and
+        TIMER.currentTime <= 2000 and
+        #ENEMIES_MANAGER.enemies < 4
+        then
         -- If no alarm clock, give a chance to trigger it.
         ENEMIES_MANAGER:spawnEnemy('alarm', 'alarm1')
     end
