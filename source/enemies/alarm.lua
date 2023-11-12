@@ -15,6 +15,7 @@ function Alarm:init(alarm_name)
     self.movement_speed = 0.0
     self.movement_target_x = HEAD_X
     self.movement_target_y = HEAD_Y
+    self.jitter_intensity = 1
 
     img = gfx.image.new('images/animation_alarm1')
     self:setImage(img)
@@ -23,7 +24,7 @@ function Alarm:init(alarm_name)
 end
 
 function Alarm:jitter()
-    self:moveTo(self.x + math.random(-1, 1), self.y + math.random(-1, 1))
+    self:moveTo(self.x + math.random(-1, 1) * self.jitter_intensity, self.y + math.random(-1, 1) * self.jitter_intensity)
 end
 
 function Alarm:moveTowardsTarget(x, y, speed)
