@@ -32,11 +32,11 @@ function draw_game_background( x, y, width, height )
     gfx.popContext()
 
     -- Draw the sprite bubble circle.
-    if CONTEXT.sprite_alarm:isVisible() then
+    if ENEMIES.ALARM1:isVisible() then
         gfx.pushContext()
         gfx.setColor(gfx.kColorWhite)
         gfx.setLineWidth(1)
-        gfx.drawCircleAtPoint(CONTEXT.sprite_alarm.x, CONTEXT.sprite_alarm.y, CONTEXT.sprite_alarm.current_bubble_radius)
+        gfx.drawCircleAtPoint(ENEMIES.ALARM1.x, ENEMIES.ALARM1.y, ENEMIES.ALARM1.current_bubble_radius)
         gfx.popContext()
     end
 

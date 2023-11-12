@@ -8,3 +8,9 @@
 -- lvl1 alarm1 2
 -- lvl2 alarm1-4 3
 --     cat      1
+
+import "alarm"
+
+ENEMIES = {
+  ALARM1 = Alarm()
+}

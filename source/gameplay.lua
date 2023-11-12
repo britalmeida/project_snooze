@@ -3,6 +3,7 @@ import "CoreLibs/graphics"
 import "CoreLibs/sprites"
 import "CoreLibs/timer"
 
+import "enemies/enemies"
 
 gfx = playdate.graphics
 
@@ -54,10 +55,10 @@ function init_gameplay()
 
     active_hand = sprite_hand_l
 
-    sprite_alarm = Alarm()
-    sprite_alarm:reset()
+   -- sprite_alarm = Alarm()
+    --sprite_alarm:reset()
 
-    CONTEXT.sprite_alarm = sprite_alarm
+   -- CONTEXT.sprite_alarm = sprite_alarm
 
     -- Which arm is active, left (true) or right (false).
     CONTEXT.is_left_arm_active = false
@@ -71,7 +72,7 @@ function reset_gameplay()
     CONTEXT.awakeness = 0
     CONTEXT.enemies_snoozed = 0
 
-    sprite_alarm:reset()
+    ENEMIES.ALARM1:reset()
 end
 
 
@@ -160,17 +161,17 @@ end
 
 
 function manage_clocks()
-    if not sprite_alarm:isVisible() then
+    if not ENEMIES.ALARM1:isVisible() then
         -- If no alarm clock, give a chance to trigger it.
         if math.random(0, 256) > 250 then
-            sprite_alarm:start()
+            ENEMIES.ALARM1:start()
         end
     else
         -- Else update it (jitter it around, increase its radius, ...).
-        sprite_alarm:update_logic(CONTEXT)
+        ENEMIES.ALARM1:update_logic(CONTEXT)
     end
 
-    CONTEXT.awakeness = math.min(CONTEXT.sprite_alarm.current_bubble_radius / 100, 1)
+    CONTEXT.awakeness = math.min(ENEMIES.ALARM1.current_bubble_radius / 100, 1)
     if CONTEXT.awakeness >= 1 then
         print("Time is Up!")
         reset_gameplay()

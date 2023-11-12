@@ -3,7 +3,7 @@ import "CoreLibs/graphics"
 import "CoreLibs/sprites"
 import "CoreLibs/timer"
 
-import "alarm"
+import "enemies/enemies"
 import "gameplay"
 import "menu"
 import "sound"

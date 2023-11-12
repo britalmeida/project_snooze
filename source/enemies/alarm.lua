@@ -54,11 +54,11 @@ end
 
 function Alarm:start()
     if math.random(0, 100) < 50 then
-        sprite_alarm:moveTo(math.random(50, 150), math.random(50, 190))
+        self:moveTo(math.random(50, 150), math.random(50, 190))
     else
-        sprite_alarm:moveTo(math.random(250, 350), math.random(50, 190))
+        self:moveTo(math.random(250, 350), math.random(50, 190))
     end
-    sprite_alarm:setVisible(true)
+    self:setVisible(true)
     if TIMER.value % 500 == 0 then
         SOUND.ALARM1:play(0)
     end
