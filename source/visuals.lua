@@ -304,6 +304,12 @@ function draw_character()
     TEXTURES.armpit:draw(173, 103)
     TEXTURES.armpit:draw(211, 105)
     TEXTURES.body:draw(0, 0)
+
+    if CONTEXT.awakeness >= 0.9 then
+        TEXTURES.head_awake:draw(178, 48)
+    else
+        TEXTURES.head_asleep:draw(178, 48)
+    end
 end
 
 
@@ -326,6 +332,8 @@ function init_visuals()
     TEXTURES.bg = gfxi.new("images/bg")
     TEXTURES.body = gfxi.new("images/body")
     TEXTURES.armpit = gfxi.new("images/shoulder_stump")
+    TEXTURES.head_asleep = gfxi.new("images/animation_hero-asleep")
+    TEXTURES.head_awake = gfxi.new("images/animation_hero-awake")
 
     -- Make a (programmer) star.
     local size = 8
