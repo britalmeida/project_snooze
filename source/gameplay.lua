@@ -71,7 +71,8 @@ end
 function reset_gameplay()
     CONTEXT.awakeness = 0
     CONTEXT.enemies_snoozed = 0
-
+    PROGRESSION = PROGRESSION_PLAN.LVL1
+    ENEMIES_MANAGER.enemies = {}
 end
 
 
@@ -178,8 +179,4 @@ function manage_enemies()
     end
 
     CONTEXT.awakeness = math.min(#ENEMIES_MANAGER.enemies / 5, 1)
-    if CONTEXT.awakeness >= 1 then
-        print("Time is Up!")
-        reset_gameplay()
-    end
 end

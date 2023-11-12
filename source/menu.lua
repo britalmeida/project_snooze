@@ -31,7 +31,7 @@ end
 
 function init_menus()
 
-    UI_TEXTURES.game_over = gfxi.new("images/test_screen")
+    UI_TEXTURES.game_over = gfxi.new("images/screen_game_over")
 
     -- Set the multiple things in their Z order of what overlaps what.
     setDrawPass(100, draw_ui) -- UI goes on top of everything.

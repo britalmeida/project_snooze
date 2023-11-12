@@ -54,6 +54,14 @@ function playdate.update()
     end
 
     CONTEXT.is_active = true
+
+    if CONTEXT.awakeness >= 1 then
+        if playdate.buttonIsPressed( playdate.kButtonA ) then
+            print("Restart!")
+            reset_gameplay()
+        end
+    end
+
     updateProgression()
 
     handle_input()
