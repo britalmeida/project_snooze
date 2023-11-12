@@ -56,6 +56,7 @@ function playdate.update()
     handle_input()
 
     manage_enemies()
+    calculate_light_areas()
 
     gfx.sprite.redrawBackground()
     gfx.sprite.update()
