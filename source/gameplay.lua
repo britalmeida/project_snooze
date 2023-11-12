@@ -48,8 +48,9 @@ function reset_gameplay()
         enemy:remove()
     end
     ENEMIES_MANAGER.enemies = {}
-    PROGRESSION = PROGRESSION_PLAN.LVL1
+    ENEMIES_MANAGER.last_spawned_enemy_time = 0
     playdate.resetElapsedTime()
+    initProgressionLevel(PROGRESSION_PLAN.LVL1)
 end
 
 
@@ -65,7 +66,7 @@ function handle_input()
     end
 
     -- B button is to slap alarms/mosquitoes.
-    if CONTEXT.active_arm.slapping == false and playdate.buttonIsPressed(playdate.kButtonB) then 
+    if CONTEXT.active_arm.slapping == false and playdate.buttonIsPressed(playdate.kButtonB) then
         CONTEXT.active_arm.slapping = true
         SOUND['SLAP_ALARM']:play()
         local arm = CONTEXT.active_arm
