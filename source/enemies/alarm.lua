@@ -9,6 +9,9 @@ function Alarm:init(alarm_name)
     self.current_bubble_radius = 0.0
     self.sound = SOUND[string.upper(alarm_name)]
     self.collision_radius = 15
+    self.movement_speed = 0.8
+    self.movement_target_x = 213
+    self.movement_target_y = 82
 
     img = gfx.image.new('images/animation_alarm1')
     self:setImage(img)
@@ -32,6 +35,24 @@ end
 
 function Alarm:jitter()
     self:moveTo(self.x + math.random(-1, 1), self.y + math.random(-1, 1))
+end
+
+function Alarm:moveTowardsTarget(x, y, speed)
+    local directionX = x - self.x
+    local directionY = y - self.y
+
+    -- Calculate the distance between self and target
+    local distance = math.sqrt(directionX^2 + directionY^2)
+
+    -- Normalize the direction vector
+    directionX = directionX / distance
+    directionY = directionY / distance
+
+    -- Update the Enemy's position based on the direction and speed
+    self.x = self.x + directionX * speed
+    self.y = self.y + directionY * speed
+
+    self:moveTo(self.x + directionX * speed, self.y + directionY * speed)
 end
 
 function Alarm:clampPosition(min_x, min_y, max_x, max_y)
@@ -111,6 +132,7 @@ function Alarm:update_logic(CONTEXT)
         return
     end
 
+    self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
     self:jitter()
     self:clampPosition(50, 50, 350, 190)
 
