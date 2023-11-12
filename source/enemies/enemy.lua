@@ -72,10 +72,7 @@ function Enemy:__isTouchedByActiveArm(CONTEXT)
     -- Dead code for now, we only want touch detection on the hands, not the whole arm.
 
     -- Detect contact between alarm clock and the active arm.
-    active_arm = CONTEXT.player_arm_r_current
-    if CONTEXT.is_left_arm_active then
-        active_arm = CONTEXT.player_arm_l_current
-    end
+    active_arm = CONTEXT.active_arm
     self_p = playdate.geometry.point.new(self.x, self.y)
     hand_p = playdate.geometry.point.new(active_arm.x2, active_arm.y2)
     -- If self point is more than ARM_EXTEND_SPEED pixels away, no contact.
@@ -126,18 +123,25 @@ function Enemy:on_hit()
     end)
 end
 
-function Enemy:is_touched_by_active_hand(CONTEXT)
-    hand = CONTEXT.player_hand_r
-    if CONTEXT.is_left_arm_active then
-        hand = CONTEXT.player_hand_l
-    end
+function Enemy:is_touched_by_hand(hand)
     return self:circleCollision(hand.x, hand.y, HAND_TOUCH_RADIUS + self.collision_radius)
 end
 
+function Enemy:is_touched_by_any_hand(CONTEXT)
+    for _, arm in ipairs(CONTEXT.player_arms) do
+        if self:circleCollision(arm.hand.x, arm.hand.y, HAND_TOUCH_RADIUS + self.collision_radius) then
+            return true
+        end
+    end
+    return false
+end
+
 function Enemy:update_logic(CONTEXT)
-    if CONTEXT.player_slapping and self:is_touched_by_active_hand(CONTEXT) then
-        self:on_hit_by_player()
-        return
+    for _, arm in ipairs(CONTEXT.player_arms) do
+        if arm.slapping and self:is_touched_by_hand(arm.hand) then
+            self:on_hit_by_player()
+            return
+        end
     end
     self:jitter()
     self:clampPosition(0, 0, 400, 240)

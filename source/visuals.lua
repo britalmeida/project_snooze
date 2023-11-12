@@ -291,8 +291,8 @@ end
 
 
 function draw_arms()
-    draw_arm(CONTEXT.player_arm_l_current)
-    draw_arm(CONTEXT.player_arm_r_current)
+    draw_arm(CONTEXT.player_arm_left.line_segment)
+    draw_arm(CONTEXT.player_arm_right.line_segment)
 end
 
 

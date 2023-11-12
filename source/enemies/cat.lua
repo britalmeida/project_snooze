@@ -31,9 +31,9 @@ function Cat:start()
 
     -- Pick arms based on which side we're on.
     if angle <= 90 or angle >= 270 then
-        arm = CONTEXT.player_arm_r_current
+        arm = CONTEXT.player_arm_right.line_segment
     else
-        arm = CONTEXT.player_arm_l_current
+        arm = CONTEXT.player_arm_left.line_segment
     end
 
     local radius = ARM_LENGTH_DEFAULT + 20
@@ -63,7 +63,7 @@ function Cat:update_logic(CONTEXT)
         CONTEXT.awakeness = 1
     end
 
-    if self:is_touched_by_active_hand(CONTEXT) then
+    if self:is_touched_by_any_hand(CONTEXT) then
         self.current_bubble_radius += self.touch_bubble_growth_speed
         if self.current_bubble_radius < 0 then
             self:on_hit()
