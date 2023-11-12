@@ -1,3 +1,5 @@
+import "gameplay" -- Needed to access HEAD_X/Y in the constructor.
+
 gfx = playdate.graphics
 local Sprite = gfx.sprite
 
@@ -10,8 +12,8 @@ function Alarm:init(alarm_name)
     self.sound = SOUND[string.upper(alarm_name)]
     self.collision_radius = 15
     self.movement_speed = 0.8
-    self.movement_target_x = 213
-    self.movement_target_y = 82
+    self.movement_target_x = HEAD_X
+    self.movement_target_y = HEAD_Y
 
     img = gfx.image.new('images/animation_alarm1')
     self:setImage(img)
@@ -91,9 +93,9 @@ function Alarm:__isTouchedByActiveArm(CONTEXT)
     return true
 end
 
-function Alarm:isTouchedBySprite(sprite, radius)
+function Alarm:circleCollision(x, y, radius)
     local total_radius = radius + self.collision_radius
-    return math.abs( self.x - sprite.x) <= total_radius and math.abs( self.y - sprite.y ) <= total_radius
+    return math.abs( self.x - x) <= total_radius and math.abs( self.y - y ) <= total_radius
 end
 
 function Alarm:start()
@@ -127,9 +129,14 @@ function Alarm:update_logic(CONTEXT)
     if CONTEXT.is_left_arm_active then
         hand = CONTEXT.player_hand_l
     end
-    if self:isTouchedBySprite(hand, HAND_TOUCH_RADIUS) then
+    if self:circleCollision(hand.x, hand.y, HAND_TOUCH_RADIUS) then
         self:snooze()
         return
+    end
+
+    if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS) then
+        self:snooze()
+        CONTEXT.awakeness = 1
     end
 
     self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)

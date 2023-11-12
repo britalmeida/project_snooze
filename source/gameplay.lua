@@ -21,6 +21,9 @@ ARM_R_X, ARM_R_Y = 225, 110
 ARM_L_SIGN = -1
 ARM_R_SIGN = 1
 
+HEAD_X, HEAD_Y = 213, 82
+HEAD_RADIUS = 5
+
 DRAW_DEBUG = 1
 
 function init_gameplay()
