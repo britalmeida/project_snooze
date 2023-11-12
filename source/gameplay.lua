@@ -168,7 +168,9 @@ function manage_enemies()
     -- Update enemies (jitter around, increase radius, ...).
     -- ENEMIES.ALARM1:update_logic(CONTEXT)
     for key, enemy in ipairs(ENEMIES_MANAGER.enemies) do
-        enemy:update_logic(CONTEXT)
+        if enemy:isVisible() == true then
+            enemy:update_logic(CONTEXT)
+        end
     end
 
     CONTEXT.awakeness = math.min(#ENEMIES_MANAGER.enemies / 5, 1)
