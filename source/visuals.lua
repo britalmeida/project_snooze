@@ -264,8 +264,8 @@ function calculate_light_areas()
         end
 
         -- Draw sunray.
-        gfx.setDitherPattern(0.05, gfxi.kDitherTypeBayer8x8)
-        gfx.fillPolygon(200, 32, 205, 32, 380, 240, 350, 240)
+        --gfx.setDitherPattern(0.05, gfxi.kDitherTypeBayer8x8)
+        --gfx.fillPolygon(200, 32, 205, 32, 380, 240, 350, 240)
 
     gfx.popContext()
 end
@@ -308,21 +308,13 @@ end
 
 
 function draw_game_background( x, y, width, height )
-    if CONTEXT.test_screen then
-        TEXTURES.bg_test2:draw(0, 0)
-        return
-    end
 
     -- Draw full screen background.
     gfx.pushContext()
         --gfx.setStencilImage(TEXTURES.light_areas)
-        TEXTURES.bg_test1:draw(0, 0)
+        TEXTURES.bg:draw(0, 0)
     gfx.popContext()
 
-
-    if CONTEXT.test_dither then
-        draw_test_dither_patterns()
-    end
 end
 
 
@@ -330,10 +322,8 @@ function init_visuals()
 
     CONTEXT.test_dither = false
 
-    -- Have 2 bg images so they can be swapped for test purposes.
-    TEXTURES.bg_test1 = gfxi.new("images/bg")
-    TEXTURES.bg_test2 = gfxi.new("images/test_screen")
-    -- Load other layers.
+    -- Load other image layers.
+    TEXTURES.bg = gfxi.new("images/bg")
     TEXTURES.body = gfxi.new("images/body")
     TEXTURES.armpit = gfxi.new("images/shoulder_stump")
 
