@@ -15,6 +15,8 @@ function Enemy:init(sound_name)
     self.current_bubble_radius = 0.0
     self.bubble_growth_speed = 0.3
 
+    self.respawn_timer_seconds = 5
+
     img = gfx.image.new('images/animation_alarm1')
     self:setImage(img)
     self:addSprite()
@@ -93,34 +95,17 @@ function Enemy:start()
     self.sound:play(0)
 end
 
-function Enemy:reset()
+function Enemy:on_hit()
+    -- Should be called whenever player hits enemy or enemy hits player.
+    self.sound:stop()
     self:setVisible(false)
+
+    -- Start a timer to respawn this enemy.
+    playdate.timer.new(self.respawn_timer_seconds*1000, function()
+        self:start()
+    end)
 end
 
 function Enemy:update_logic(CONTEXT)
-    hand = CONTEXT.player_hand_r
-    if CONTEXT.is_left_arm_active then
-        hand = CONTEXT.player_hand_l
-    end
-    if self:circleCollision(hand.x, hand.y, HAND_TOUCH_RADIUS + self.collision_radius) then
-        self:snooze()
-        return
-    end
-
-    -- TODO: This should be moved into a new mosquito enemy type.
-    if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.collision_radius) then
-        print("Mosquito hit!")
-        self:snooze()
-        CONTEXT.awakeness = 1
-    end
-
-    if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
-        print("Enemy hit!")
-        self:snooze()
-        CONTEXT.awakeness = 1
-    end
-
-    function Enemy:update_logic(CONTEXT)
-        self:clampPosition(50, 50, 350, 190)
-    end
+    self:clampPosition(0, 0, 400, 240)
 end

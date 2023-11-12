@@ -9,9 +9,6 @@ function Mosquito:init(sound_name)
 
     self.sound = SOUND[string.upper(sound_name)]
     self.collision_radius = 15
-    self.movement_speed = 0.0
-    self.movement_target_x = HEAD_X
-    self.movement_target_y = HEAD_Y
     self.jitter_intensity = 1
 
     self.current_bubble_radius = 15
@@ -19,13 +16,16 @@ function Mosquito:init(sound_name)
 
     img = gfx.image.new('images/animation_alarm1')
     self:setImage(img)
-    self:addSprite()
-    self:setVisible(false)
+
+    -- Mosquito specific variables
+    self.movement_speed = 0.0
+    self.movement_target_x = HEAD_X
+    self.movement_target_y = HEAD_Y
 end
 
 function Mosquito:update_logic(CONTEXT)
     if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.collision_radius) then
-        self:snooze()
+        self:on_hit()
         CONTEXT.awakeness = 1
     end
     Mosquito.super.update_logic(self, CONTEXT)

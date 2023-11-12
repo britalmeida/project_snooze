@@ -9,8 +9,6 @@ function Alarm:init(sound_name)
     Alarm.super.init(self, sound_name)
 
     self.sound = SOUND[string.upper(sound_name)]
-    self.collision_radius = 15
-    self.jitter_intensity = 1
 
     self.current_bubble_radius = 0.0
     self.bubble_growth_speed = 0.3
@@ -19,21 +17,16 @@ function Alarm:init(sound_name)
     img = gfx.image.new('images/animation_alarm1') -- Chill clock state
     anim_ring = gfx.animation.loop.new(33.33333333, gfx.imagetable.new('images/animation_alarm1-ring') , true) -- Ring
     self:setImage(img)
-
-    self:addSprite()
-    self:setVisible(false)
 end
 
-function Alarm:reset()
-    Alarm.super.reset(self)
-    self.current_bubble_radius = 0.0
-end
-
-function Alarm:snooze()
-    self.sound:stop()
+function Alarm:on_hit()
+    -- Should be called whenever player hits enemy or enemy hits player
     SOUND.SLAP_ALARM:play()
+
     CONTEXT.enemies_snoozed += 1
-    self:reset()
+    self.current_bubble_radius = 0.0
+
+    Alarm.super.on_hit(self)
 end
 
 function Alarm:update_logic(CONTEXT)
@@ -45,12 +38,12 @@ function Alarm:update_logic(CONTEXT)
         hand = CONTEXT.player_hand_l
     end
     if self:circleCollision(hand.x, hand.y, HAND_TOUCH_RADIUS + self.collision_radius) then
-        self:snooze()
+        self:on_hit()
         return
     end
 
     if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
-        self:snooze()
+        self:on_hit()
         CONTEXT.awakeness = 1
     end
 
