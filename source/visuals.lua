@@ -251,6 +251,18 @@ function calculate_light_areas()
 end
 
 
+function draw_arms()
+    -- Draw the arms.
+    gfx.pushContext()
+        gfx.setLineCapStyle(gfx.kLineCapStyleRound)
+        gfx.setColor(gfx.kColorWhite)
+        gfx.setLineWidth(5)
+        gfx.drawLine(CONTEXT.player_arm_l_current)
+        gfx.drawLine(CONTEXT.player_arm_r_current)
+    gfx.popContext()
+end
+
+
 function draw_game_background( x, y, width, height )
     if CONTEXT.test_screen then
         TEXTURES.bg_test2:draw(0, 0)
@@ -270,19 +282,12 @@ function draw_game_background( x, y, width, height )
 
     draw_dream_world()
 
-    -- Draw the arms.
-    gfx.pushContext()
-    gfx.setLineCapStyle(gfx.kLineCapStyleRound)
-    gfx.setColor(gfx.kColorWhite)
-    gfx.setLineWidth(5)
-    gfx.drawLine(CONTEXT.player_arm_l_current)
-    gfx.drawLine(CONTEXT.player_arm_r_current)
-    gfx.popContext()
+    draw_arms()
 
     draw_light_areas()
 
     -- draw_debug_circle(ENEMIES.ALARM1.x, ENEMIES.ALARM1.y, ENEMIES.ALARM1.collision_radius)
-    draw_debug_circle(HEAD_X, HEAD_Y, HEAD_RADIUS)
+    --draw_debug_circle(HEAD_X, HEAD_Y, HEAD_RADIUS)
 end
 
 
