@@ -32,8 +32,10 @@ function Alarm:clampPosition(min_x, min_y, max_x, max_y)
     end
 end
 
-function Alarm:isTouched(CONTEXT)
-    -- Detect contact between alarm clock and the active hand.
+function Alarm:__isTouchedByActiveArm(CONTEXT)
+    -- Dead code for now, we only want touch detection on the hands, not the whole arm.
+
+    -- Detect contact between alarm clock and the active arm.
     active_arm = CONTEXT.player_arm_r_current
     if CONTEXT.is_left_arm_active then
         active_arm = CONTEXT.player_arm_l_current
@@ -50,6 +52,10 @@ function Alarm:isTouched(CONTEXT)
         return false
     end
     return true
+end
+
+function Alarm:isTouchedBySprite(sprite, radius)
+    return math.abs( self.x - sprite.x) <= radius and math.abs( self.y - sprite.y ) <= radius
 end
 
 function Alarm:start()
@@ -79,16 +85,11 @@ function Alarm:snooze()
 end
 
 function Alarm:update_logic(CONTEXT)
-    curr_scale = self:getScale()
-    if curr_scale == 1.0 and self:isTouched(CONTEXT) then
-        self:setScale(1.5)
-    elseif curr_scale == 1.5 then
-        self:setScale(1.8)
-    elseif curr_scale == 1.8 then
-        self:setScale(2.0)
-    elseif curr_scale == 2.0 then
-        self:setScale(2.1)
-    elseif curr_scale == 2.1 then
+    hand = CONTEXT.player_hand_r
+    if CONTEXT.is_left_arm_active then
+        hand = CONTEXT.player_hand_l
+    end
+    if self:isTouchedBySprite(hand, HAND_TOUCH_RADIUS) then
         self:snooze()
         return
     end

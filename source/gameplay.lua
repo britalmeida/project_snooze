@@ -13,7 +13,7 @@ ARM_LENGTH_MAX = 180
 ARM_LENGTH_MIN = 20
 ARM_EXTEND_SPEED = 20
 
-HAND_TOUCH_RADIUS = 5
+HAND_TOUCH_RADIUS = 20
 
 ARM_L_X, ARM_L_Y = 190, 100
 ARM_R_X, ARM_R_Y = 225, 110
@@ -29,14 +29,14 @@ function init_gameplay()
 
     -- Permanent sprites
     -- Left hand.
-    sprite_hand_l = gfx.sprite.new()
+    local sprite_hand_l = gfx.sprite.new()
     sprite_hand_l:setImage(image_hand_left)
     sprite_hand_l:setCenter(1.0, 0.5)
     sprite_hand_l:moveTo(ARM_L_X-ARM_LENGTH_DEFAULT, ARM_L_Y)
     sprite_hand_l:add()
 
     -- Right hand.
-    sprite_hand_r = gfx.sprite.new()
+    local sprite_hand_r = gfx.sprite.new()
     sprite_hand_r:setImage(image_hand_right)
     sprite_hand_r:setCenter(0.0, 0.5)
     sprite_hand_r:moveTo(ARM_R_X+ARM_LENGTH_DEFAULT, ARM_R_Y)
@@ -50,20 +50,12 @@ function init_gameplay()
     player_arm_r = playdate.geometry.lineSegment.new(0, 0, ARM_LENGTH_DEFAULT, 0)
     player_arm_r_angle = 0
 
-    active_arm = player_arm_r
-    inactive_arm = player_arm_l
-
-    active_hand = sprite_hand_l
-
-   -- sprite_alarm = Alarm()
-    --sprite_alarm:reset()
-
-   -- CONTEXT.sprite_alarm = sprite_alarm
-
     -- Which arm is active, left (true) or right (false).
     CONTEXT.is_left_arm_active = false
     CONTEXT.player_arm_l_current = player_arm_l
     CONTEXT.player_arm_r_current = player_arm_r
+    CONTEXT.player_hand_l = sprite_hand_l
+    CONTEXT.player_hand_r = sprite_hand_r
 
 end
 
@@ -152,11 +144,11 @@ function handle_input()
     player_arm_r_current = player_arm_r_tx:transformedLineSegment(player_arm_r)
     CONTEXT.player_arm_r_current = player_arm_r_current
 
-    sprite_hand_l:moveTo(player_arm_l_current.x2, player_arm_l_current.y2)
-    sprite_hand_r:moveTo(player_arm_r_current.x2, player_arm_r_current.y2)
+    CONTEXT.player_hand_l:moveTo(player_arm_l_current.x2, player_arm_l_current.y2)
+    CONTEXT.player_hand_r:moveTo(player_arm_r_current.x2, player_arm_r_current.y2)
 
-    sprite_hand_l:setRotation(player_arm_l_angle * ARM_L_SIGN - 180)
-    sprite_hand_r:setRotation(player_arm_r_angle * ARM_R_SIGN)
+    CONTEXT.player_hand_l:setRotation(player_arm_l_angle * ARM_L_SIGN - 180)
+    CONTEXT.player_hand_r:setRotation(player_arm_r_angle * ARM_R_SIGN)
 end
 
 
