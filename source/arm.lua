@@ -38,7 +38,9 @@ function Arm:init(is_left)
         self.line_segment = geo.lineSegment.new(ARM_R_X, ARM_R_Y, ARM_R_X+ARM_LENGTH_DEFAULT, ARM_R_Y)
     end
 
+    self.current_length = ARM_LENGTH_DEFAULT
     self.grow_rate = 0.0
+    self.punch_speed = 10
     self.slapping = false
 end
 
@@ -46,8 +48,10 @@ function Arm:crank(crank_change)
     self.angle_degrees += playdate.getCrankChange() * self.sign
 
     -- Compute transforms for both arms
-    local x = self.line_segment.x + ARM_LENGTH_DEFAULT * math.cos(math.rad(self.angle_degrees))
-    local y = self.line_segment.y + ARM_LENGTH_DEFAULT * math.sin(math.rad(self.angle_degrees))
+    local x = self.line_segment.x + self.current_length * math.cos(math.rad(self.angle_degrees))
+    local y = self.line_segment.y + self.current_length * math.sin(math.rad(self.angle_degrees))
+
+    self.current_length += self.grow_rate
 
     self.line_segment.x2 = x
     self.line_segment.y2 = y
@@ -58,6 +62,35 @@ function Arm:crank(crank_change)
     end
     self.hand:setRotation(self.angle_degrees + offset)
 
+end
+
+function Arm:setLength(newLength)
+    if newLength > ARM_LENGTH_MAX then
+        newLength = ARM_LENGTH_MAX
+    elseif newLength < ARM_LENGTH_MIN then
+        newLength = ARM_LENGTH_MIN
+    end
+
+    local currentLength = math.sqrt((self.line_segment.x2 - self.line_segment.x)^2 + (self.line_segment.y2 - self.line_segment.y)^2)
+
+    -- Calculate the scaling factor
+    local scaleFactor = newLength / currentLength
+
+    self.line_segment.x2 = self.line_segment.x + (self.line_segment.x2 - self.line_segment.x) * scaleFactor
+    self.line_segment.y2 = self.line_segment.y + (self.line_segment.y2 - self.line_segment.y) * scaleFactor
+end
+
+function Arm:punch(speed)
+    self.grow_rate = speed
+    self.slapping = true
+    playdate.timer.new(100, function()
+        self.grow_rate = -speed
+        playdate.timer.new(100, function()
+            self.current_length = ARM_LENGTH_DEFAULT
+            self.grow_rate = 0
+            self.slapping = false
+        end)
+    end)
 end
 
 function Arm:clampLength()
