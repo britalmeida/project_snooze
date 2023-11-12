@@ -5,7 +5,7 @@ class('Cat').extends(Enemy)
 function Cat:init()
     Cat.super.init(self)
     -- Sound
-    self.sound_loop = SOUND['ENEMY_ALARM_CAT']
+    self.sound_loop = SOUND['ENEMY_CAT']
     self.sound_slap = SOUND['SLAP_CAT']
 
     self.jitter_intensity = 0
