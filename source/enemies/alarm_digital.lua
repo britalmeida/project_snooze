@@ -17,6 +17,15 @@ function AlarmDigital:init()
     self.anim_default = gfx.animation.loop.new(500, gfx.imagetable.new('images/animation_alarm2-move') , true) -- Ring
 end
 
+function AlarmDigital:start()
+    AlarmDigital.super.start(self)
+    -- Spawn it somewhere slightly off-screen
+    local index = math.random(1, 2)
+    local x = {-20, 420}
+    local y = math.random(240)
+    self:moveTo(x[index], y)
+end
+
 function AlarmDigital:update_logic()
     AlarmDigital.super.update_logic(self, CONTEXT)
     self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
