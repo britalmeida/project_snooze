@@ -131,7 +131,7 @@ function Enemy:update_logic(CONTEXT)
     if CONTEXT.is_left_arm_active then
         hand = CONTEXT.player_hand_l
     end
-    if self:circleCollision(hand.x, hand.y, HAND_TOUCH_RADIUS + self.collision_radius) then
+    if CONTEXT.player_slapping and self:circleCollision(hand.x, hand.y, HAND_TOUCH_RADIUS + self.collision_radius) then
         self:on_hit_by_player()
         return
     end

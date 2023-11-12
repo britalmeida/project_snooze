@@ -13,7 +13,7 @@ ARM_LENGTH_MAX = 180
 ARM_LENGTH_MIN = 20
 ARM_EXTEND_SPEED = 20
 
-HAND_TOUCH_RADIUS = 5
+HAND_TOUCH_RADIUS = 10
 
 ARM_L_X, ARM_L_Y = 180, 110
 ARM_R_X, ARM_R_Y = 225, 115
@@ -60,6 +60,7 @@ function init_gameplay()
     CONTEXT.player_arm_r_current = player_arm_r
     CONTEXT.player_hand_l = sprite_hand_l
     CONTEXT.player_hand_r = sprite_hand_r
+    CONTEXT.player_slapping = false
 
 end
 
@@ -73,7 +74,7 @@ end
 
 function handle_input()
 
-    -- If A or B button is pressed, define active arm.
+    -- Left/Right button switches the active arm.
     if playdate.buttonIsPressed( playdate.kButtonRight ) then
         is_left_arm_active = false
     end
@@ -91,6 +92,15 @@ function handle_input()
         active_arm = player_arm_r
         active_hand = sprite_hand_r
         inactive_arm = player_arm_l
+    end
+
+    -- B button is to slap alarms/mosquitoes.
+    if CONTEXT.player_slapping == false and playdate.buttonIsPressed(playdate.kButtonB) then 
+        CONTEXT.player_slapping = true
+        SOUND['SLAP_ALARM']:play()
+        playdate.timer.new(100, function()
+            CONTEXT.player_slapping = false
+        end)
     end
 
     -- Handle active arm length.
