@@ -10,34 +10,34 @@ end
 
 local multiplier = 2
 
-local LVL2_THRESHOLD = 8000 * multiplier
-local LVL3_THRESHOLD = 16000 * multiplier
-local LVL4_THRESHOLD = 24000 * multiplier
+local LVL2_THRESHOLD = 8 * multiplier
+local LVL3_THRESHOLD = 16 * multiplier
+local LVL4_THRESHOLD = 24 * multiplier
 
 PROGRESSION_PLAN = {
   LVL1 = {
     ID = 1,
     ENEMIES_SPAWNABLE = {Cat, Cat},
     MUSIC = SOUND.BG_LOOP_1,
-    SPAWN_INTERVAL_MS = 3000,
+    SPAWN_INTERVAL_S = 3,
   },
   LVL2 = {
     ID = 2,
     ENEMIES_SPAWNABLE = {AlarmPhone, AlarmAnalog},
     MUSIC = SOUND.BG_LOOP_2,
-    SPAWN_INTERVAL_MS = 3000,
+    SPAWN_INTERVAL_S = 3,
   },
   LVL3 = {
     ID = 3,
     ENEMIES_SPAWNABLE = {Cat, AlarmDigital, AlarmAnalog},
     MUSIC = SOUND.BG_LOOP_3,
-    SPAWN_INTERVAL_MS = 2000,
+    SPAWN_INTERVAL_S = 2,
   },
   LVL4 = {
     ID = 4,
     ENEMIES_SPAWNABLE = {Mosquito, AlarmAnalog},
     MUSIC = SOUND.BG_LOOP_4,
-    SPAWN_INTERVAL_MS = 2000,
+    SPAWN_INTERVAL_S = 2,
   }
 }
 
@@ -55,7 +55,7 @@ end
 initProgressionLevel(PROGRESSION_PLAN.LVL1)
 
 function updateProgression()
-  local t = playdate.getCurrentTimeMilliseconds()
+  local t = playdate.getElapsedTime()
   if t > LVL4_THRESHOLD then
     if PROGRESSION.ID ~= PROGRESSION_PLAN.LVL4.ID then
       initProgressionLevel(PROGRESSION_PLAN.LVL4)

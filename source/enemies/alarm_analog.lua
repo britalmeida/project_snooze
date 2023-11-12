@@ -6,6 +6,8 @@ class('AlarmAnalog').extends(Enemy)
 
 function AlarmAnalog:init()
     AlarmAnalog.super.init(self)
+
+    self.name = 'alarm_analog'
     self.current_bubble_radius = 0.0
     self.bubble_growth_speed = 0.3
 
