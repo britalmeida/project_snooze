@@ -11,7 +11,25 @@
 
 import "alarm"
 
-ENEMIES = {
-  ALARM1 = Alarm('alarm1'),
-  ALARM2 = Alarm('alarm2'),
+PROGRESSION = {
+  LVL1 = 'alarm1', 'alarm2',
+  LVL2 = 'alarm3', 'alarm4',
+  LVL3 = 'alarm5', 'alarm6',
 }
+
+ENEMIES_MANAGER = {
+  enemies = {}
+}
+
+function ENEMIES_MANAGER:spawnEnemy(category, variant)
+  variant = variant or nil
+  if category == 'alarm' then
+    local alarm = Alarm(variant)
+    alarm:start()
+    table.insert(self.enemies, alarm)
+  elseif category == 'cat' then
+    return nil
+  elseif category == 'mosquito' then
+    return nil
+  end
+end
