@@ -25,10 +25,14 @@ function Arm:init(is_left)
     self.hand:setCenter(0.0, 0.5)
     self.hand:moveTo(x+ARM_LENGTH_DEFAULT, y)
     self.angle_degrees = 0
+    self.angle_max = 120
+    self.angle_min = -120
     if is_left then
         self.hand:setCenter(1.0, 0.5)
         self.hand:moveTo(x-ARM_LENGTH_DEFAULT, y)
         self.angle_degrees = 180
+        self.angle_max = 310
+        self.angle_min = 60
     end
     self.hand:add()
 
@@ -46,6 +50,11 @@ end
 
 function Arm:crank(crank_change)
     self.angle_degrees += playdate.getCrankChange() * self.sign
+    if self.angle_degrees > self.angle_max then
+        self.angle_degrees = self.angle_max
+    elseif self.angle_degrees < self.angle_min then
+        self.angle_degrees = self.angle_min
+    end
 
     -- Compute transforms for both arms
     local x = self.line_segment.x + self.current_length * math.cos(math.rad(self.angle_degrees))
@@ -61,7 +70,6 @@ function Arm:crank(crank_change)
         offset = 180
     end
     self.hand:setRotation(self.angle_degrees + offset)
-
 end
 
 function Arm:setLength(newLength)
