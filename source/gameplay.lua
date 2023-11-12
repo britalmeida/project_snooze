@@ -10,7 +10,7 @@ gfx = playdate.graphics
 
 -- Global static defines
 ARM_LENGTH_DEFAULT = 40
-ARM_LENGTH_MAX = 180
+ARM_LENGTH_MAX = 120
 ARM_LENGTH_MIN = 20
 ARM_EXTEND_SPEED = 20
 
