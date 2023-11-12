@@ -54,7 +54,7 @@ function playdate.update()
 
     handle_input()
 
-    manage_clocks()
+    manage_enemies()
 
     gfx.sprite.redrawBackground()
     gfx.sprite.update()
