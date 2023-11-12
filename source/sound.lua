@@ -16,3 +16,18 @@ SOUND = {
   SLAP_MOSQUITO = sp.new("sound/slap_mosquito"),
   WINDOW_OPEN_LOOP = sp.new("sound/window_open_loop"),
 }
+
+
+function init_sound()
+
+  SOUND.BG_LOOP_1:play()
+  TIMER = playdate.timer.new(8000, function()
+      if SOUND.BG_LOOP_1:isPlaying() then
+          SOUND.BG_LOOP_1:stop()
+      end
+      SOUND.BG_LOOP_1:play()
+  end)
+  TIMER.repeats = true;
+
+end
+
