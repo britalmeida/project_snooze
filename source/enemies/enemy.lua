@@ -88,7 +88,7 @@ function Enemy:__isTouchedByActiveArm(CONTEXT)
 end
 
 function Enemy:circleCollision(x, y, radius)
-    return math.abs( self.x - x) <= radius and math.abs( self.y - y ) <= radius
+    return math.sqrt((self.x - x)^2 + (self.y - y)^2) < radius
 end
 
 function Enemy:start()
@@ -101,6 +101,10 @@ function Enemy:start()
     if self.sound_loop then 
         self.sound_loop:play(0)
     end
+end
+
+function Enemy:is_near_player_face(threshold)
+    return self:circleCollision(HEAD_X, HEAD_Y, threshold)
 end
 
 function Enemy:on_hit_by_player()
