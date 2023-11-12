@@ -9,8 +9,8 @@ function Alarm:init(alarm_name)
     self.current_bubble_radius = 0.0
     self.sound = SOUND[string.upper(alarm_name)]
 
-    clock_image = gfx.image.new('images/animation_alarm1')
-    self:setImage(clock_image)
+    img = gfx.image.new('images/animation_alarm1')
+    self:setImage(img)
     self:addSprite()
 end
 
