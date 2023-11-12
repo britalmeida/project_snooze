@@ -2,6 +2,8 @@ gfx = playdate.graphics
 gfxi = playdate.graphics.image
 
 function main_draw()
+    -- NOTE: Non-sprite drawing needs to go into draw_game_background...
+    -- So, this main_draw function won't get much longer than this, but ohwell.
     gfx.sprite.redrawBackground()
     gfx.sprite.update()
 end
@@ -234,6 +236,8 @@ function draw_game_background( x, y, width, height )
         return
     end
 
+    ENEMIES.ALARM1:drawDebug()
+ 
     gfx.pushContext()
 
         if CONTEXT.test_dither then

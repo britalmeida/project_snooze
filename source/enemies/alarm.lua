@@ -8,11 +8,26 @@ function Alarm:init(alarm_name)
 
     self.current_bubble_radius = 0.0
     self.sound = SOUND[string.upper(alarm_name)]
+    self.collision_radius = 15
 
     img = gfx.image.new('images/animation_alarm1')
     self:setImage(img)
     self:addSprite()
     self:setVisible(false)
+end
+
+function Alarm:drawDebug()
+    if DRAW_DEBUG == 0 then
+        return
+    end
+    if self == nil then
+        return
+    end
+    gfx.pushContext()
+        gfx.setColor(gfx.kColorWhite)
+        gfx.setLineWidth(2)
+        gfx.drawCircleAtPoint(self.x, self.y, self.collision_radius)
+    gfx.popContext()
 end
 
 function Alarm:jitter()
@@ -56,7 +71,8 @@ function Alarm:__isTouchedByActiveArm(CONTEXT)
 end
 
 function Alarm:isTouchedBySprite(sprite, radius)
-    return math.abs( self.x - sprite.x) <= radius and math.abs( self.y - sprite.y ) <= radius
+    local total_radius = radius + self.collision_radius
+    return math.abs( self.x - sprite.x) <= total_radius and math.abs( self.y - sprite.y ) <= total_radius
 end
 
 function Alarm:start()
