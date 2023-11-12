@@ -1,12 +1,15 @@
 import "alarm_analog"
 
-class('AlarmPhone').extends(Alarm_Analog)
+class('AlarmPhone').extends(AlarmAnalog)
 
-function AlarmPhone:init(sound_name)
-    Alarm_Analog.super.init(self, sound_name)
+function AlarmPhone:init()
+    AlarmPhone.super.init(self)
+    -- Sound
+    self.sound_loop = SOUND['ENEMY_ALARM_PHONE']
+    self.sound_slap = SOUND['SLAP_ALARM']
 
-    -- Load image visuals and animations
-    img = gfx.image.new('images/animation_alarm3') -- Chill clock state
-    anim_ring = gfx.animation.loop.new(33.33333333, gfx.imagetable.new('images/animation_alarm3-ring') , true) -- Ring
-    self:setImage(img)
+    -- Graphics
+    self.static_image = gfx.image.new('images/animation_alarm3')
+    self:setImage(self.static_image)
+    self.anim_default = gfx.animation.loop.new(33.33333333, gfx.imagetable.new('images/animation_alarm3-ring') , true) -- Ring
 end

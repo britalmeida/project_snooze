@@ -5,17 +5,29 @@ class('Enemy').extends(Sprite)
 
 function Enemy:init(sound_name)
     Enemy.super.init(self)
-    self.sound = SOUND[string.upper('enemy_' .. sound_name)]
-    self.collision_radius = 15
-    self.jitter_intensity = 1
 
+    -- Threat
+    self.collision_radius = 15
     self.current_bubble_radius = 0.0
     self.bubble_growth_speed = 0.3
 
+    -- Movement
+    self.jitter_intensity = 1
+    self.movement_speed = 0.3
+    self.movement_target_x = HEAD_X
+    self.movement_target_y = HEAD_Y
+
+    -- Life cycle
     self.respawn_timer_seconds = 5
 
-    img = gfx.image.new('images/animation_alarm1')
-    self:setImage(img)
+    -- Sound
+    self.sound_loop = nil
+    self.sound_slap = nil
+
+    -- Graphics
+    self.static_image = nil
+    self.anim_default = nil
+    self:setImage(self.static_image)
     self:addSprite()
     self:setVisible(false)
 end
@@ -89,16 +101,23 @@ function Enemy:start()
         self:moveTo(math.random(250, 350), math.random(50, 190))
     end
     self:setVisible(true)
-    self.sound:play(0)
+    if self.sound_loop then 
+        self.sound_loop:play(0)
+    end
 end
 
 function Enemy:on_hit_by_player()
+    if self.sound_slap then
+        self.sound_slap:play()
+    end
     self:on_hit()
 end
 
 function Enemy:on_hit()
     -- Should be called whenever player hits enemy or enemy hits player.
-    self.sound:stop()
+    if self.sound_loop then
+        self.sound_loop:stop()
+    end
     self:setVisible(false)
 
     -- Start a timer to respawn this enemy.
@@ -117,4 +136,10 @@ function Enemy:update_logic(CONTEXT)
         return
     end
     self:clampPosition(0, 0, 400, 240)
+
+    -- Set the image frame to display.
+    -- e.g. if chill then self:setImage(img), otherwise walk or ring.
+    if self.anim_default then 
+        self:setImage(self.anim_default:image())
+    end
 end
