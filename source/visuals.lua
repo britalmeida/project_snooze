@@ -292,9 +292,16 @@ function draw_game_background( x, y, width, height )
 
     draw_dream_world()
 
+
+    TEXTURES.armpit:draw(170, 100)
+    TEXTURES.armpit:draw(210, 100)
+
     draw_arm(CONTEXT.player_arm_l_current)
     draw_arm(CONTEXT.player_arm_r_current)
 
+    TEXTURES.body:draw(0, 0)
+
+    
     draw_light_areas()
 
     -- draw_debug_circle(ENEMIES.ALARM1.x, ENEMIES.ALARM1.y, ENEMIES.ALARM1.collision_radius)
@@ -309,6 +316,9 @@ function init_visuals()
     -- Have 2 bg images so they can be swapped for test purposes.
     TEXTURES.bg_test1 = gfxi.new("images/bg")
     TEXTURES.bg_test2 = gfxi.new("images/test_screen")
+    -- Load other layers.
+    TEXTURES.body = gfxi.new("images/body")
+    TEXTURES.armpit = gfxi.new("images/shoulder_stump")
 
     -- Make a (programmer) star.
     local size = 8
