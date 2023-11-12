@@ -163,7 +163,7 @@ function manage_enemies()
         #ENEMIES_MANAGER.enemies < 4
         then
         -- If no alarm clock, give a chance to trigger it.
-        ENEMIES_MANAGER:spawnEnemy(ENEMIES_MANAGER.prototypes.alarm_analog)
+        ENEMIES_MANAGER:spawnEnemy(ENEMIES_MANAGER.prototypes.mosquito)
     end
     -- Update enemies (jitter around, increase radius, ...).
     -- ENEMIES.ALARM1:update_logic(CONTEXT)

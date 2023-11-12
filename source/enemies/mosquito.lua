@@ -1,13 +1,13 @@
 import "gameplay" -- Needed to access HEAD_X/Y in the constructor.
+import "enemy"
 
 gfx = playdate.graphics
 
-class('Mosquito').extends(Sprite)
+class('Mosquito').extends(Enemy)
 
-function Mosquito:init(sound_name)
-    Mosquito.super.init(self, sound_name)
+function Mosquito:init()
+    Mosquito.super.init(self, 'mosquito')
 
-    self.sound = SOUND[string.upper(sound_name)]
     self.collision_radius = 15
     self.jitter_intensity = 1
 
