@@ -167,7 +167,6 @@ function manage_enemies()
         ENEMIES.ALARM1:update_logic(CONTEXT)
     end
 
-    CONTEXT.awakeness = math.min(ENEMIES.ALARM1.current_bubble_radius / 100, 1)
     if CONTEXT.awakeness >= 1 then
         print("Time is Up!")
         reset_gameplay()

@@ -9,9 +9,10 @@ function Alarm:init(alarm_name)
     Alarm.super.init(self)
 
     self.current_bubble_radius = 0.0
+    self.bubble_growth_speed = 0.3
     self.sound = SOUND[string.upper(alarm_name)]
     self.collision_radius = 15
-    self.movement_speed = 0.8
+    self.movement_speed = 0.0
     self.movement_target_x = HEAD_X
     self.movement_target_y = HEAD_Y
 
@@ -19,20 +20,6 @@ function Alarm:init(alarm_name)
     self:setImage(img)
     self:addSprite()
     self:setVisible(false)
-end
-
-function Alarm:drawDebug()
-    if DRAW_DEBUG == 0 then
-        return
-    end
-    if self == nil then
-        return
-    end
-    gfx.pushContext()
-        gfx.setColor(gfx.kColorWhite)
-        gfx.setLineWidth(2)
-        gfx.drawCircleAtPoint(self.x, self.y, self.collision_radius)
-    gfx.popContext()
 end
 
 function Alarm:jitter()
@@ -94,8 +81,7 @@ function Alarm:__isTouchedByActiveArm(CONTEXT)
 end
 
 function Alarm:circleCollision(x, y, radius)
-    local total_radius = radius + self.collision_radius
-    return math.abs( self.x - x) <= total_radius and math.abs( self.y - y ) <= total_radius
+    return math.abs( self.x - x) <= radius and math.abs( self.y - y ) <= radius
 end
 
 function Alarm:start()
@@ -129,19 +115,28 @@ function Alarm:update_logic(CONTEXT)
     if CONTEXT.is_left_arm_active then
         hand = CONTEXT.player_hand_l
     end
-    if self:circleCollision(hand.x, hand.y, HAND_TOUCH_RADIUS) then
+    if self:circleCollision(hand.x, hand.y, HAND_TOUCH_RADIUS + self.collision_radius) then
         self:snooze()
         return
     end
 
-    if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS) then
+    -- TODO: This should be moved into a new mosquito enemy type.
+    if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.collision_radius) then
+        print("Mosquito hit!")
         self:snooze()
         CONTEXT.awakeness = 1
     end
+
+    if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
+        print("Alarm hit!")
+        self:snooze()
+        CONTEXT.awakeness = 1
+    end
+
 
     self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
     self:jitter()
     self:clampPosition(50, 50, 350, 190)
 
-    self.current_bubble_radius += 0.1
+    self.current_bubble_radius += self.bubble_growth_speed
 end
