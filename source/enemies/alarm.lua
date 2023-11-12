@@ -17,8 +17,11 @@ function Alarm:init(alarm_name)
     self.movement_target_y = HEAD_Y
     self.jitter_intensity = 1
 
-    img = gfx.image.new('images/animation_alarm1')
+    -- Load image visuals and animations
+    img = gfx.image.new('images/animation_alarm1') -- Chill clock state
+    anim_ring = gfx.animation.loop.new(33.33333333, gfx.imagetable.new('images/animation_alarm1-ring') , true) -- Ring
     self:setImage(img)
+
     self:addSprite()
     self:setVisible(false)
 end
@@ -139,4 +142,8 @@ function Alarm:update_logic(CONTEXT)
     self:clampPosition(50, 50, 350, 190)
 
     self.current_bubble_radius += self.bubble_growth_speed
+
+    -- Set the image frame to display.
+    -- e.g. if chill then self:setImage(img), otherwise walk or ring.
+    self:setImage(anim_ring:image())
 end
