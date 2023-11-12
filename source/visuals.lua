@@ -21,7 +21,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -29,7 +29,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -37,7 +37,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -45,7 +45,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -53,7 +53,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -101,7 +101,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         -- different types
         x = 40
         y = 10
@@ -112,7 +112,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -120,7 +120,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -136,7 +136,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -144,7 +144,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -160,7 +160,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -168,7 +168,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -185,7 +185,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
