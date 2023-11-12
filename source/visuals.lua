@@ -1,10 +1,8 @@
 gfx = playdate.graphics
 gfxi = playdate.graphics.image
 
-function main_draw()
-    gfx.sprite.redrawBackground()
-    gfx.sprite.update()
-end
+-- Image Passes
+TEXTURES = {}
 
 function draw_test_dither_patterns()
 
@@ -23,7 +21,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -31,7 +29,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -39,7 +37,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -47,7 +45,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -55,7 +53,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -103,7 +101,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         -- different types
         x = 40
         y = 10
@@ -114,7 +112,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -122,7 +120,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -138,7 +136,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -146,7 +144,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -162,7 +160,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -170,7 +168,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -187,7 +185,7 @@ function draw_test_dither_patterns()
             gfx.fillRect(0, 0, size, size)
         gfx.popContext()
         star_img:draw(x, y)
-    
+
         y += size
         star_img = gfxi.new(size, size, gfx.kColorBlack)
         gfx.pushContext(star_img)
@@ -202,25 +200,28 @@ end
 
 function draw_dream_world()
     -- programmer art for stars
-    local size = 20
-    local star_img1 = gfx.image.new(size, size, gfx.kColorBlack)
-    gfx.pushContext(star_img1)
-        gfx.setColor(gfx.kColorWhite)
-        gfx.setDitherPattern(CONTEXT.awakeness, gfx.image.kDitherTypeDiagonalLine)
-        gfx.fillRect(0, 0, size, size)
-    gfx.popContext()
-    star_img1:draw(50, 50)
-    star_img1:draw(75, 55)
+    local dither_type = gfxi.kDitherTypeBayer8x8
+    local alpha = CONTEXT.awakeness * -1
+
+    TEXTURES.star:drawFaded(50, 50, alpha, dither_type)
+    TEXTURES.star:drawFaded(75, 55, alpha, dither_type)
+    TEXTURES.star:drawFaded(45, 155, alpha, dither_type)
+    TEXTURES.star:drawFaded(330, 165, alpha, dither_type)
+    TEXTURES.star:drawFaded(355, 160, alpha, dither_type)
+
 end
 
 
 function draw_light_areas()
-    -- Draw the sprite bubble circle.
-    if ENEMIES.ALARM1:isVisible() then
-        gfx.pushContext()
-        gfx.setColor(gfx.kColorWhite)
-        gfx.fillCircleAtPoint(ENEMIES.ALARM1.x, ENEMIES.ALARM1.y, ENEMIES.ALARM1.current_bubble_radius)
-        gfx.popContext()
+    for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
+        -- Draw the sprite bubble circle.
+        if enemy:isVisible() then
+            gfx.pushContext()
+            gfx.setColor(gfx.kColorWhite)
+            gfx.setLineWidth(1)
+            gfx.drawCircleAtPoint(enemy.x, enemy.y, enemy.current_bubble_radius)
+            gfx.popContext()
+        end
     end
 end
 
@@ -253,18 +254,40 @@ function draw_game_background( x, y, width, height )
 
         draw_light_areas()
 
+        -- draw_debug_circle(ENEMIES.ALARM1.x, ENEMIES.ALARM1.y, ENEMIES.ALARM1.collision_radius)
+        draw_debug_circle(HEAD_X, HEAD_Y, HEAD_RADIUS)
     gfx.popContext()
 end
 
+function draw_debug_circle(x, y, radius)
+    if DRAW_DEBUG == 0 then
+        return
+    end
+    gfx.pushContext()
+        gfx.setColor(gfx.kColorWhite)
+        gfx.setLineWidth(2)
+        gfx.drawCircleAtPoint(x, y, radius)
+    gfx.popContext()
+end
 
 function init_visuals()
 
     CONTEXT.test_dither = false
 
-    -- Have 2 images so they can be swapped for test purposes.
-    CONTEXT.image_bg_test1 = gfxi.new("images/bg")
-    CONTEXT.image_bg_test2 = gfxi.new("images/test_screen")
-    CONTEXT.image_bg = CONTEXT.image_bg_test1
+    -- Have 2 bg images so they can be swapped for test purposes.
+    TEXTURES.bg_test1 = gfxi.new("images/bg")
+    TEXTURES.bg_test2 = gfxi.new("images/test_screen")
+    CONTEXT.image_bg = TEXTURES.bg_test1
+
+    -- Make a (programmer) star.
+    local size = 8
+    local pattern = { 0x11, 0x08, 0x18, 0x5d, 0xba, 0x18, 0x10, 0x88 }
+    TEXTURES.star = gfx.image.new(size, size, gfx.kColorBlack)
+    gfx.pushContext(TEXTURES.star)
+        gfx.setPattern(pattern)
+        gfx.fillRect(0, 0, size, size)
+    gfx.popContext()
+    TEXTURES.star:setMaskImage(TEXTURES.star)
 
     gfx.sprite.setBackgroundDrawingCallback(draw_game_background)
 

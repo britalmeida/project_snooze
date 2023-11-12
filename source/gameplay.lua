@@ -13,7 +13,7 @@ ARM_LENGTH_MAX = 180
 ARM_LENGTH_MIN = 20
 ARM_EXTEND_SPEED = 20
 
-HAND_TOUCH_RADIUS = 20
+HAND_TOUCH_RADIUS = 5
 
 ARM_L_X, ARM_L_Y = 190, 100
 ARM_R_X, ARM_R_Y = 225, 110
@@ -21,6 +21,10 @@ ARM_R_X, ARM_R_Y = 225, 110
 ARM_L_SIGN = -1
 ARM_R_SIGN = 1
 
+HEAD_X, HEAD_Y = 213, 82
+HEAD_RADIUS = 10
+
+DRAW_DEBUG = 1
 
 function init_gameplay()
 
@@ -64,7 +68,6 @@ function reset_gameplay()
     CONTEXT.awakeness = 0
     CONTEXT.enemies_snoozed = 0
 
-    ENEMIES.ALARM1:reset()
 end
 
 
@@ -153,17 +156,18 @@ end
 
 
 function manage_enemies()
-    if not ENEMIES.ALARM1:isVisible() then
+    -- print(TIMER.currentTime)
+    if TIMER.currentTime % 2000 == 0 then
         -- If no alarm clock, give a chance to trigger it.
-        if math.random(0, 256) > 250 then
-            ENEMIES.ALARM1:start()
-        end
-    else
-        -- Else update it (jitter it around, increase its radius, ...).
-        ENEMIES.ALARM1:update_logic(CONTEXT)
+        ENEMIES_MANAGER:spawnEnemy('alarm', 'alarm1')
+    end
+    -- Update enemies (jitter around, increase radius, ...).
+    -- ENEMIES.ALARM1:update_logic(CONTEXT)
+    for key, enemy in ipairs(ENEMIES_MANAGER.enemies) do
+        enemy:update_logic(CONTEXT)
     end
 
-    CONTEXT.awakeness = math.min(ENEMIES.ALARM1.current_bubble_radius / 100, 1)
+    CONTEXT.awakeness = math.min(#ENEMIES_MANAGER.enemies / 5, 1)
     if CONTEXT.awakeness >= 1 then
         print("Time is Up!")
         reset_gameplay()

@@ -31,9 +31,9 @@ function initialize()
     add_menu_entries()
 
     -- Init all the things!
+    init_sound()
     init_visuals()
     init_gameplay()
-    init_sound()
 
 end
 
@@ -56,7 +56,8 @@ function playdate.update()
 
     manage_enemies()
 
-    main_draw()
+    gfx.sprite.redrawBackground()
+    gfx.sprite.update()
 
     playdate.timer.updateTimers()
 end

@@ -1,3 +1,5 @@
+import "gameplay" -- Needed to access HEAD_X/Y in the constructor.
+
 gfx = playdate.graphics
 local Sprite = gfx.sprite
 
@@ -7,7 +9,12 @@ function Alarm:init(alarm_name)
     Alarm.super.init(self)
 
     self.current_bubble_radius = 0.0
+    self.bubble_growth_speed = 0.3
     self.sound = SOUND[string.upper(alarm_name)]
+    self.collision_radius = 15
+    self.movement_speed = 0.0
+    self.movement_target_x = HEAD_X
+    self.movement_target_y = HEAD_Y
 
     img = gfx.image.new('images/animation_alarm1')
     self:setImage(img)
@@ -17,6 +24,24 @@ end
 
 function Alarm:jitter()
     self:moveTo(self.x + math.random(-1, 1), self.y + math.random(-1, 1))
+end
+
+function Alarm:moveTowardsTarget(x, y, speed)
+    local directionX = x - self.x
+    local directionY = y - self.y
+
+    -- Calculate the distance between self and target
+    local distance = math.sqrt(directionX^2 + directionY^2)
+
+    -- Normalize the direction vector
+    directionX = directionX / distance
+    directionY = directionY / distance
+
+    -- Update the Enemy's position based on the direction and speed
+    self.x = self.x + directionX * speed
+    self.y = self.y + directionY * speed
+
+    self:moveTo(self.x + directionX * speed, self.y + directionY * speed)
 end
 
 function Alarm:clampPosition(min_x, min_y, max_x, max_y)
@@ -55,8 +80,8 @@ function Alarm:__isTouchedByActiveArm(CONTEXT)
     return true
 end
 
-function Alarm:isTouchedBySprite(sprite, radius)
-    return math.abs( self.x - sprite.x) <= radius and math.abs( self.y - sprite.y ) <= radius
+function Alarm:circleCollision(x, y, radius)
+    return math.abs( self.x - x) <= radius and math.abs( self.y - y ) <= radius
 end
 
 function Alarm:start()
@@ -66,9 +91,7 @@ function Alarm:start()
         self:moveTo(math.random(250, 350), math.random(50, 190))
     end
     self:setVisible(true)
-    if TIMER.value % 500 == 0 then
-        self.sound:play(0)
-    end
+    self.sound:play(0)
 end
 
 function Alarm:reset()
@@ -81,7 +104,6 @@ function Alarm:snooze()
     self.sound:stop()
     SOUND.SLAP_ALARM:play()
     CONTEXT.enemies_snoozed += 1
-    print(CONTEXT.enemies_snoozed)
     self:reset()
 end
 
@@ -90,13 +112,28 @@ function Alarm:update_logic(CONTEXT)
     if CONTEXT.is_left_arm_active then
         hand = CONTEXT.player_hand_l
     end
-    if self:isTouchedBySprite(hand, HAND_TOUCH_RADIUS) then
+    if self:circleCollision(hand.x, hand.y, HAND_TOUCH_RADIUS + self.collision_radius) then
         self:snooze()
         return
     end
 
+    -- TODO: This should be moved into a new mosquito enemy type.
+    if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.collision_radius) then
+        print("Mosquito hit!")
+        self:snooze()
+        CONTEXT.awakeness = 1
+    end
+
+    if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
+        print("Alarm hit!")
+        self:snooze()
+        CONTEXT.awakeness = 1
+    end
+
+
+    self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
     self:jitter()
     self:clampPosition(50, 50, 350, 190)
 
-    self.current_bubble_radius += 0.1
+    self.current_bubble_radius += self.bubble_growth_speed
 end
