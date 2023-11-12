@@ -41,6 +41,7 @@ function initialize()
 end
 
 initialize()
+enter_menu()
 
 
 function playdate.update()

@@ -13,6 +13,21 @@ function add_menu_entries()
     end)
 end
 
+function enter_menu()
+    CONTEXT.in_menu = true
+    if not SOUND.BG_LOOP_CREDITS:isPlaying() then
+        SOUND.BG_LOOP_CREDITS:play(0)
+    end
+end
+
+function exit_menu()
+    CONTEXT.in_menu = false
+    if SOUND.BG_LOOP_CREDITS:isPlaying() then
+        SOUND.BG_LOOP_CREDITS:stop()
+    end
+    reset_gameplay()
+end
+
 
 function draw_ui()
     if CONTEXT.in_menu then
@@ -47,8 +62,7 @@ function handle_menu_input()
     if CONTEXT.menu_screen == "start" then
         if playdate.buttonJustReleased( playdate.kButtonA ) then
             if CONTEXT.menu_focus_option == 0 then
-                CONTEXT.in_menu = false
-                reset_gameplay()
+                exit_menu()
             end
             if CONTEXT.menu_focus_option == 1 then
                 CONTEXT.menu_screen = "howto"
@@ -81,7 +95,6 @@ end
 
 function init_menus()
 
-    CONTEXT.in_menu = true
     CONTEXT.menu_screen = "start"
     CONTEXT.menu_focus_option = 0
 
