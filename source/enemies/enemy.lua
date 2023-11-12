@@ -135,6 +135,7 @@ function Enemy:update_logic(CONTEXT)
         self:on_hit_by_player()
         return
     end
+    self:jitter()
     self:clampPosition(0, 0, 400, 240)
 
     -- Set the image frame to display.

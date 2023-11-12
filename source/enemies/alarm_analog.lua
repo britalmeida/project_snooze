@@ -40,7 +40,6 @@ function AlarmAnalog:update_logic(CONTEXT)
     end
 
     self.current_bubble_radius += self.bubble_growth_speed
-    self:jitter()
 
     AlarmAnalog.super.update_logic(self, CONTEXT)
 end
