@@ -1,6 +1,6 @@
 gfx = playdate.graphics
 
-function gfx_draw_lines( x, y, width, height )
+function draw_game_background( x, y, width, height )
     gfx.clear(gfx.kColorWhite)
 
     CONTEXT.image_bg:draw(0, 0)
@@ -10,6 +10,17 @@ function gfx_draw_lines( x, y, width, height )
     end
 
     gfx.pushContext()
+
+    -- programmer art for stars
+    local size = 20
+    local star_img1 = gfx.image.new(size, size, gfx.kColorBlack)
+    gfx.pushContext(star_img1)
+        gfx.setColor(gfx.kColorWhite)
+        gfx.setDitherPattern(CONTEXT.awakeness, gfx.image.kDitherTypeDiagonalLine)
+        gfx.fillRect(0, 0, size, size)
+    gfx.popContext()
+    star_img1:draw(50, 50)
+    star_img1:draw(75, 55)
 
     -- Draw the arms.
     gfx.pushContext()
@@ -40,7 +51,7 @@ function init_visuals()
     CONTEXT.image_bg_test2 = gfx.image.new("images/test_screen")
     CONTEXT.image_bg = CONTEXT.image_bg_test1
 
-    gfx.sprite.setBackgroundDrawingCallback(gfx_draw_lines)
+    gfx.sprite.setBackgroundDrawingCallback(draw_game_background)
 
 end
 

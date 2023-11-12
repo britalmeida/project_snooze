@@ -57,8 +57,6 @@ function init_gameplay()
     sprite_alarm = Alarm()
     sprite_alarm:reset()
 
-    CONTEXT.is_active = false
-
     CONTEXT.sprite_alarm = sprite_alarm
 
     -- Which arm is active, left (true) or right (false).
@@ -66,6 +64,14 @@ function init_gameplay()
     CONTEXT.player_arm_l_current = player_arm_l
     CONTEXT.player_arm_r_current = player_arm_r
 
+end
+
+
+function reset_gameplay()
+    CONTEXT.awakeness = 0
+    CONTEXT.enemies_snoozed = 0
+
+    sprite_alarm:reset()
 end
 
 
@@ -162,5 +168,11 @@ function manage_clocks()
     else
         -- Else update it (jitter it around, increase its radius, ...).
         sprite_alarm:update_logic(CONTEXT)
+    end
+
+    CONTEXT.awakeness = math.min(CONTEXT.sprite_alarm.current_bubble_radius / 100, 1)
+    if CONTEXT.awakeness >= 1 then
+        print("Time is Up!")
+        reset_gameplay()
     end
 end

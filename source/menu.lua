@@ -6,6 +6,10 @@ function add_menu_entries()
 
     local menu = playdate.getSystemMenu()
 
+    local menuItem, error = menu:addMenuItem("restart", function()
+        reset_gameplay()
+    end)
+
     local checkmarkMenuItem, error = menu:addCheckmarkMenuItem("test screen", false, function(value)
         if value then
             CONTEXT.image_bg = CONTEXT.image_bg_test2

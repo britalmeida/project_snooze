@@ -13,8 +13,13 @@ gfx = playdate.graphics
 
 -- Global logic context, storing the game data.
 -- NOTE: All of its variables are defined in #initialize() and in the init functions of other files.
-CONTEXT = {}
+CONTEXT = {
+    is_active = false, -- Paused
 
+    -- Game State
+    awakeness = 0,
+    enemies_snoozed = 0,
+}
 
 function initialize()
     -- Start all systems needed by the game to start ticking
