@@ -12,6 +12,7 @@ function Alarm:init(alarm_name)
     img = gfx.image.new('images/animation_alarm1')
     self:setImage(img)
     self:addSprite()
+    self:setVisible(false)
 end
 
 function Alarm:jitter()

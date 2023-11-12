@@ -12,5 +12,6 @@
 import "alarm"
 
 ENEMIES = {
-  ALARM1 = Alarm()
+  ALARM1 = Alarm('alarm1'),
+  ALARM2 = Alarm('alarm2'),
 }
