@@ -56,8 +56,7 @@ function playdate.update()
 
     manage_enemies()
 
-    gfx.sprite.redrawBackground()
-    gfx.sprite.update()
+    main_draw()
 
     playdate.timer.updateTimers()
 end

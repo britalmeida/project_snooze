@@ -1,6 +1,10 @@
 gfx = playdate.graphics
 gfxi = playdate.graphics.image
 
+function main_draw()
+    gfx.sprite.redrawBackground()
+    gfx.sprite.update()
+end
 
 function draw_test_dither_patterns()
 
