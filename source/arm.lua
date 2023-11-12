@@ -22,13 +22,11 @@ function Arm:init(is_left)
     self.hand:setImage(image_hand)
     self.hand:setZIndex(-1)
 
-    self.hand:setCenter(0.0, 0.5)
     self.hand:moveTo(x+ARM_LENGTH_DEFAULT, y)
     self.angle_degrees = 0
     self.angle_max = 120
     self.angle_min = -120
     if is_left then
-        self.hand:setCenter(1.0, 0.5)
         self.hand:moveTo(x-ARM_LENGTH_DEFAULT, y)
         self.angle_degrees = 180
         self.angle_max = 310
