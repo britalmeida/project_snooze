@@ -4,6 +4,7 @@ SOUND = {
   BG_LOOP_1 = sp.new("sound/background_loop_stage1"),
   BG_LOOP_2 = sp.new("sound/background_loop_stage2"),
   BG_LOOP_3 = sp.new("sound/background_loop_stage3"),
+  BG_LOOP_4 = sp.new("sound/background_loop_stage4"),
   ENEMY_ALARM_ANALOG = sp.new("sound/enemy_alarm_analog"),
   ENEMY_ALARM_PHONE = sp.new("sound/enemy_alarm_phone"),
   ENEMY_ALARM_DIGITAL = sp.new("sound/enemy_alarm_digital"),

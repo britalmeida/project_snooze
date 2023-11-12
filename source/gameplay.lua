@@ -3,6 +3,7 @@ import "CoreLibs/graphics"
 import "CoreLibs/sprites"
 import "CoreLibs/timer"
 
+import "progression"
 import "enemies/enemies"
 
 gfx = playdate.graphics
@@ -168,21 +169,8 @@ end
 
 
 function manage_enemies()
-    if playdate.getElapsedTime() < 10 then
-        ENEMIES_MANAGER.proto = PROGRESSION.LVL1
-    end
-    -- print(TIMER.currentTime)
-    if
-        TIMER.currentTime >= 1000 and
-        TIMER.currentTime <= 2000 and
-        #ENEMIES_MANAGER.enemies < 4
-        then
-        -- If no alarm clock, give a chance to trigger it.
-        -- ENEMIES_MANAGER:spawnEnemy(ENEMIES_MANAGER.prototypes.mosquito)
-        ENEMIES_MANAGER:spawnRandomEnemy()
-    end
+    ENEMIES_MANAGER:spawnRandomEnemy()
     -- Update enemies (jitter around, increase radius, ...).
-    -- ENEMIES.ALARM1:update_logic(CONTEXT)
     for key, enemy in ipairs(ENEMIES_MANAGER.enemies) do
         if enemy:isVisible() == true then
             enemy:update_logic(CONTEXT)

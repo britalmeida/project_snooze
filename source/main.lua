@@ -9,6 +9,7 @@ import "enemies/enemies"
 import "gameplay"
 import "menu"
 import "visuals"
+import "progression"
 
 gfx = playdate.graphics
 
@@ -32,7 +33,7 @@ function initialize()
     add_menu_entries()
 
     -- Init all the things!
-    init_sound()
+    -- init_sound()
     init_visuals()
     init_gameplay()
 
@@ -52,6 +53,7 @@ function playdate.update()
     end
 
     CONTEXT.is_active = true
+    updateProgression()
 
     handle_input()
 

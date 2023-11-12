@@ -15,20 +15,13 @@ import "alarm_phone"
 import "mosquito"
 import "cat"
 
-PROGRESSION = {
-  LVL1 = {Cat, Cat},
-  --LVL2 = 'alarm3', 'alarm4',
-  --LVL3 = 'alarm5', 'alarm6',
-}
-
-
 ENEMIES_MANAGER = {
   enemies = {},
   prototypes = {
     alarm_analog = AlarmAnalog,
     mosquito = Mosquito,
   },
-  proto = {}
+  last_spawned_enemy_time = 0,
 }
 
 function ENEMIES_MANAGER:spawnEnemy(prototype)
@@ -38,13 +31,19 @@ function ENEMIES_MANAGER:spawnEnemy(prototype)
 end
 
 function ENEMIES_MANAGER:spawnRandomEnemy()
-  local randomIndex = math.random(#ENEMIES_MANAGER.proto)
+  local t = playdate.getCurrentTimeMilliseconds()
+  if t - ENEMIES_MANAGER.last_spawned_enemy_time < PROGRESSION.SPAWN_INTERVAL_MS then
+    return
+  end
+  ENEMIES_MANAGER.last_spawned_enemy_time = t
+  print('len' .. #PROGRESSION.ENEMIES_SPAWNABLE)
+  local randomIndex = math.random(#PROGRESSION.ENEMIES_SPAWNABLE)
+  print('index' .. randomIndex)
   -- Init a random enemy from the list
-  local enemy = ENEMIES_MANAGER.proto[randomIndex]()
+  local prototype = PROGRESSION.ENEMIES_SPAWNABLE[randomIndex]
+  print(prototype)
+  local enemy = prototype()
+  print(enemy)
   enemy:start()
   table.insert(self.enemies, enemy)
-end
-
-function ENEMIES_MANAGER:setEnemiesPrototypes()
-
 end
