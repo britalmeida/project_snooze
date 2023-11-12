@@ -4,6 +4,9 @@ gfxi = playdate.graphics.image
 -- Image Passes
 TEXTURES = {}
 
+
+-- Development only
+
 function draw_test_dither_patterns()
 
     local size = 20
@@ -197,6 +200,19 @@ function draw_test_dither_patterns()
     gfx.popContext()
 end
 
+function draw_debug_circle(x, y, radius)
+    if DRAW_DEBUG == 0 then
+        return
+    end
+    gfx.pushContext()
+        gfx.setColor(gfx.kColorWhite)
+        gfx.setLineWidth(2)
+        gfx.drawCircleAtPoint(x, y, radius)
+    gfx.popContext()
+end
+
+
+-- Draw passes
 
 function draw_dream_world()
     -- programmer art for stars
@@ -219,7 +235,7 @@ function draw_light_areas()
             gfx.pushContext()
             gfx.setColor(gfx.kColorWhite)
             gfx.setLineWidth(1)
-            gfx.drawCircleAtPoint(enemy.x, enemy.y, enemy.current_bubble_radius)
+            gfx.fillCircleAtPoint(enemy.x, enemy.y, enemy.current_bubble_radius)
             gfx.popContext()
         end
     end
@@ -259,16 +275,6 @@ function draw_game_background( x, y, width, height )
     gfx.popContext()
 end
 
-function draw_debug_circle(x, y, radius)
-    if DRAW_DEBUG == 0 then
-        return
-    end
-    gfx.pushContext()
-        gfx.setColor(gfx.kColorWhite)
-        gfx.setLineWidth(2)
-        gfx.drawCircleAtPoint(x, y, radius)
-    gfx.popContext()
-end
 
 function init_visuals()
 
