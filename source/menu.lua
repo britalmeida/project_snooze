@@ -11,11 +11,7 @@ function add_menu_entries()
     end)
 
     local checkmarkMenuItem, error = menu:addCheckmarkMenuItem("test screen", false, function(value)
-        if value then
-            CONTEXT.image_bg = TEXTURES.bg_test2
-        else
-            CONTEXT.image_bg = TEXTURES.bg_test1
-        end
+        CONTEXT.test_screen = value
     end)
 
     local checkmarkMenuItem, error = menu:addCheckmarkMenuItem("test dither", false, function(value)

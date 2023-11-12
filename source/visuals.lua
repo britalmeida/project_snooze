@@ -229,7 +229,10 @@ end
 
 
 function draw_light_areas()
-    TEXTURES.light_areas:draw(0, 0)
+    gfx.pushContext()
+        gfx.setImageDrawMode(gfx.kDrawModeXOR)
+        TEXTURES.light_areas:draw(0, 0)
+    gfx.popContext()
 end
 
 function calculate_light_areas()
@@ -249,36 +252,37 @@ end
 
 
 function draw_game_background( x, y, width, height )
-    gfx.clear(gfx.kColorWhite)
-
-    CONTEXT.image_bg:draw(0, 0)
-
-    if not CONTEXT.is_active then
+    if CONTEXT.test_screen then
+        TEXTURES.bg_test2:draw(0, 0)
         return
     end
 
+    -- Draw full screen background.
     gfx.pushContext()
-
-        if CONTEXT.test_dither then
-            draw_test_dither_patterns()
-        end
-
-        draw_dream_world()
-
-        -- Draw the arms.
-        gfx.pushContext()
-        gfx.setLineCapStyle(gfx.kLineCapStyleRound)
-        gfx.setColor(gfx.kColorWhite)
-        gfx.setLineWidth(5)
-        gfx.drawLine(CONTEXT.player_arm_l_current)
-        gfx.drawLine(CONTEXT.player_arm_r_current)
-        gfx.popContext()
-
-        draw_light_areas()
-
-        -- draw_debug_circle(ENEMIES.ALARM1.x, ENEMIES.ALARM1.y, ENEMIES.ALARM1.collision_radius)
-        draw_debug_circle(HEAD_X, HEAD_Y, HEAD_RADIUS)
+        --gfx.setStencilImage(TEXTURES.light_areas)
+        TEXTURES.bg_test1:draw(0, 0)
     gfx.popContext()
+
+
+    if CONTEXT.test_dither then
+        draw_test_dither_patterns()
+    end
+
+    draw_dream_world()
+
+    -- Draw the arms.
+    gfx.pushContext()
+    gfx.setLineCapStyle(gfx.kLineCapStyleRound)
+    gfx.setColor(gfx.kColorWhite)
+    gfx.setLineWidth(5)
+    gfx.drawLine(CONTEXT.player_arm_l_current)
+    gfx.drawLine(CONTEXT.player_arm_r_current)
+    gfx.popContext()
+
+    draw_light_areas()
+
+    -- draw_debug_circle(ENEMIES.ALARM1.x, ENEMIES.ALARM1.y, ENEMIES.ALARM1.collision_radius)
+    draw_debug_circle(HEAD_X, HEAD_Y, HEAD_RADIUS)
 end
 
 
@@ -289,7 +293,6 @@ function init_visuals()
     -- Have 2 bg images so they can be swapped for test purposes.
     TEXTURES.bg_test1 = gfxi.new("images/bg")
     TEXTURES.bg_test2 = gfxi.new("images/test_screen")
-    CONTEXT.image_bg = TEXTURES.bg_test1
 
     -- Make a (programmer) star.
     local size = 8
