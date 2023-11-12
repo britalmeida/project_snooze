@@ -36,6 +36,7 @@ function initialize()
     -- init_sound()
     init_visuals()
     init_gameplay()
+    init_menus()
 
 end
 
