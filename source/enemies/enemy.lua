@@ -5,8 +5,7 @@ class('Enemy').extends(Sprite)
 
 function Enemy:init(sound_name)
     Enemy.super.init(self)
-
-    self.sound = SOUND[string.upper(sound_name)]
+    self.sound = SOUND[string.upper('enemy_' .. sound_name)]
     self.collision_radius = 15
     self.jitter_intensity = 1
 
@@ -93,6 +92,10 @@ function Enemy:start()
     self.sound:play(0)
 end
 
+function Enemy:on_hit_by_player()
+    self:on_hit()
+end
+
 function Enemy:on_hit()
     -- Should be called whenever player hits enemy or enemy hits player.
     self.sound:stop()
@@ -105,5 +108,13 @@ function Enemy:on_hit()
 end
 
 function Enemy:update_logic(CONTEXT)
+    hand = CONTEXT.player_hand_r
+    if CONTEXT.is_left_arm_active then
+        hand = CONTEXT.player_hand_l
+    end
+    if self:circleCollision(hand.x, hand.y, HAND_TOUCH_RADIUS + self.collision_radius) then
+        self:on_hit_by_player()
+        return
+    end
     self:clampPosition(0, 0, 400, 240)
 end

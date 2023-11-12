@@ -163,12 +163,14 @@ function manage_enemies()
         #ENEMIES_MANAGER.enemies < 4
         then
         -- If no alarm clock, give a chance to trigger it.
-        ENEMIES_MANAGER:spawnEnemy('alarm', 'alarm1')
+        ENEMIES_MANAGER:spawnEnemy(ENEMIES_MANAGER.prototypes.mosquito)
     end
     -- Update enemies (jitter around, increase radius, ...).
     -- ENEMIES.ALARM1:update_logic(CONTEXT)
     for key, enemy in ipairs(ENEMIES_MANAGER.enemies) do
-        enemy:update_logic(CONTEXT)
+        if enemy:isVisible() == true then
+            enemy:update_logic(CONTEXT)
+        end
     end
 
     CONTEXT.awakeness = math.min(#ENEMIES_MANAGER.enemies / 5, 1)
