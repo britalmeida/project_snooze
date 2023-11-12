@@ -156,14 +156,18 @@ end
 
 
 function manage_enemies()
+    if playdate.getElapsedTime() < 10 then
+        ENEMIES_MANAGER.proto = PROGRESSION.LVL1
+    end
     -- print(TIMER.currentTime)
     if
-        TIMER.currentTime >= 1500 and
+        TIMER.currentTime >= 1000 and
         TIMER.currentTime <= 2000 and
         #ENEMIES_MANAGER.enemies < 4
         then
         -- If no alarm clock, give a chance to trigger it.
-        ENEMIES_MANAGER:spawnEnemy(ENEMIES_MANAGER.prototypes.mosquito)
+        -- ENEMIES_MANAGER:spawnEnemy(ENEMIES_MANAGER.prototypes.mosquito)
+        ENEMIES_MANAGER:spawnRandomEnemy()
     end
     -- Update enemies (jitter around, increase radius, ...).
     -- ENEMIES.ALARM1:update_logic(CONTEXT)
