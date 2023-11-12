@@ -68,7 +68,6 @@ function reset_gameplay()
     CONTEXT.awakeness = 0
     CONTEXT.enemies_snoozed = 0
 
-    ENEMIES.ALARM1:reset()
 end
 
 
@@ -157,16 +156,18 @@ end
 
 
 function manage_enemies()
-    if not ENEMIES.ALARM1:isVisible() then
+    -- print(TIMER.currentTime)
+    if TIMER.currentTime % 2000 == 0 then
         -- If no alarm clock, give a chance to trigger it.
-        if math.random(0, 256) > 250 then
-            ENEMIES.ALARM1:start()
-        end
-    else
-        -- Else update it (jitter it around, increase its radius, ...).
-        ENEMIES.ALARM1:update_logic(CONTEXT)
+        ENEMIES_MANAGER:spawnEnemy('alarm', 'alarm1')
+    end
+    -- Update enemies (jitter around, increase radius, ...).
+    -- ENEMIES.ALARM1:update_logic(CONTEXT)
+    for key, enemy in ipairs(ENEMIES_MANAGER.enemies) do
+        enemy:update_logic(CONTEXT)
     end
 
+    CONTEXT.awakeness = math.min(#ENEMIES_MANAGER.enemies / 5, 1)
     if CONTEXT.awakeness >= 1 then
         print("Time is Up!")
         reset_gameplay()

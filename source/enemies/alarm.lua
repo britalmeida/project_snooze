@@ -92,9 +92,7 @@ function Alarm:start()
         self:moveTo(math.random(250, 350), math.random(50, 190))
     end
     self:setVisible(true)
-    if TIMER.value % 500 == 0 then
-        self.sound:play(0)
-    end
+    self.sound:play(0)
 end
 
 function Alarm:reset()
@@ -107,7 +105,6 @@ function Alarm:snooze()
     self.sound:stop()
     SOUND.SLAP_ALARM:play()
     CONTEXT.enemies_snoozed += 1
-    print(CONTEXT.enemies_snoozed)
     self:reset()
 end
 
