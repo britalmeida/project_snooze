@@ -68,8 +68,14 @@ function Alarm:reset()
     self.current_bubble_radius = 0.0
     self:setScale(1.0)
     self:setVisible(false)
+end
+
+function Alarm:snooze()
     SOUND.ALARM1:stop()
     SOUND.SLAP_ALARM:play()
+    CONTEXT.enemies_snoozed += 1
+    print(CONTEXT.enemies_snoozed)
+    self:reset()
 end
 
 function Alarm:update_logic(CONTEXT)
@@ -83,7 +89,7 @@ function Alarm:update_logic(CONTEXT)
     elseif curr_scale == 2.0 then
         self:setScale(2.1)
     elseif curr_scale == 2.1 then
-        self:reset()
+        self:snooze()
         return
     end
 
