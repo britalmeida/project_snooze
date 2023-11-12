@@ -293,15 +293,16 @@ function draw_game_background( x, y, width, height )
     draw_dream_world()
 
 
-    TEXTURES.armpit:draw(170, 100)
-    TEXTURES.armpit:draw(210, 100)
+    TEXTURES.armpit:draw(173, 103)
+    TEXTURES.armpit:draw(211, 105)
+
+    TEXTURES.body:draw(0, 0)
 
     draw_arm(CONTEXT.player_arm_l_current)
     draw_arm(CONTEXT.player_arm_r_current)
 
-    TEXTURES.body:draw(0, 0)
 
-    
+
     draw_light_areas()
 
     -- draw_debug_circle(ENEMIES.ALARM1.x, ENEMIES.ALARM1.y, ENEMIES.ALARM1.collision_radius)
