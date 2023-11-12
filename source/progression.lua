@@ -8,7 +8,7 @@ local function isInRange(number, min, max)
   return number >= min and number <= max
 end
 
-local multiplier = 2
+local multiplier = 1
 
 local LVL2_THRESHOLD = 8 * multiplier
 local LVL3_THRESHOLD = 16 * multiplier
@@ -17,7 +17,7 @@ local LVL4_THRESHOLD = 24 * multiplier
 PROGRESSION_PLAN = {
   LVL1 = {
     ID = 1,
-    ENEMIES_SPAWNABLE = {Cat, Cat},
+    ENEMIES_SPAWNABLE = {AlarmAnalog, AlarmDigital},
     MUSIC = SOUND.BG_LOOP_1,
     SPAWN_INTERVAL_S = 3,
   },
@@ -43,7 +43,7 @@ PROGRESSION_PLAN = {
 
 PROGRESSION = PROGRESSION_PLAN.LVL1
 
-local function initProgressionLevel(level)
+function initProgressionLevel(level)
   print('Level: ' .. level.ID)
   if PROGRESSION.MUSIC:isPlaying() then
     PROGRESSION.MUSIC:stop()
@@ -51,8 +51,6 @@ local function initProgressionLevel(level)
   PROGRESSION = level
   PROGRESSION.MUSIC:play(0)
 end
-
-initProgressionLevel(PROGRESSION_PLAN.LVL1)
 
 function updateProgression()
   local t = playdate.getElapsedTime()
