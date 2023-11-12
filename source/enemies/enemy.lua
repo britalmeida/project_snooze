@@ -12,6 +12,9 @@ function Enemy:init(sound_name)
     self.collision_radius = 15
     self.jitter_intensity = 1
 
+    self.current_bubble_radius = 0.0
+    self.bubble_growth_speed = 0.3
+
     img = gfx.image.new('images/animation_alarm1')
     self:setImage(img)
     self:addSprite()

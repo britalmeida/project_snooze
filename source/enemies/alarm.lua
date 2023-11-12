@@ -8,11 +8,12 @@ class('Alarm').extends(Enemy)
 function Alarm:init(sound_name)
     Alarm.super.init(self, sound_name)
 
-    self.current_bubble_radius = 0.0
-    self.bubble_growth_speed = 0.3
     self.sound = SOUND[string.upper(sound_name)]
     self.collision_radius = 15
     self.jitter_intensity = 1
+
+    self.current_bubble_radius = 0.0
+    self.bubble_growth_speed = 0.3
 
     -- Load image visuals and animations
     img = gfx.image.new('images/animation_alarm1') -- Chill clock state
@@ -49,13 +50,12 @@ function Alarm:update_logic(CONTEXT)
     end
 
     if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
-        print("Alarm hit!")
         self:snooze()
         CONTEXT.awakeness = 1
     end
 
-    self:jitter()
     self.current_bubble_radius += self.bubble_growth_speed
+    self:jitter()
 
     Alarm.super.update_logic(self, CONTEXT)
     -- Set the image frame to display.
