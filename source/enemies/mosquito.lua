@@ -6,6 +6,7 @@ class('Mosquito').extends(Enemy)
 
 function Mosquito:init()
     Mosquito.super.init(self)
+    self.name = 'mosquito'
     self.collision_radius = 15
     self.jitter_intensity = 1
 

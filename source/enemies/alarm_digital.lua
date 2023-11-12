@@ -5,6 +5,7 @@ class('AlarmDigital').extends(AlarmAnalog)
 function AlarmDigital:init()
     AlarmDigital.super.init(self)
 
+    self.name = 'alarm_digital'
     self.sound_loop = SOUND['ENEMY_ALARM_DIGITAL']
     self.sound_slap = SOUND['SLAP_ALARM']
 

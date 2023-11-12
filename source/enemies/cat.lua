@@ -5,6 +5,7 @@ class('Cat').extends(Enemy)
 function Cat:init()
     Cat.super.init(self)
     -- Sound
+    self.name = 'cat'
     self.sound_loop = SOUND['ENEMY_CAT']
     self.sound_slap = SOUND['SLAP_CAT']
 
