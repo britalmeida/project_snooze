@@ -58,5 +58,5 @@ function Cat:update_logic()
     self.current_bubble_radius += self.bubble_growth_speed
     self.current_bubble_radius = math.max(self.min_bubble_radius, self.current_bubble_radius)
 
-    AlarmAnalog.super.update_logic(self, CONTEXT)
+    Cat.super.update_logic(self, CONTEXT)
 end

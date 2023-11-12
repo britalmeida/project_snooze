@@ -1,5 +1,8 @@
 import "enemies/alarm_analog"
+import "enemies/alarm_digital"
+import "enemies/alarm_phone"
 import "enemies/mosquito"
+import "enemies/cat"
 
 local function isInRange(number, min, max)
   return number >= min and number <= max
@@ -12,19 +15,19 @@ local LVL4_THRESHOLD = 24000
 PROGRESSION_PLAN = {
   LVL1 = {
     ID = 1,
-    ENEMIES_SPAWNABLE = {Mosquito, Mosquito},
+    ENEMIES_SPAWNABLE = {AlarmDigital, AlarmAnalog},
     MUSIC = SOUND.BG_LOOP_1,
     SPAWN_INTERVAL_MS = 2000,
   },
   LVL2 = {
     ID = 2,
-    ENEMIES_SPAWNABLE = {Mosquito, Mosquito},
+    ENEMIES_SPAWNABLE = {AlarmPhone, AlarmAnalog},
     MUSIC = SOUND.BG_LOOP_2,
     SPAWN_INTERVAL_MS = 2000,
   },
   LVL3 = {
     ID = 3,
-    ENEMIES_SPAWNABLE = {Mosquito, Mosquito},
+    ENEMIES_SPAWNABLE = {Cat, Mosquito},
     MUSIC = SOUND.BG_LOOP_3,
     SPAWN_INTERVAL_MS = 2000,
   },
@@ -32,7 +35,7 @@ PROGRESSION_PLAN = {
     ID = 4,
     ENEMIES_SPAWNABLE = {Mosquito, Mosquito},
     MUSIC = SOUND.BG_LOOP_4,
-    SPAWN_INTERVAL_MS = 1000,
+    SPAWN_INTERVAL_MS = 2000,
   }
 }
 

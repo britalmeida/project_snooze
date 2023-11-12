@@ -1,4 +1,3 @@
-import "gameplay" -- Needed to access HEAD_X/Y in the constructor.
 import "enemy"
 
 gfx = playdate.graphics
