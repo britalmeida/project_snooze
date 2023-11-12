@@ -231,8 +231,6 @@ function draw_game_background( x, y, width, height )
     if not CONTEXT.is_active then
         return
     end
-
-    ENEMIES.ALARM1:drawDebug()
  
     gfx.pushContext()
 
@@ -253,9 +251,21 @@ function draw_game_background( x, y, width, height )
 
         draw_light_areas()
 
+        draw_debug_circle(ENEMIES.ALARM1.x, ENEMIES.ALARM1.y, ENEMIES.ALARM1.collision_radius)
+        draw_debug_circle(HEAD_X, HEAD_Y, HEAD_RADIUS)
     gfx.popContext()
 end
 
+function draw_debug_circle(x, y, radius)
+    if DRAW_DEBUG == 0 then
+        return
+    end
+    gfx.pushContext()
+        gfx.setColor(gfx.kColorWhite)
+        gfx.setLineWidth(2)
+        gfx.drawCircleAtPoint(x, y, radius)
+    gfx.popContext()
+end
 
 function init_visuals()
 
