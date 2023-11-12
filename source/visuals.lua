@@ -234,7 +234,7 @@ function draw_game_background( x, y, width, height )
     if not CONTEXT.is_active then
         return
     end
- 
+
     gfx.pushContext()
 
         if CONTEXT.test_dither then

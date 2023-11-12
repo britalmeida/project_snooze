@@ -31,9 +31,9 @@ function initialize()
     add_menu_entries()
 
     -- Init all the things!
+    init_sound()
     init_visuals()
     init_gameplay()
-    init_sound()
 
 end
 

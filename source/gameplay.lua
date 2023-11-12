@@ -156,11 +156,10 @@ end
 
 
 function manage_enemies()
-    if #ENEMIES_MANAGER.enemies == 0 then
+    -- print(TIMER.currentTime)
+    if TIMER.currentTime % 2000 == 0 then
         -- If no alarm clock, give a chance to trigger it.
-        if math.random(0, 256) > 250 then
-            ENEMIES_MANAGER:spawnEnemy('alarm', 'alarm1')
-        end
+        ENEMIES_MANAGER:spawnEnemy('alarm', 'alarm1')
     end
     -- Update enemies (jitter around, increase radius, ...).
     -- ENEMIES.ALARM1:update_logic(CONTEXT)
@@ -168,6 +167,7 @@ function manage_enemies()
         enemy:update_logic(CONTEXT)
     end
 
+    CONTEXT.awakeness = math.min(#ENEMIES_MANAGER.enemies / 5, 1)
     if CONTEXT.awakeness >= 1 then
         print("Time is Up!")
         reset_gameplay()
