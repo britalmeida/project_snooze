@@ -46,37 +46,33 @@ initialize()
 function playdate.update()
     -- Called before every frame is drawn.
 
-    -- If crank is docked, pause the game.
-    if playdate.isCrankDocked() then
-        CONTEXT.is_active = false
-        gfx.sprite.update()
-        return
-    end
-
     CONTEXT.is_active = true
 
-    if CONTEXT.awakeness >= 1 then
-        if playdate.buttonIsPressed( playdate.kButtonA ) then
-            reset_gameplay()
-        end
-
+    if CONTEXT.in_menu then
+        handle_menu_input()
     else
-        updateProgression()
 
-        handle_input()
-
-        manage_enemies()
-        calculate_light_areas()
-
-        -- Game Over!
         if CONTEXT.awakeness >= 1 then
-            PROGRESSION.MUSIC:stop()
-            SOUND.DEATH:play()
-            for _, t in ipairs(playdate.timer.allTimers()) do
-                t:remove()
+            if playdate.buttonIsPressed( playdate.kButtonA ) then
+                reset_gameplay()
             end
-            for _, e in ipairs(ENEMIES_MANAGER.enemies) do
-                e.sound_loop:stop()
+
+        else
+            updateProgression()
+            handle_input()
+            manage_enemies()
+            calculate_light_areas()
+
+            -- Game Over!
+            if CONTEXT.awakeness >= 1 then
+                PROGRESSION.MUSIC:stop()
+                SOUND.DEATH:play()
+                for _, t in ipairs(playdate.timer.allTimers()) do
+                    t:remove()
+                end
+                for _, e in ipairs(ENEMIES_MANAGER.enemies) do
+                    e.sound_loop:stop()
+                end
             end
         end
     end
