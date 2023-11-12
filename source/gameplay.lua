@@ -10,8 +10,8 @@ import "arm"
 gfx = playdate.graphics
 
 -- Global static defines
-ARM_LENGTH_DEFAULT = 80
-ARM_LENGTH_MAX = 180
+ARM_LENGTH_DEFAULT = 40
+ARM_LENGTH_MAX = 120
 ARM_LENGTH_MIN = 20
 ARM_EXTEND_SPEED = 20
 
@@ -44,6 +44,12 @@ end
 function reset_gameplay()
     CONTEXT.awakeness = 0
     CONTEXT.enemies_snoozed = 0
+    for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
+        enemy:remove()
+    end
+    ENEMIES_MANAGER.enemies = {}
+    PROGRESSION = PROGRESSION_PLAN.LVL1
+    playdate.resetElapsedTime()
 end
 
 
@@ -81,9 +87,11 @@ function manage_enemies()
         end
     end
 
-    CONTEXT.awakeness = math.min(#ENEMIES_MANAGER.enemies / 5, 1)
-    if CONTEXT.awakeness >= 1 then
-        print("Time is Up!")
-        reset_gameplay()
+    local sumRadius = 0
+    for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
+        if enemy:isVisible() then
+            sumRadius = sumRadius + enemy.current_bubble_radius
+        end
     end
+    CONTEXT.awakeness = math.min(sumRadius / 100, 1)
 end

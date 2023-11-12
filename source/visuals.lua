@@ -254,14 +254,18 @@ end
 function calculate_light_areas()
     TEXTURES.light_areas:clear(gfx.kColorClear)
     gfx.pushContext(TEXTURES.light_areas)
-        gfx.setColor(gfx.kColorWhite)
 
+        -- Draw light bubbles for the visible enemies.
+        gfx.setColor(gfx.kColorWhite)
         for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
-            -- Draw the sprite bubble circle.
             if enemy:isVisible() then
                 gfx.fillCircleAtPoint(enemy.x, enemy.y, enemy.current_bubble_radius)
             end
         end
+
+        -- Draw sunray.
+        --gfx.setDitherPattern(0.05, gfxi.kDitherTypeBayer8x8)
+        --gfx.fillPolygon(200, 32, 205, 32, 380, 240, 350, 240)
 
     gfx.popContext()
 end
@@ -300,25 +304,23 @@ function draw_character()
     TEXTURES.armpit:draw(173, 103)
     TEXTURES.armpit:draw(211, 105)
     TEXTURES.body:draw(0, 0)
+
+    if CONTEXT.awakeness >= 0.9 then
+        TEXTURES.head_awake:draw(178, 48)
+    else
+        TEXTURES.head_asleep:draw(178, 48)
+    end
 end
 
 
 function draw_game_background( x, y, width, height )
-    if CONTEXT.test_screen then
-        TEXTURES.bg_test2:draw(0, 0)
-        return
-    end
 
     -- Draw full screen background.
     gfx.pushContext()
         --gfx.setStencilImage(TEXTURES.light_areas)
-        TEXTURES.bg_test1:draw(0, 0)
+        TEXTURES.bg:draw(0, 0)
     gfx.popContext()
 
-
-    if CONTEXT.test_dither then
-        draw_test_dither_patterns()
-    end
 end
 
 
@@ -326,12 +328,12 @@ function init_visuals()
 
     CONTEXT.test_dither = false
 
-    -- Have 2 bg images so they can be swapped for test purposes.
-    TEXTURES.bg_test1 = gfxi.new("images/bg")
-    TEXTURES.bg_test2 = gfxi.new("images/test_screen")
-    -- Load other layers.
+    -- Load other image layers.
+    TEXTURES.bg = gfxi.new("images/bg")
     TEXTURES.body = gfxi.new("images/body")
     TEXTURES.armpit = gfxi.new("images/shoulder_stump")
+    TEXTURES.head_asleep = gfxi.new("images/animation_hero-asleep")
+    TEXTURES.head_awake = gfxi.new("images/animation_hero-awake")
 
     -- Make a (programmer) star.
     local size = 8
