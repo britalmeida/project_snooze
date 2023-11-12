@@ -152,7 +152,7 @@ function handle_input()
 end
 
 
-function manage_clocks()
+function manage_enemies()
     if not ENEMIES.ALARM1:isVisible() then
         -- If no alarm clock, give a chance to trigger it.
         if math.random(0, 256) > 250 then

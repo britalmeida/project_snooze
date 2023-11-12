@@ -1,15 +1,15 @@
 local sp <const> = playdate.sound.sampleplayer
 
 SOUND = {
+  BG_LOOP_1 = sp.new("sound/background_loop_stage1"),
+  BG_LOOP_2 = sp.new("sound/background_loop_stage2"),
+  BG_LOOP_3 = sp.new("sound/background_loop_stage3"),
   ALARM1 = sp.new("sound/alarm1"),
   ALARM2 = sp.new("sound/alarm2"),
   ALARM3 = sp.new("sound/alarm3"),
   ALARM4 = sp.new("sound/alarm4"),
   ALARM5 = sp.new("sound/alarm5"),
   ALARM6 = sp.new("sound/alarm6"),
-  BG_LOOP_1 = sp.new("sound/background_loop_stage1"),
-  BG_LOOP_2 = sp.new("sound/background_loop_stage2"),
-  BG_LOOP_3 = sp.new("sound/background_loop_stage3"),
   CAT_MEOW = sp.new("sound/cat_meow"),
   CURTAIN_CLOSE = sp.new("sound/curtain_close"),
   SLAP_ALARM = sp.new("sound/slap_alarm"),

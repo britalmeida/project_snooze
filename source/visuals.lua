@@ -195,6 +195,32 @@ function draw_test_dither_patterns()
     gfx.popContext()
 end
 
+
+function draw_dream_world()
+    -- programmer art for stars
+    local size = 20
+    local star_img1 = gfx.image.new(size, size, gfx.kColorBlack)
+    gfx.pushContext(star_img1)
+        gfx.setColor(gfx.kColorWhite)
+        gfx.setDitherPattern(CONTEXT.awakeness, gfx.image.kDitherTypeDiagonalLine)
+        gfx.fillRect(0, 0, size, size)
+    gfx.popContext()
+    star_img1:draw(50, 50)
+    star_img1:draw(75, 55)
+end
+
+
+function draw_light_areas()
+    -- Draw the sprite bubble circle.
+    if ENEMIES.ALARM1:isVisible() then
+        gfx.pushContext()
+        gfx.setColor(gfx.kColorWhite)
+        gfx.fillCircleAtPoint(ENEMIES.ALARM1.x, ENEMIES.ALARM1.y, ENEMIES.ALARM1.current_bubble_radius)
+        gfx.popContext()
+    end
+end
+
+
 function draw_game_background( x, y, width, height )
     gfx.clear(gfx.kColorWhite)
 
@@ -206,38 +232,22 @@ function draw_game_background( x, y, width, height )
 
     gfx.pushContext()
 
-    if CONTEXT.test_dither then
-        draw_test_dither_patterns()
-    end
+        if CONTEXT.test_dither then
+            draw_test_dither_patterns()
+        end
 
-    -- programmer art for stars
-    local size = 20
-    local star_img1 = gfx.image.new(size, size, gfx.kColorBlack)
-    gfx.pushContext(star_img1)
-        gfx.setColor(gfx.kColorWhite)
-        gfx.setDitherPattern(CONTEXT.awakeness, gfx.image.kDitherTypeDiagonalLine)
-        gfx.fillRect(0, 0, size, size)
-    gfx.popContext()
-    star_img1:draw(50, 50)
-    star_img1:draw(75, 55)
+        draw_dream_world()
 
-    -- Draw the arms.
-    gfx.pushContext()
-    gfx.setLineCapStyle(gfx.kLineCapStyleRound)
-    gfx.setColor(gfx.kColorWhite)
-    gfx.setLineWidth(5)
-    gfx.drawLine(CONTEXT.player_arm_l_current)
-    gfx.drawLine(CONTEXT.player_arm_r_current)
-    gfx.popContext()
-
-    -- Draw the sprite bubble circle.
-    if ENEMIES.ALARM1:isVisible() then
+        -- Draw the arms.
         gfx.pushContext()
+        gfx.setLineCapStyle(gfx.kLineCapStyleRound)
         gfx.setColor(gfx.kColorWhite)
-        gfx.setLineWidth(1)
-        gfx.drawCircleAtPoint(ENEMIES.ALARM1.x, ENEMIES.ALARM1.y, ENEMIES.ALARM1.current_bubble_radius)
+        gfx.setLineWidth(5)
+        gfx.drawLine(CONTEXT.player_arm_l_current)
+        gfx.drawLine(CONTEXT.player_arm_r_current)
         gfx.popContext()
-    end
+
+        draw_light_areas()
 
     gfx.popContext()
 end
