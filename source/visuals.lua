@@ -229,16 +229,22 @@ end
 
 
 function draw_light_areas()
-    for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
-        -- Draw the sprite bubble circle.
-        if enemy:isVisible() then
-            gfx.pushContext()
-            gfx.setColor(gfx.kColorWhite)
-            gfx.setLineWidth(1)
-            gfx.fillCircleAtPoint(enemy.x, enemy.y, enemy.current_bubble_radius)
-            gfx.popContext()
+    TEXTURES.light_areas:draw(0, 0)
+end
+
+function calculate_light_areas()
+    TEXTURES.light_areas:clear(gfx.kColorClear)
+    gfx.pushContext(TEXTURES.light_areas)
+        gfx.setColor(gfx.kColorWhite)
+
+        for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
+            -- Draw the sprite bubble circle.
+            if enemy:isVisible() then
+                gfx.fillCircleAtPoint(enemy.x, enemy.y, enemy.current_bubble_radius)
+            end
         end
-    end
+
+    gfx.popContext()
 end
 
 
@@ -288,12 +294,15 @@ function init_visuals()
     -- Make a (programmer) star.
     local size = 8
     local pattern = { 0x11, 0x08, 0x18, 0x5d, 0xba, 0x18, 0x10, 0x88 }
-    TEXTURES.star = gfx.image.new(size, size, gfx.kColorBlack)
+    TEXTURES.star = gfxi.new(size, size, gfx.kColorBlack)
     gfx.pushContext(TEXTURES.star)
         gfx.setPattern(pattern)
         gfx.fillRect(0, 0, size, size)
     gfx.popContext()
     TEXTURES.star:setMaskImage(TEXTURES.star)
+
+    -- Screen sized texture where the light bubbles and sun render to.
+    TEXTURES.light_areas = gfxi.new(400, 240, gfx.kColorClear)
 
     gfx.sprite.setBackgroundDrawingCallback(draw_game_background)
 
