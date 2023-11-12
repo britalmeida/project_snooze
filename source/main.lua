@@ -57,17 +57,29 @@ function playdate.update()
 
     if CONTEXT.awakeness >= 1 then
         if playdate.buttonIsPressed( playdate.kButtonA ) then
-            print("Restart!")
             reset_gameplay()
         end
+
+    else
+        updateProgression()
+
+        handle_input()
+
+        manage_enemies()
+        calculate_light_areas()
+
+        -- Game Over!
+        if CONTEXT.awakeness >= 1 then
+            PROGRESSION.MUSIC:stop()
+            SOUND.DEATH:play()
+            for _, t in ipairs(playdate.timer.allTimers()) do
+                t:remove()
+            end
+            for _, e in ipairs(ENEMIES_MANAGER.enemies) do
+                e.sound_loop:stop()
+            end
+        end
     end
-
-    updateProgression()
-
-    handle_input()
-
-    manage_enemies()
-    calculate_light_areas()
 
     gfx.sprite.redrawBackground()
     gfx.sprite.update()

@@ -16,6 +16,7 @@ SOUND = {
   SLAP_CAT = sp.new("sound/slap_cat"),
   WINDOW_OPEN_LOOP = sp.new("sound/window_open_loop"),
   CURTAIN_CLOSE = sp.new("sound/curtain_close"),
+  DEATH = sp.new("sound/death"),
 }
 
 

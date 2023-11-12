@@ -76,6 +76,7 @@ function reset_gameplay()
     end
     ENEMIES_MANAGER.enemies = {}
     PROGRESSION = PROGRESSION_PLAN.LVL1
+    playdate.resetElapsedTime()
 end
 
 
@@ -102,7 +103,7 @@ function handle_input()
     end
 
     -- B button is to slap alarms/mosquitoes.
-    if CONTEXT.player_slapping == false and playdate.buttonIsPressed(playdate.kButtonB) then 
+    if CONTEXT.player_slapping == false and playdate.buttonIsPressed(playdate.kButtonB) then
         CONTEXT.player_slapping = true
         SOUND['SLAP_ALARM']:play()
         playdate.timer.new(100, function()
@@ -181,5 +182,11 @@ function manage_enemies()
         end
     end
 
-    CONTEXT.awakeness = math.min(#ENEMIES_MANAGER.enemies / 5, 1)
+    local sumRadius = 0
+    for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
+        if enemy:isVisible() then
+            sumRadius = sumRadius + enemy.current_bubble_radius
+        end
+    end
+    CONTEXT.awakeness = math.min(sumRadius / 100, 1)
 end
