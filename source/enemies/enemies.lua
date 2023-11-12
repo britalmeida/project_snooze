@@ -17,19 +17,17 @@ PROGRESSION = {
   LVL3 = 'alarm5', 'alarm6',
 }
 
+
 ENEMIES_MANAGER = {
-  enemies = {}
+  enemies = {},
+  prototypes = {
+    alarm_analog = AlarmAnalog,
+    mosquito = Mosquito,
+  }
 }
 
-function ENEMIES_MANAGER:spawnEnemy(category, variant)
-  variant = variant or nil
-  if category == 'alarm' then
-    local alarm = Alarm_Analog(variant)
-    alarm:start()
-    table.insert(self.enemies, alarm)
-  elseif category == 'cat' then
-    return nil
-  elseif category == 'mosquito' then
-    return nil
-  end
+function ENEMIES_MANAGER:spawnEnemy(prototype)
+  local enemy = prototype()
+  enemy:start()
+  table.insert(self.enemies, enemy)
 end

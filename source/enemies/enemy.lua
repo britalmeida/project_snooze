@@ -5,8 +5,7 @@ class('Enemy').extends(Sprite)
 
 function Enemy:init(sound_name)
     Enemy.super.init(self)
-
-    self.sound = SOUND[string.upper(sound_name)]
+    self.sound = SOUND[string.upper('enemy_' .. sound_name)]
     self.collision_radius = 15
     self.jitter_intensity = 1
 
