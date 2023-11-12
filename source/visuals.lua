@@ -347,7 +347,7 @@ function init_visuals()
     TEXTURES.light_areas = gfxi.new(400, 240, gfx.kColorClear)
 
     -- Set the multiple things in their Z order of what overlaps what.
-    setDrawPass(-32768, draw_game_background)
+    gfx.sprite.setBackgroundDrawingCallback(draw_game_background)
     setDrawPass(-30, draw_dream_world)
     setDrawPass(-20, draw_character)
     setDrawPass(-10, draw_arms)
