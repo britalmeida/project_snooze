@@ -109,6 +109,9 @@ function Alarm:snooze()
 end
 
 function Alarm:update_logic(CONTEXT)
+    if self:isVisible() == false then
+        return
+    end
     hand = CONTEXT.player_hand_r
     if CONTEXT.is_left_arm_active then
         hand = CONTEXT.player_hand_l
@@ -120,15 +123,16 @@ function Alarm:update_logic(CONTEXT)
 
     -- TODO: This should be moved into a new mosquito enemy type.
     if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.collision_radius) then
+        print("Mosquito hit!")
         self:snooze()
         CONTEXT.awakeness = 1
     end
 
     if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
+        print("Alarm hit!")
         self:snooze()
         CONTEXT.awakeness = 1
     end
-
 
     self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
     self:jitter()
