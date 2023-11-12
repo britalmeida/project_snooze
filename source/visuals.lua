@@ -251,17 +251,27 @@ function calculate_light_areas()
 end
 
 
-function draw_arms()
-    -- Draw the arms.
+function draw_arm(arm_line_segment)
+    -- Draw one arm.
+    local arm_vec2 = arm_line_segment:segmentVector()
+    local arm_normal = arm_vec2:leftNormal() * 6
+    local line_top = arm_line_segment:offsetBy(arm_normal:unpack())
+    local line_bottom = arm_line_segment:offsetBy((-arm_normal):unpack())
+
     gfx.pushContext()
+        gfx.setColor(gfx.kColorBlack)
+        gfx.fillPolygon(line_top.x1, line_top.y1, line_top.x2, line_top.y2,
+                        line_bottom.x2, line_bottom.y2, line_bottom.x1, line_bottom.y1)
+
         gfx.setLineCapStyle(gfx.kLineCapStyleRound)
+        gfx.setLineWidth(2)
         gfx.setColor(gfx.kColorWhite)
-        gfx.setLineWidth(5)
-        gfx.drawLine(CONTEXT.player_arm_l_current)
-        gfx.drawLine(CONTEXT.player_arm_r_current)
+        --local pattern = { 0x11, 0x08, 0x18, 0x5d, 0xba, 0x18, 0x10, 0x88 }
+        --gfx.setPattern(pattern)
+        gfx.drawLine(line_top)
+        gfx.drawLine(line_bottom)
     gfx.popContext()
 end
-
 
 function draw_game_background( x, y, width, height )
     if CONTEXT.test_screen then
@@ -282,7 +292,8 @@ function draw_game_background( x, y, width, height )
 
     draw_dream_world()
 
-    draw_arms()
+    draw_arm(CONTEXT.player_arm_l_current)
+    draw_arm(CONTEXT.player_arm_r_current)
 
     draw_light_areas()
 
