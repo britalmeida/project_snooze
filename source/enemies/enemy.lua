@@ -126,12 +126,16 @@ function Enemy:on_hit()
     end)
 end
 
-function Enemy:update_logic(CONTEXT)
+function Enemy:is_touched_by_active_hand(CONTEXT)
     hand = CONTEXT.player_hand_r
     if CONTEXT.is_left_arm_active then
         hand = CONTEXT.player_hand_l
     end
-    if CONTEXT.player_slapping and self:circleCollision(hand.x, hand.y, HAND_TOUCH_RADIUS + self.collision_radius) then
+    return self:circleCollision(hand.x, hand.y, HAND_TOUCH_RADIUS + self.collision_radius)
+end
+
+function Enemy:update_logic(CONTEXT)
+    if CONTEXT.player_slapping and self:is_touched_by_active_hand(CONTEXT) then
         self:on_hit_by_player()
         return
     end

@@ -15,7 +15,7 @@ local LVL4_THRESHOLD = 24000
 PROGRESSION_PLAN = {
   LVL1 = {
     ID = 1,
-    ENEMIES_SPAWNABLE = {AlarmDigital, AlarmAnalog},
+    ENEMIES_SPAWNABLE = {Cat, Cat},
     MUSIC = SOUND.BG_LOOP_1,
     SPAWN_INTERVAL_MS = 2000,
   },

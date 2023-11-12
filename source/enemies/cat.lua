@@ -11,7 +11,7 @@ function Cat:init()
     self.jitter_intensity = 0
     self.collision_radius = 25
     self.current_bubble_radius = 30
-    self.bubble_growth_speed = -0.1
+    self.bubble_growth_speed = 0.1
     self.respawn_timer_seconds = 1 -- For the cat, this is used for the grace period of touching the cat again.
 
     -- Graphics
@@ -20,28 +20,36 @@ function Cat:init()
     self.anim_default = gfx.animation.loop.new(66.66, gfx.imagetable.new('images/animation_enemy_cat-walk') , true) -- Ring
 
     -- Cat
-    self.touches_register = true
-    self.min_bubble_radius = 30 -- Since the cat's bubble radius is always decreasing, we want to clamp it to a minimum. This is also important for visuals, otherwise we can't see the cat so well.
+    self.touch_bubble_growth_speed = -0.8
+end
+
+
+function Cat:start()
+    self:setVisible(true)
+    -- Pick an angle.
+    local angle = math.random() * 360
+
+    -- Pick arms based on which side we're on.
+    if angle <= 90 or angle >= 270 then
+        arm = CONTEXT.player_arm_r_current
+    else
+        arm = CONTEXT.player_arm_l_current
+    end
+
+    local radius = ARM_LENGTH_DEFAULT + 20
+
+    local x = arm.x + radius * math.cos(math.rad(angle))
+    local y = arm.y + radius * math.sin(math.rad(angle))
+
+    self:moveTo(x, y)
+
+    if self.sound_loop then 
+        self.sound_loop:play(0)
+    end
 end
 
 function Cat:on_hit_by_player()
-    if self.touches_register == false then
-        return
-    end
     self.sound_slap:play()
-
-    local growth_speed_bkp = self.bubble_growth_speed
-    self.bubble_growth_speed = 5
-    playdate.timer.new(100, function()
-        self.bubble_growth_speed = growth_speed_bkp
-    end)
-
-    -- Allow a grace period for touching the cat, so it's notice being slapped every frame.
-    self.touches_register = false
-    playdate.timer.new(self.respawn_timer_seconds*1000, function()
-        self.touches_register = true
-    end)
-
     -- Make the cat jitter to tell the player they did something bad.
     self.jitter_intensity = 1
     playdate.timer.new(400, function()
@@ -49,14 +57,20 @@ function Cat:on_hit_by_player()
     end)
 end
 
-function Cat:update_logic()
+function Cat:update_logic(CONTEXT)
     if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
         self:on_hit()
         CONTEXT.awakeness = 1
     end
 
-    self.current_bubble_radius += self.bubble_growth_speed
-    self.current_bubble_radius = math.max(self.min_bubble_radius, self.current_bubble_radius)
+    if self:is_touched_by_active_hand(CONTEXT) then
+        self.current_bubble_radius += self.touch_bubble_growth_speed
+        if self.current_bubble_radius < 0 then
+            self:on_hit()
+        end
+    else
+        self.current_bubble_radius += self.bubble_growth_speed
+    end
 
     Cat.super.update_logic(self, CONTEXT)
 end
