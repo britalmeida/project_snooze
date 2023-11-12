@@ -71,8 +71,11 @@ end
 function reset_gameplay()
     CONTEXT.awakeness = 0
     CONTEXT.enemies_snoozed = 0
-    PROGRESSION = PROGRESSION_PLAN.LVL1
+    for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
+        enemy:remove()
+    end
     ENEMIES_MANAGER.enemies = {}
+    PROGRESSION = PROGRESSION_PLAN.LVL1
 end
 
 
