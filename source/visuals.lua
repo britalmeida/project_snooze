@@ -1,4 +1,199 @@
 gfx = playdate.graphics
+gfxi = playdate.graphics.image
+
+
+function draw_test_dither_patterns()
+
+    local size = 20
+    local x = 10
+    local y = 10
+
+    gfx.pushContext()
+        gfx.setColor(gfx.kColorWhite)
+
+        -- kDitherTypeBayer8x8 gradient
+        local dither_type = gfxi.kDitherTypeBayer8x8
+        local star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(0.0, dither_type)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+    
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(0.1, dither_type)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+    
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(0.2, dither_type)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+    
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(0.3, dither_type)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+    
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(0.4, dither_type)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+    
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(0.5, dither_type)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+            gfx.pushContext(star_img)
+            gfx.setDitherPattern(0.6, dither_type)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(0.7, dither_type)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(0.8, dither_type)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(0.9, dither_type)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(1.0, dither_type)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+    
+        -- different types
+        x = 40
+        y = 10
+        local alpha = 0.3
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(alpha, gfxi.kDitherTypeNone)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+    
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(alpha, gfxi.kDitherTypeDiagonalLine)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+    
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(alpha, gfxi.kDitherTypeVerticalLine)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(alpha, gfxi.kDitherTypeHorizontalLine)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+    
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(alpha, gfxi.kDitherTypeScreen)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+    
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(alpha, gfxi.kDitherTypeBayer2x2)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(alpha, gfxi.kDitherTypeBayer4x4)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+    
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(alpha, gfxi.kDitherTypeBayer8x8)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+    
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(alpha, gfxi.kDitherTypeFloydSteinberg)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+
+        y += size
+        star_img:draw(x, y)
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(alpha, gfxi.kDitherTypeBurkes)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+    
+        y += size
+        star_img = gfxi.new(size, size, gfx.kColorBlack)
+        gfx.pushContext(star_img)
+            gfx.setDitherPattern(alpha, gfxi.kDitherTypeAtkinson)
+            gfx.fillRect(0, 0, size, size)
+        gfx.popContext()
+        star_img:draw(x, y)
+
+    gfx.popContext()
+end
 
 function draw_game_background( x, y, width, height )
     gfx.clear(gfx.kColorWhite)
@@ -10,6 +205,10 @@ function draw_game_background( x, y, width, height )
     end
 
     gfx.pushContext()
+
+    if CONTEXT.test_dither then
+        draw_test_dither_patterns()
+    end
 
     -- programmer art for stars
     local size = 20
@@ -46,9 +245,11 @@ end
 
 function init_visuals()
 
+    CONTEXT.test_dither = false
+
     -- Have 2 images so they can be swapped for test purposes.
-    CONTEXT.image_bg_test1 = gfx.image.new("images/bg")
-    CONTEXT.image_bg_test2 = gfx.image.new("images/test_screen")
+    CONTEXT.image_bg_test1 = gfxi.new("images/bg")
+    CONTEXT.image_bg_test2 = gfxi.new("images/test_screen")
     CONTEXT.image_bg = CONTEXT.image_bg_test1
 
     gfx.sprite.setBackgroundDrawingCallback(draw_game_background)

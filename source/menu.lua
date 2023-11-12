@@ -18,4 +18,8 @@ function add_menu_entries()
         end
     end)
 
+    local checkmarkMenuItem, error = menu:addCheckmarkMenuItem("test dither", false, function(value)
+        CONTEXT.test_dither = value
+    end)
+
 end
