@@ -13,9 +13,10 @@ import "alarm_analog"
 import "alarm_digital"
 import "alarm_phone"
 import "mosquito"
+import "cat"
 
 PROGRESSION = {
-  LVL1 = {AlarmDigital, AlarmPhone},
+  LVL1 = {Cat, Cat},
   --LVL2 = 'alarm3', 'alarm4',
   --LVL3 = 'alarm5', 'alarm6',
 }
