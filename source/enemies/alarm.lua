@@ -3,13 +3,13 @@ local Sprite = gfx.sprite
 
 class('Alarm').extends(Sprite)
 
-function Alarm:init()
+function Alarm:init(alarm_name)
     Alarm.super.init(self)
 
     self.current_bubble_radius = 0.0
+    self.sound = SOUND[string.upper(alarm_name)]
 
-    clock_image = gfx.image.new('images/clock')
-    clock_image:setMaskImage(gfx.image.new('images/clock_mask'))
+    clock_image = gfx.image.new('images/animation_alarm1')
     self:setImage(clock_image)
     self:addSprite()
 end
@@ -60,7 +60,7 @@ function Alarm:start()
     end
     self:setVisible(true)
     if TIMER.value % 500 == 0 then
-        SOUND.ALARM1:play(0)
+        self.sound:play(0)
     end
 end
 
@@ -71,7 +71,7 @@ function Alarm:reset()
 end
 
 function Alarm:snooze()
-    SOUND.ALARM1:stop()
+    self.sound:stop()
     SOUND.SLAP_ALARM:play()
     CONTEXT.enemies_snoozed += 1
     print(CONTEXT.enemies_snoozed)
