@@ -254,14 +254,18 @@ end
 function calculate_light_areas()
     TEXTURES.light_areas:clear(gfx.kColorClear)
     gfx.pushContext(TEXTURES.light_areas)
-        gfx.setColor(gfx.kColorWhite)
 
+        -- Draw light bubbles for the visible enemies.
+        gfx.setColor(gfx.kColorWhite)
         for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
-            -- Draw the sprite bubble circle.
             if enemy:isVisible() then
                 gfx.fillCircleAtPoint(enemy.x, enemy.y, enemy.current_bubble_radius)
             end
         end
+
+        -- Draw sunray.
+        gfx.setDitherPattern(0.05, gfxi.kDitherTypeBayer8x8)
+        gfx.fillPolygon(200, 32, 205, 32, 380, 240, 350, 240)
 
     gfx.popContext()
 end
