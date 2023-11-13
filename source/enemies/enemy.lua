@@ -92,11 +92,22 @@ function Enemy:circleCollision(x, y, radius)
 end
 
 function Enemy:start()
-    if math.random(0, 100) < 50 then
-        self:moveTo(math.random(50, 150), math.random(50, 190))
-    else
-        self:moveTo(math.random(250, 350), math.random(50, 190))
-    end
+    local repeats = 0
+    repeat
+        -- Pick an arm
+        arm = CONTEXT.player_arms[math.random(1, 2)]
+
+        -- Pick an angle.
+        local angle = math.random(arm.angle_min, arm.angle_max)
+        local radius = math.random(50, ARM_LENGTH_MAX)
+
+        local x = radius * math.cos(math.rad(angle))
+        local y = radius * math.sin(math.rad(angle))
+
+        self:moveTo(x, y)
+        repeats += 1
+    until (self:is_near_player_face(self.current_bubble_radius) == false) or repeats > 10
+
     self:setVisible(true)
     if self.sound_loop then 
         self.sound_loop:play(0)
