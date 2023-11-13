@@ -333,6 +333,17 @@ function draw_game_background( x, y, width, height )
 
 end
 
+function draw_hud()
+    -- Top left corner: Score!
+    gfx.pushContext()
+        gfx.setColor(gfx.kColorWhite)
+        gfx.fillRect(10, 10, 50, 20)
+        gfx.setColor(gfx.kColorBlack)
+        gfx.drawText(math.floor(CONTEXT.score), 12, 12)
+    gfx.popContext()
+end
+
+
 function draw_debug_overlay()
     if DRAW_DEBUG == 0 then
         return
@@ -375,6 +386,6 @@ function init_visuals()
     setDrawPass(-20, draw_character)
     setDrawPass(-10, draw_arms)
     setDrawPass(  0, draw_light_areas) -- light bubbles are 0, so its easy to remember.
-    setDrawPass(10, draw_debug_overlay)
+    setDrawPass(10, draw_hud)
+    setDrawPass(20, draw_debug_overlay)
 end
-

@@ -40,6 +40,7 @@ function init_gameplay()
     CONTEXT.player_arms = {CONTEXT.player_arm_left, CONTEXT.player_arm_right}
     CONTEXT.player_hand_l = sprite_hand_l
     CONTEXT.player_hand_r = sprite_hand_r
+    CONTEXT.score = 0
 end
 
 
@@ -62,6 +63,7 @@ function reset_gameplay()
     CONTEXT.is_left_arm_active = true
     CONTEXT.player_arm_left:reset()
     CONTEXT.player_arm_right:reset()
+    CONTEXT.score = 0
 
     -- Fresh Score.
     CONTEXT.awakeness = 0

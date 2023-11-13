@@ -73,6 +73,7 @@ function Cat:update_logic(CONTEXT)
     if self:is_touched_by_any_hand(CONTEXT) then
         self.current_bubble_radius += self.touch_bubble_growth_speed
         if self.current_bubble_radius < 0 then
+            CONTEXT.score += self.current_score
             self:on_hit()
         end
     else

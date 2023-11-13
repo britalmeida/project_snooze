@@ -100,6 +100,7 @@ function self:is_out_of_reach()
 end
 
 function Enemy:start()
+    self.current_score = self.initial_score
     local repeats = 0
     repeat
         -- Pick an arm
@@ -130,6 +131,7 @@ function Enemy:on_hit_by_player()
     if self.sound_slap then
         self.sound_slap:play()
     end
+    CONTEXT.score += self.current_score
     self:on_hit()
 end
 
@@ -166,6 +168,7 @@ function Enemy:update_logic(CONTEXT)
             return
         end
     end
+    self.current_score -= self.score_decay
     self:jitter()
     self:clampPosition(0, 0, 400, 240)
 
