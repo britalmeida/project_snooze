@@ -156,11 +156,10 @@ end
 
 
 function update_gameplay_score()
-    CONTEXT.awakeness = math.max(0, CONTEXT.awakeness-AWAKENESS_DECAY) * 2
+    CONTEXT.awakeness = math.max(0, CONTEXT.awakeness-AWAKENESS_DECAY)
 
     -- Game Over!
     if CONTEXT.awakeness >= 1 then
         enter_menu_gameover()
-                    SOUND.DEATH:play()
     end
 end
