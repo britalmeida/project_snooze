@@ -18,7 +18,7 @@ function Enemy:init(sound_name)
     self.movement_target_y = HEAD_Y
 
     -- Life cycle
-    self.respawn_timer_seconds = 5
+    self.respawn_timer_seconds = 8
 
     -- Sound
     self.sound_loop = nil

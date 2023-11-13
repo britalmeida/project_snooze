@@ -25,8 +25,7 @@ function Cat:start()
     self.jitter_intensity = 0
     self.current_bubble_radius = 40
     self.bubble_growth_speed = 0.1
-    self.respawn_timer_seconds = 1 -- For the cat, this is used for the grace period of touching the cat again.
-
+    
     repeat
         -- Pick an arm
         arm = CONTEXT.player_arms[math.random(1, 2)]

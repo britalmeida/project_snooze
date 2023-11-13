@@ -17,6 +17,8 @@ ARM_EXTEND_SPEED = 20
 
 HAND_TOUCH_RADIUS = 10
 
+ENEMY_SPAWN_GAP_SECONDS = 5
+
 AWAKENESS_DECAY = 0.0001
 
 ARM_L_X, ARM_L_Y = 180, 111
@@ -52,7 +54,10 @@ function reset_gameplay()
     ENEMIES_MANAGER.enemies = {}
     ENEMIES_MANAGER.last_spawned_enemy_time = 0
     playdate.resetElapsedTime()
-    initProgressionLevel(PROGRESSION_PLAN.LVL1)
+    -- initProgressionLevel(PROGRESSION_PLAN.LVL1)
+
+    playdate.timer.new(1000, spawn_next_enemy)
+    
     rampUpTheMusic(1, 8)
 end
 
@@ -88,9 +93,24 @@ function handle_input()
     end
 end
 
+function spawn_next_enemy()
+    local next_enemy_idx = #ENEMIES_MANAGER.enemies + 1
+    local next_enemy = ENEMY_SEQUENCE[next_enemy_idx]
+    if next_enemy == nil then
+        print("All enemies spawned. Game won't get any harder.")
+        return
+    end
+    next_enemy = next_enemy()
+    print("Spawned enemy " .. next_enemy_idx .. " " .. next_enemy.name)
+    next_enemy:start()
+    table.insert(ENEMIES_MANAGER.enemies, next_enemy)
+    playdate.timer.new(ENEMY_SPAWN_GAP_SECONDS*1000, function()
+        spawn_next_enemy()
+    end)
+end
 
 function manage_enemies()
-    ENEMIES_MANAGER:spawnRandomEnemy()
+    -- ENEMIES_MANAGER:spawnRandomEnemy()
     -- Update enemies (jitter around, increase radius, ...).
     for key, enemy in ipairs(ENEMIES_MANAGER.enemies) do
         if enemy:isVisible() == true then

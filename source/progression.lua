@@ -32,6 +32,9 @@ function rampUpTheMusic(level, duration_S)
 end)
 end
 
+ENEMY_SEQUENCE = {AlarmAnalog, AlarmAnalog, AlarmDigital, AlarmAnalog, AlarmPhone, AlarmDigital, Mosquito, AlarmDigital, Mosquito, AlarmPhone, Cat, AlarmAnalog, AlarmDigital, AlarmPhone, Mosquito}
+
+
 PROGRESSION_PLAN = {
   LVL1 = {
     ID = 1,
