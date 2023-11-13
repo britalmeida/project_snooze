@@ -110,6 +110,7 @@ function handle_menu_input()
         end
     end
     if CONTEXT.menu_screen == MENU_SCREEN.start then
+        -- Select an Option.
         if playdate.buttonJustReleased( playdate.kButtonA ) then
             if CONTEXT.menu_focus_option == 0 then
                 enter_gameplay()
@@ -121,14 +122,22 @@ function handle_menu_input()
                 enter_menu_credits()
             end
         end
+        -- Cycle Options.
         if playdate.buttonJustReleased( playdate.kButtonDown ) then
             CONTEXT.menu_focus_option += 1
-            CONTEXT.menu_focus_option = math.min(CONTEXT.menu_focus_option, 2)
         end
         if playdate.buttonJustReleased( playdate.kButtonUp ) then
             CONTEXT.menu_focus_option -= 1
-            CONTEXT.menu_focus_option = math.max(CONTEXT.menu_focus_option, 0)
         end
+        local crankTicks = playdate.getCrankTicks(3)
+        if crankTicks == 1 then
+            CONTEXT.menu_focus_option += 1
+        elseif crankTicks == -1 then
+            CONTEXT.menu_focus_option -= 1
+        end
+        -- Clamp so the option cycling doesn't wrap around.
+        CONTEXT.menu_focus_option = math.max(CONTEXT.menu_focus_option, 0)
+        CONTEXT.menu_focus_option = math.min(CONTEXT.menu_focus_option, 2)
     end
     if CONTEXT.menu_screen == MENU_SCREEN.howto then
         if playdate.buttonJustReleased( playdate.kButtonB ) then
