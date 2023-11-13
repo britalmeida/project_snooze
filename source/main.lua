@@ -78,7 +78,7 @@ function playdate.update()
         end
     end
 
-    gfx.sprite.redrawBackground()
+    gfx.clear()
     gfx.sprite.update()
 
     playdate.timer.updateTimers()

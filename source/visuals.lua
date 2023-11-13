@@ -323,6 +323,14 @@ function draw_game_background( x, y, width, height )
 
 end
 
+function draw_debug_overlay()
+    gfx.pushContext()
+        gfx.setColor(gfx.kColorWhite)
+        gfx.fillRect(10, 10, 50, 20)
+        gfx.setColor(gfx.kColorBlack)
+        gfx.drawText(string.format("%.3f", CONTEXT.awakeness), 12, 12)
+    gfx.popContext()
+end
 
 function init_visuals()
 
@@ -349,10 +357,11 @@ function init_visuals()
     TEXTURES.light_areas = gfxi.new(400, 240, gfx.kColorClear)
 
     -- Set the multiple things in their Z order of what overlaps what.
-    gfx.sprite.setBackgroundDrawingCallback(draw_game_background)
+    setDrawPass(-40, draw_game_background)
     setDrawPass(-30, draw_dream_world)
     setDrawPass(-20, draw_character)
     setDrawPass(-10, draw_arms)
     setDrawPass(  0, draw_light_areas) -- light bubbles are 0, so its easy to remember.
+    setDrawPass(10, draw_debug_overlay)
 end
 
