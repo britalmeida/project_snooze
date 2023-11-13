@@ -2,6 +2,6 @@ name=Snooze or Lose
 author=Team Snooze
 description=Wakey wakey
 bundleID=com.playjam.projectsnooze
-version=0.0.1
+version=1.0.0
 buildNumber=3
 imagePath=images/launcher
