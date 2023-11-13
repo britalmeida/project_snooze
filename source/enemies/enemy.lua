@@ -193,7 +193,7 @@ function Enemy:update_logic(CONTEXT)
             return
         end
     end
-    self.current_score -= self.score_decay
+    self.current_score = math.max(1, self.current_score - self.score_decay)
     self:jitter()
     self:clampPosition(0, 0, 400, 240)
 
