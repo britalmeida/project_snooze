@@ -1,6 +1,8 @@
 import "enemy"
 
-gfx = playdate.graphics
+local still_img = gfx.image.new('images/animation_alarm1')
+local anim_ring_imgs = gfx.imagetable.new('images/animation_alarm1-ring')
+local anim_ring_framerate = 1
 
 class('AlarmAnalog').extends(Enemy)
 
@@ -14,11 +16,10 @@ function AlarmAnalog:init()
     self.sound_loop = SOUND['ENEMY_ALARM_ANALOG']
     self.sound_slap = SOUND['SLAP_ALARM']
 
-    -- Load image visuals and animations
-    self.static_image = gfx.image.new('images/animation_alarm1')
+    -- Graphics
+    self.static_image = still_img
+    self.anim_default = gfx.animation.loop.new(anim_ring_framerate * frame_ms, anim_ring_imgs, true)
     self:setImage(self.static_image)
-    self.anim_default = gfx.animation.loop.new(33.33333333, gfx.imagetable.new('images/animation_alarm1-ring') , true) -- Ring
-
 end
 
 function AlarmAnalog:on_hit_by_player()

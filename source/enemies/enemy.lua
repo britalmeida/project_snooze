@@ -32,7 +32,6 @@ function Enemy:init(sound_name)
     -- Graphics
     self.static_image = nil
     self.anim_default = nil
-    self:setImage(self.static_image)
     self:addSprite()
     self:setVisible(false)
 end
@@ -199,7 +198,12 @@ function Enemy:update_logic(CONTEXT)
 
     -- Set the image frame to display.
     -- e.g. if chill then self:setImage(img), otherwise walk or ring.
-    if self.anim_default then 
-        self:setImage(self.anim_default:image())
+    -- Make the enemies face the player depending if they're on the left or right side of the screen.
+    local mirror = 1
+    if self.x > 200 then
+        mirror = -1
+    end
+    if self.anim_default then
+        self:setImage(self.anim_default:image():scaledImage(mirror,1))
     end
 end

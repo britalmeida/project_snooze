@@ -13,6 +13,7 @@ import "visuals"
 import "progression"
 
 gfx = playdate.graphics
+frame_ms = 1000 / 30
 
 -- Global logic context, storing the game data.
 -- NOTE: All of its variables are defined in #initialize() and in the init functions of other files.

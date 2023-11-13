@@ -1,5 +1,9 @@
 import "alarm_analog"
 
+local still_img = gfx.image.new('images/animation_alarm2')
+local anim_walk_imgs = gfx.imagetable.new('images/animation_alarm2-move')
+local anim_walk_framerate = 15
+
 class('AlarmDigital').extends(AlarmAnalog)
 
 function AlarmDigital:init()
@@ -14,10 +18,10 @@ function AlarmDigital:init()
 
     self.jitter_intensity = 0
 
-    -- Load image visuals and animations
-    self.static_image = gfx.image.new('images/animation_alarm2')
+    -- Graphics
+    self.static_image = still_img
+    self.anim_default = gfx.animation.loop.new(anim_walk_framerate * frame_ms, anim_walk_imgs, true)
     self:setImage(self.static_image)
-    self.anim_default = gfx.animation.loop.new(500, gfx.imagetable.new('images/animation_alarm2-move') , true) -- Ring
 end
 
 function AlarmDigital:start()

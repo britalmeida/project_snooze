@@ -1,6 +1,7 @@
 import "enemy"
 
-gfx = playdate.graphics
+local anim_walk_imgs = gfx.imagetable.new('images/animation_mosquito-fly')
+local anim_walk_framerate = 1
 
 class('Mosquito').extends(Enemy)
 
@@ -20,9 +21,10 @@ function Mosquito:init()
     self.sound_slap = SOUND['SLAP_MOSQUITO']
 
     -- Graphics
-    self.static_image = gfx.image.new('images/animation_mosquito-fly-table-1')
+    self.static_image = anim_walk_imgs:getImage(1)
+    self.anim_default = gfx.animation.loop.new(anim_walk_framerate * frame_ms, anim_walk_imgs, true)
+
     self:setImage(self.static_image)
-    self.anim_default = gfx.animation.loop.new(33.33333333, gfx.imagetable.new('images/animation_mosquito-fly') , true) -- Ring
 end
 
 function Mosquito:start()

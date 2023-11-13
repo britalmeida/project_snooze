@@ -1,4 +1,6 @@
-gfx = playdate.graphics
+local still_img = gfx.image.new('images/animation_enemy_cat')
+local anim_walk_imgs = gfx.imagetable.new('images/animation_enemy_cat-walk')
+local anim_walk_framerate = 2
 
 class('Cat').extends(Enemy)
 
@@ -12,9 +14,9 @@ function Cat:init()
     self.score_decay = 0
 
     -- Graphics
-    self.static_image = gfx.image.new('images/animation_enemy_cat')
+    self.static_image = still_img
+    self.anim_default = gfx.animation.loop.new(anim_walk_framerate * frame_ms, anim_walk_imgs, true)
     self:setImage(self.static_image)
-    self.anim_default = gfx.animation.loop.new(66.66, gfx.imagetable.new('images/animation_enemy_cat-walk') , true) -- Ring
 
     -- Cat
     self.touch_bubble_growth_speed = -0.8
