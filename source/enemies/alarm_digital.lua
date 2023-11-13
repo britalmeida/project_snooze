@@ -9,6 +9,9 @@ function AlarmDigital:init()
     self.sound_loop = SOUND['ENEMY_ALARM_DIGITAL']
     self.sound_slap = SOUND['SLAP_ALARM']
 
+    self.bubble_growth_speed = 0
+    self.current_bubble_radius = 20
+
     self.jitter_intensity = 0
 
     -- Load image visuals and animations
