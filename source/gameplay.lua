@@ -48,10 +48,9 @@ end
 function reset_gameplay()
     -- Done on every (re)start of the play.
 
-    PROGRESSION.MUSIC:stop()
+    stop_gameplay_sounds()
 
     for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
-        enemy.sound_loop:stop()
         enemy:remove()
     end
     ENEMIES_MANAGER.enemies = {}
@@ -78,15 +77,12 @@ function reset_gameplay()
 end
 
 
-function transition_to_gameover_sounds()
+function stop_gameplay_sounds()
     -- Stop snoozed clocks from waking up during game over.
     for _, t in ipairs(playdate.timer.allTimers()) do
         t:remove()
     end
 
-    -- Change sounds.
-    SOUND.DEATH:play()
-    -- Dim or stop?
     PROGRESSION.MUSIC:stop()
     for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
         if enemy.sound_loop:isPlaying() then
