@@ -339,7 +339,10 @@ function draw_hud()
         gfx.setColor(gfx.kColorWhite)
         gfx.fillRect(10, 10, 50, 20)
         gfx.setColor(gfx.kColorBlack)
-        gfx.drawText(math.floor(CONTEXT.score), 12, 12)
+        local formattedNumber = string.format("%04d", math.floor(math.min(9999, CONTEXT.score)))
+        formattedNumber = formattedNumber:sub(1, 2) .. ":" .. formattedNumber:sub(3)
+
+        gfx.drawText(formattedNumber, 12, 12)
 
         -- Crappy health bar
         if false then
