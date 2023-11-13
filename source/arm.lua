@@ -6,12 +6,7 @@ class('Arm').extends(Sprite)
 function Arm:init(is_left)
     Arm.super.init(self)
 
-    local x, y = ARM_R_X, ARM_R_Y
-    self.sign = 1
-    if is_left then
-        x, y = ARM_L_X, ARM_L_Y
-        self.sign = -1
-    end
+    self.is_left = is_left
 
     local image_hand = gfx.image.new("images/hand")
     if is_left then
@@ -21,20 +16,32 @@ function Arm:init(is_left)
     self.hand = gfx.sprite.new()
     self.hand:setImage(image_hand)
     self.hand:setZIndex(-1)
+    self.hand:add()
+
+    self:reset()
+end
+
+function Arm:reset()
+
+    local x, y = ARM_R_X, ARM_R_Y
+    self.sign = 1
+    if self.is_left then
+        x, y = ARM_L_X, ARM_L_Y
+        self.sign = -1
+    end
 
     self.hand:moveTo(x+ARM_LENGTH_DEFAULT, y)
     self.angle_degrees = 0
     self.angle_max = 120
     self.angle_min = -120
-    if is_left then
+    if self.is_left then
         self.hand:moveTo(x-ARM_LENGTH_DEFAULT, y)
         self.angle_degrees = 180
         self.angle_max = 310
         self.angle_min = 60
     end
-    self.hand:add()
 
-    if is_left then
+    if self.is_left then
         self.line_segment = geo.lineSegment.new(ARM_L_X, ARM_L_Y, ARM_L_X-ARM_LENGTH_DEFAULT, ARM_L_Y)
     else
         self.line_segment = geo.lineSegment.new(ARM_R_X, ARM_R_Y, ARM_R_X+ARM_LENGTH_DEFAULT, ARM_R_Y)

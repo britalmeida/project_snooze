@@ -59,6 +59,8 @@ function reset_gameplay()
     -- Setup Character.
     CONTEXT.active_arm = CONTEXT.player_arm_left
     CONTEXT.is_left_arm_active = true
+    CONTEXT.player_arm_left:reset()
+    CONTEXT.player_arm_right:reset()
 
     -- Fresh Score.
     CONTEXT.awakeness = 0
