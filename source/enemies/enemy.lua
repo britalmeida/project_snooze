@@ -10,6 +10,11 @@ function Enemy:init(sound_name)
     self.collision_radius = 15
     self.current_bubble_radius = 0.0
     self.bubble_growth_speed = 0.3
+    
+    -- Score
+    self.initial_score = 10
+    self.score_decay = 0.05
+    self.current_score = 10
 
     -- Movement
     self.jitter_intensity = 1
@@ -91,10 +96,20 @@ function Enemy:circleCollision(x, y, radius)
     return math.sqrt((self.x - x)^2 + (self.y - y)^2) < radius
 end
 
-function self:is_out_of_reach()
-    for _, arm in ipairs(CONTEXT.player_arms)
-    if self:circleCollision(arm.x, arm.y, ARM_LENGTH_MAX) then
-        return true
+function Enemy:is_out_of_reach()
+    for _, arm in ipairs(CONTEXT.player_arms) do
+        if self:circleCollision(arm.line_segment.x, arm.line_segment.y, ARM_LENGTH_MAX) == false then
+            return true
+        end
+    end
+    return false
+end
+
+function Enemy:is_near_another_enemy()
+    for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
+        if enemy ~= self and self:circleCollision(enemy.x, enemy.y, 25) then
+            return true
+        end
     end
     return false
 end
@@ -103,20 +118,21 @@ function Enemy:start()
     self.current_score = self.initial_score
     local repeats = 0
     repeat
-        -- Pick an arm
-        arm = CONTEXT.player_arms[math.random(1, 2)]
-
         -- Pick an angle.
-        local angle = math.random(arm.angle_min, arm.angle_max)
-        local radius = math.random(50, ARM_LENGTH_MAX)
+        local angle = math.random(360)
+        local radius = math.random(70, ARM_LENGTH_MAX)
 
-        local x = radius * math.cos(math.rad(angle))
-        local y = radius * math.sin(math.rad(angle))
+        local x = 200 + radius * math.cos(math.rad(angle))
+        local y = 120 + radius * math.sin(math.rad(angle))
 
         self:moveTo(x, y)
         repeats += 1
-    until ((self:is_near_player_face(self.current_bubble_radius) or self:is_out_of_reach()) == false) or repeats > 10
-
+    until (
+        (self:is_near_player_face(30 + self.current_bubble_radius) == false) and 
+        (self:is_out_of_reach() == false) or
+        (repeats > 10)
+    )
+    self:clampPosition(20, 20, 380, 120)
     self:setVisible(true)
     if self.sound_loop then 
         self.sound_loop:play(0)

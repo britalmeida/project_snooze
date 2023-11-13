@@ -38,7 +38,7 @@ function Cat:start()
         local y = arm.line_segment.y + radius * math.sin(math.rad(angle))
 
         self:moveTo(x, y)
-    until (self:is_near_player_face(self.current_bubble_radius) == false) and (self.x > 230) or (self.x < 170)
+    until (self:is_near_player_face(50+self.current_bubble_radius) == false) and (self.x > 230) or (self.x < 170)
 
     if self.sound_loop then 
         self.sound_loop:play(0)
