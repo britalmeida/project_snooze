@@ -273,9 +273,12 @@ function calculate_light_areas()
             end
         end
 
-        -- Draw sunray.
-        --gfx.setDitherPattern(0.05, gfxi.kDitherTypeBayer8x8)
-        --gfx.fillPolygon(200, 32, 205, 32, 380, 240, 350, 240)
+        -- Draw sunray as a healthbar.
+        local intensity = math.min(0.95, 1.0-CONTEXT.awakeness)
+        local sun_growth = 50 * CONTEXT.awakeness + math.random(0,2)
+        gfx.setDitherPattern(intensity, gfxi.kDitherTypeBayer8x8)
+        gfx.fillPolygon(199, 32, 203, 32,
+                        360+sun_growth, 240, 350, 240)
 
     gfx.popContext()
 end
@@ -315,7 +318,7 @@ function draw_character()
     TEXTURES.armpit:draw(211, 105)
     TEXTURES.body:draw(0, 0)
 
-    if CONTEXT.awakeness >= 0.9 then
+    if CONTEXT.awakeness >= 0.97 then
         TEXTURES.head_awake:draw(178, 48)
     else
         TEXTURES.head_asleep:draw(178, 48)
@@ -389,10 +392,9 @@ function init_visuals()
 
     -- Set the multiple things in their Z order of what overlaps what.
     setDrawPass(-40, draw_game_background)
-    setDrawPass(-30, draw_dream_world)
+    --setDrawPass(-30, draw_dream_world)
     setDrawPass(-20, draw_character)
     setDrawPass(-10, draw_arms)
     setDrawPass(  0, draw_light_areas) -- light bubbles are 0, so its easy to remember.
     setDrawPass(10, draw_hud)
-    setDrawPass(20, draw_debug_overlay)
 end
