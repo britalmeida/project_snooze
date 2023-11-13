@@ -30,7 +30,7 @@ ARM_R_SIGN = 1
 HEAD_X, HEAD_Y = 213, 82
 HEAD_RADIUS = 10
 
-DRAW_DEBUG = 1
+DRAW_DEBUG = 0
 
 function init_gameplay()
     -- Done only once on start of the game, to load and setup const resources.
