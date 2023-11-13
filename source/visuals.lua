@@ -334,12 +334,19 @@ function draw_game_background( x, y, width, height )
 end
 
 function draw_hud()
-    -- Top left corner: Score!
     gfx.pushContext()
+        -- Top left corner: Score!
         gfx.setColor(gfx.kColorWhite)
         gfx.fillRect(10, 10, 50, 20)
         gfx.setColor(gfx.kColorBlack)
         gfx.drawText(math.floor(CONTEXT.score), 12, 12)
+
+        -- Crappy health bar
+        if false then
+            gfx.setColor(gfx.kColorWhite)
+            width = (1 - CONTEXT.awakeness) * 50
+            gfx.fillRect(340, 10, width, 20)
+        end
     gfx.popContext()
 end
 

@@ -19,7 +19,7 @@ HAND_TOUCH_RADIUS = 10
 
 ENEMY_SPAWN_GAP_SECONDS = 5
 
-AWAKENESS_DECAY = 0.0001
+AWAKENESS_DECAY = -0.001
 
 ARM_L_X, ARM_L_Y = 180, 111
 ARM_R_X, ARM_R_Y = 222, 114
@@ -41,6 +41,7 @@ function init_gameplay()
     CONTEXT.player_hand_l = sprite_hand_l
     CONTEXT.player_hand_r = sprite_hand_r
     CONTEXT.score = 0
+    CONTEXT.awakeness_rate_of_change = AWAKENESS_DECAY
 end
 
 
@@ -64,6 +65,7 @@ function reset_gameplay()
     CONTEXT.player_arm_left:reset()
     CONTEXT.player_arm_right:reset()
     CONTEXT.score = 0
+    CONTEXT.awakeness_rate_of_change = AWAKENESS_DECAY
 
     -- Fresh Score.
     CONTEXT.awakeness = 0
@@ -161,7 +163,7 @@ end
 
 
 function update_gameplay_score()
-    CONTEXT.awakeness = math.max(0, CONTEXT.awakeness-AWAKENESS_DECAY)
+    CONTEXT.awakeness = math.max(0, CONTEXT.awakeness + CONTEXT.awakeness_rate_of_change)
 
     -- Game Over!
     if CONTEXT.awakeness >= 1 then

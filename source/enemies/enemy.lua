@@ -151,6 +151,15 @@ function Enemy:on_hit_by_player()
     self:on_hit()
 end
 
+function Enemy:hit_the_player()
+    CONTEXT.awakeness_rate_of_change = 0.035
+    -- Start a timer to respawn this enemy.
+    playdate.timer.new(200, function()
+        CONTEXT.awakeness_rate_of_change = AWAKENESS_DECAY
+    end)
+    self:on_hit()
+end
+
 function Enemy:on_hit()
     -- Should be called whenever player hits enemy or enemy hits player.
     if self.sound_loop then

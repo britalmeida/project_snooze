@@ -36,8 +36,7 @@ end
 
 function AlarmAnalog:update_logic(CONTEXT)
     if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
-        self:on_hit()
-        CONTEXT.awakeness += 0.2
+        self:hit_the_player()
     end
 
     self.current_bubble_radius += self.bubble_growth_speed

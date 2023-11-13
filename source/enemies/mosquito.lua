@@ -40,8 +40,7 @@ end
 
 function Mosquito:update_logic(CONTEXT)
     if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.collision_radius) then
-        self:on_hit()
-        CONTEXT.awakeness += 0.2
+        self:hit_the_player()
         return
     end
     Mosquito.super.update_logic(self, CONTEXT)
