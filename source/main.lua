@@ -44,7 +44,9 @@ function playdate.update()
     if CONTEXT.menu_screen ~= MENU_SCREEN.gameplay then
         -- In Menu system.
         handle_menu_input()
-    else
+    end
+    -- Intentionally check again (no else), the menu might have just started gameplay
+    if CONTEXT.menu_screen == MENU_SCREEN.gameplay then
         -- In gameplay.
         updateProgression()
         handle_input()

@@ -56,15 +56,6 @@ function reset_gameplay()
 
     playdate.resetElapsedTime()
 
-    -- Fresh Score.
-    CONTEXT.awakeness = 0
-    CONTEXT.enemies_snoozed = 0
-
-    -- Start Progression.
-    -- initProgressionLevel(PROGRESSION_PLAN.LVL1)
-    playdate.timer.new(1000, spawn_next_enemy)
-    rampUpTheMusic(1, 8)
-
     -- Setup Character.
     CONTEXT.active_arm = CONTEXT.player_arm_left
     CONTEXT.is_left_arm_active = true
