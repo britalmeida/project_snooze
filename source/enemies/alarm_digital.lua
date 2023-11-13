@@ -21,6 +21,7 @@ function AlarmDigital:init()
 end
 
 function AlarmDigital:start()
+    self.current_bubble_radius = 20 -- TODO Fix the inheritance here. This is otherwise getting incorrectly reset by AlarmAnalog:on_hit()
     AlarmDigital.super.start(self)
     -- Spawn it somewhere slightly off-screen
     local index = math.random(1, 2)
