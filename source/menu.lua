@@ -31,12 +31,14 @@ end
 function enter_menu_start()
     CONTEXT.menu_screen = MENU_SCREEN.start
 
-    CONTEXT.menu_active_screen_texture = UI_TEXTURES.game_start
+    remove_system_menu_entries()
+    stop_gameplay_sounds()
     SOUND.BG_LOOP_CREDITS:stop()
+
+    CONTEXT.menu_active_screen_texture = UI_TEXTURES.game_start
     if not SOUND.BG_LOOP_MENU:isPlaying() then
         SOUND.BG_LOOP_MENU:play(0)
     end
-    remove_system_menu_entries()
 end
 
 function enter_menu_howto()
@@ -60,7 +62,8 @@ function enter_menu_gameover()
     CONTEXT.menu_screen = MENU_SCREEN.gameover
 
     CONTEXT.menu_active_screen_texture = UI_TEXTURES.game_over
-    transition_to_gameover_sounds()
+    SOUND.DEATH:play()
+    stop_gameplay_sounds()
     -- Bg loop for game over?
     --if not SOUND.BG_LOOP_MENU:isPlaying() then
     --    SOUND.BG_LOOP_MENU:play(0)
