@@ -19,7 +19,7 @@ SOUND = {
 }
 
 
-function init_sound()
+function start_gameplay_sound() -- unused?
 
   SOUND.BG_LOOP_1:play()
   TIMER = playdate.timer.new(8000, function()

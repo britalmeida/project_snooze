@@ -16,12 +16,11 @@ gfx = playdate.graphics
 -- Global logic context, storing the game data.
 -- NOTE: All of its variables are defined in #initialize() and in the init functions of other files.
 CONTEXT = {
-    is_active = false, -- Paused
-
     -- Game State
     awakeness = 0,
     enemies_snoozed = 0,
 }
+
 
 function initialize()
     -- Start all systems needed by the game to start ticking
@@ -29,58 +28,33 @@ function initialize()
     -- Make it different, every time!
     math.randomseed(playdate.getSecondsSinceEpoch())
 
-    -- Add custom entries to system menu
-    add_menu_entries()
-
     -- Init all the things!
-    -- init_sound()
-    init_visuals()
     init_gameplay()
+    init_visuals()
     init_menus()
-
 end
 
 initialize()
-enter_menu()
+enter_menu_start()
 
 
 function playdate.update()
     -- Called before every frame is drawn.
 
-    CONTEXT.is_active = true
-
-    if CONTEXT.in_menu then
+    if CONTEXT.menu_screen ~= MENU_SCREEN.gameplay then
+        -- In Menu system.
         handle_menu_input()
     else
-
-        if CONTEXT.awakeness >= 1 then
-            if playdate.buttonIsPressed( playdate.kButtonA ) then
-                reset_gameplay()
-            end
-
-        else
-            updateProgression()
-            handle_input()
-            manage_enemies()
-            calculate_light_areas()
-            CONTEXT.awakeness = math.max(0, CONTEXT.awakeness-AWAKENESS_DECAY)
-
-            -- Game Over!
-            if CONTEXT.awakeness >= 1 then
-                PROGRESSION.MUSIC:stop()
-                SOUND.DEATH:play()
-                for _, t in ipairs(playdate.timer.allTimers()) do
-                    t:remove()
-                end
-                for _, e in ipairs(ENEMIES_MANAGER.enemies) do
-                    e.sound_loop:stop()
-                end
-            end
-        end
+        -- In gameplay.
+        updateProgression()
+        handle_input()
+        manage_enemies()
+        calculate_light_areas()
+        update_gameplay_score()
     end
 
+    -- Always redraw and update entities (sprites) and timers.
     gfx.clear()
     gfx.sprite.update()
-
     playdate.timer.updateTimers()
 end

@@ -33,33 +33,70 @@ HEAD_RADIUS = 10
 DRAW_DEBUG = 1
 
 function init_gameplay()
+    -- Done only once on start of the game, to load and setup const resources.
     CONTEXT.player_arm_left = Arm(false)
     CONTEXT.player_arm_right = Arm(true)
     CONTEXT.player_arms = {CONTEXT.player_arm_left, CONTEXT.player_arm_right}
-    CONTEXT.active_arm = CONTEXT.player_arm_left
-
     CONTEXT.player_hand_l = sprite_hand_l
     CONTEXT.player_hand_r = sprite_hand_r
-
-    CONTEXT.is_left_arm_active = true
 end
 
 
 function reset_gameplay()
-    CONTEXT.awakeness = 0
-    CONTEXT.enemies_snoozed = 0
+    -- Done on every (re)start of the play.
+
+    PROGRESSION.MUSIC:stop()
+
     for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
+        enemy.sound_loop:stop()
         enemy:remove()
     end
     ENEMIES_MANAGER.enemies = {}
     ENEMIES_MANAGER.last_spawned_enemy_time = 0
-    playdate.resetElapsedTime()
-    -- initProgressionLevel(PROGRESSION_PLAN.LVL1)
 
+    playdate.resetElapsedTime()
+
+    -- Fresh Score.
+    CONTEXT.awakeness = 0
+    CONTEXT.enemies_snoozed = 0
+
+    -- Start Progression.
+    -- initProgressionLevel(PROGRESSION_PLAN.LVL1)
     playdate.timer.new(1000, spawn_next_enemy)
-    
+    rampUpTheMusic(1, 8)
+
+    -- Setup Character.
+    CONTEXT.active_arm = CONTEXT.player_arm_left
+    CONTEXT.is_left_arm_active = true
+
+    -- Fresh Score.
+    CONTEXT.awakeness = 0
+    CONTEXT.enemies_snoozed = 0
+
+    -- Start Progression.
+    -- initProgressionLevel(PROGRESSION_PLAN.LVL1)
+    playdate.timer.new(1000, spawn_next_enemy)
     rampUpTheMusic(1, 8)
 end
+
+
+function transition_to_gameover_sounds()
+    -- Stop snoozed clocks from waking up during game over.
+    for _, t in ipairs(playdate.timer.allTimers()) do
+        t:remove()
+    end
+
+    -- Change sounds.
+    SOUND.DEATH:play()
+    -- Dim or stop?
+    PROGRESSION.MUSIC:stop()
+    for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
+        if enemy.sound_loop:isPlaying() then
+            enemy.sound_loop:stop()
+        end
+    end
+  end
+  
 
 
 function handle_input()
@@ -123,5 +160,16 @@ function manage_enemies()
         if enemy:isVisible() then
             sumRadius = sumRadius + enemy.current_bubble_radius
         end
+    end
+end
+
+
+function update_gameplay_score()
+    CONTEXT.awakeness = math.max(0, CONTEXT.awakeness-AWAKENESS_DECAY) * 2
+
+    -- Game Over!
+    if CONTEXT.awakeness >= 1 then
+        enter_menu_gameover()
+                    SOUND.DEATH:play()
     end
 end
