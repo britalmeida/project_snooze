@@ -51,10 +51,11 @@ function Arm:reset()
     self.grow_rate = 0.0
     self.punch_speed = 10
     self.slapping = false
+    self:crank(0)
 end
 
 function Arm:crank(crank_change)
-    self.angle_degrees += playdate.getCrankChange() * self.sign
+    self.angle_degrees += playdate.getCrankChange()
     if self.angle_degrees > self.angle_max then
         self.angle_degrees = self.angle_max
     elseif self.angle_degrees < self.angle_min then
