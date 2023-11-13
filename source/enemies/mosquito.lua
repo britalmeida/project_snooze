@@ -12,6 +12,8 @@ function Mosquito:init()
 
     self.current_bubble_radius = 15
     self.bubble_growth_speed = 0
+    self.movement_speed = 0.6
+    self.initial_score = 20
 
     -- Sound
     self.sound_loop = SOUND['ENEMY_MOSQUITO']

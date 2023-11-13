@@ -9,6 +9,7 @@ function Cat:init()
     self.sound_loop = SOUND['ENEMY_CAT']
     self.sound_slap = SOUND['SLAP_CAT']
     self.collision_radius = 5
+    self.score_decay = 0
 
     -- Graphics
     self.static_image = gfx.image.new('images/animation_enemy_cat')
