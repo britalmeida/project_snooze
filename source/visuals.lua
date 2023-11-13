@@ -339,20 +339,12 @@ end
 function draw_hud()
     gfx.pushContext()
         -- Top left corner: Score!
+        gfx.setImageDrawMode(gfx.kDrawModeFillWhite)
         gfx.setColor(gfx.kColorWhite)
-        gfx.fillRect(10, 10, 50, 20)
-        gfx.setColor(gfx.kColorBlack)
+        gfx.setFont(TEXTURES.font)
         local formattedNumber = string.format("%04d", math.floor(math.min(9999, CONTEXT.score)))
         formattedNumber = formattedNumber:sub(1, 2) .. ":" .. formattedNumber:sub(3)
-
         gfx.drawText(formattedNumber, 12, 12)
-
-        -- Crappy health bar
-        if false then
-            gfx.setColor(gfx.kColorWhite)
-            width = (1 - CONTEXT.awakeness) * 50
-            gfx.fillRect(340, 10, width, 20)
-        end
     gfx.popContext()
 end
 
@@ -373,7 +365,10 @@ function init_visuals()
 
     CONTEXT.test_dither = false
 
-    -- Load other image layers.
+    -- Load font.
+    TEXTURES.font = gfx.font.new("fonts/alarmity")
+
+    -- Load image layers.
     TEXTURES.bg = gfxi.new("images/bg")
     TEXTURES.body = gfxi.new("images/body")
     TEXTURES.armpit = gfxi.new("images/shoulder_stump")
