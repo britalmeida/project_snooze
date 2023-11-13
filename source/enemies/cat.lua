@@ -1,6 +1,8 @@
 local still_img = gfx.image.new('images/animation_enemy_cat')
 local anim_walk_imgs = gfx.imagetable.new('images/animation_enemy_cat-walk')
 local anim_walk_framerate = 2
+local anim_meow_imgs = gfx.imagetable.new('images/animation_enemy_cat-meow')
+local anim_meow_framerate = 6.5
 
 class('Cat').extends(Enemy)
 
@@ -10,13 +12,17 @@ function Cat:init()
     self.name = 'cat'
     self.sound_loop = SOUND['ENEMY_CAT']
     self.sound_slap = SOUND['SLAP_CAT']
+    self.sound_meow = SOUND['ENEMY_CAT_MEOW']
+    
     self.collision_radius = 5
     self.score_decay = 0
 
     -- Graphics
     self.static_image = still_img
-    self.anim_default = gfx.animation.loop.new(anim_walk_framerate * frame_ms, anim_walk_imgs, true)
-    self:setImage(self.static_image)
+    self.anim_walk = gfx.animation.loop.new(anim_walk_framerate * frame_ms, anim_walk_imgs, true)
+    self.anim_meow = nil
+    self.anim_default = anim_walk
+    self:setSize(still_img:getSize())
 
     -- Cat
     self.touch_bubble_growth_speed = -0.8
@@ -67,12 +73,29 @@ function Cat:on_hit_by_player()
     end)
 end
 
+Cat.draw = function(self, x, y, width, height)
+    if CONTEXT.menu_screen == MENU_SCREEN.gameplay then
+        self.anim_walk:draw(0, 0)
+        if self.anim_meow then
+            self.anim_meow:draw(0, 0)
+        end
+    else
+        still_img:draw(0,0)
+    end
+end
+
 function Cat:update_logic(CONTEXT)
     if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
         self:hit_the_player()
     end
 
     if self:is_touched_by_any_hand(CONTEXT) then
+        if not self.sound_meow:isPlaying() then
+            self.sound_loop:stop()
+            self.sound_meow:play()
+            self.anim_meow = gfx.animation.loop.new(anim_meow_framerate * frame_ms, anim_meow_imgs, true)
+        end
+
         self.current_bubble_radius += self.touch_bubble_growth_speed
         if self.current_bubble_radius < 0 then
             CONTEXT.score += self.current_score

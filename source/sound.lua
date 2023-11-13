@@ -11,6 +11,7 @@ SOUND = {
   ENEMY_ALARM_PHONE = sp.new("sound/enemy_alarm_phone"),
   ENEMY_ALARM_DIGITAL = sp.new("sound/enemy_alarm_digital"),
   ENEMY_CAT = sp.new("sound/enemy_alarm_cat"),
+  ENEMY_CAT_MEOW = sp.new("sound/enemy_cat_meow"),
   ENEMY_MOSQUITO = sp.new("sound/enemy_mosquito"),
   SLAP_ALARM = sp.new("sound/slap_alarm"),
   SLAP_MOSQUITO = sp.new("sound/slap_mosquito"),
