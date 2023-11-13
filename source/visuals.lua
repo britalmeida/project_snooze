@@ -259,7 +259,15 @@ function calculate_light_areas()
         gfx.setColor(gfx.kColorWhite)
         for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
             if enemy:isVisible() then
-                gfx.fillCircleAtPoint(enemy.x, enemy.y, enemy.current_bubble_radius)
+                gfx.pushContext()
+                    local dither_type = gfxi.kDitherTypeBayer8x8
+                    local distance_to_head = math.sqrt((HEAD_X - enemy.x)^2 + (HEAD_Y - enemy.y)^2) - enemy.current_bubble_radius
+                    -- Circle becomes denser as it approaches the head, but maxes out at 0.8 opacity.
+                    local threat_level = math.max(0, distance_to_head / 100)
+                    local dither_level = threat_level
+                    gfx.setDitherPattern(dither_level, dither_type)
+                    gfx.fillCircleAtPoint(enemy.x, enemy.y, enemy.current_bubble_radius)
+                gfx.popContext()
             end
         end
 
@@ -324,6 +332,9 @@ function draw_game_background( x, y, width, height )
 end
 
 function draw_debug_overlay()
+    if DRAW_DEBUG == 0 then
+        return
+    end
     gfx.pushContext()
         gfx.setColor(gfx.kColorWhite)
         gfx.fillRect(10, 10, 50, 20)
