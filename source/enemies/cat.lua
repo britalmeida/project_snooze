@@ -54,11 +54,14 @@ function Cat:on_hit_by_player()
     self.sound_slap:play()
     -- Make the cat jitter to tell the player they did something bad.
     self.jitter_intensity = 1
-    self.current_bubble_radius += 30
+    local bubble_growth_speed_bkp = self.bubble_growth_speed
+    self.bubble_growth_speed = 5
+    local touch_growth_speed_bkp = self.touch_bubble_growth_speed
     self.touch_bubble_growth_speed = 0
     playdate.timer.new(400, function()
         self.jitter_intensity = 0
-        self.touch_bubble_growth_speed = -0.8
+        self.touch_bubble_growth_speed = touch_growth_speed_bkp
+        self.bubble_growth_speed = bubble_growth_speed_bkp
     end)
 end
 
