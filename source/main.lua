@@ -63,6 +63,7 @@ function playdate.update()
             handle_input()
             manage_enemies()
             calculate_light_areas()
+            CONTEXT.awakeness = math.max(0, CONTEXT.awakeness-AWAKENESS_DECAY)
 
             -- Game Over!
             if CONTEXT.awakeness >= 1 then

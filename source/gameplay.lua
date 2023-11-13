@@ -17,6 +17,8 @@ ARM_EXTEND_SPEED = 20
 
 HAND_TOUCH_RADIUS = 10
 
+AWAKENESS_DECAY = 0.0001
+
 ARM_L_X, ARM_L_Y = 180, 111
 ARM_R_X, ARM_R_Y = 222, 114
 
@@ -101,5 +103,4 @@ function manage_enemies()
             sumRadius = sumRadius + enemy.current_bubble_radius
         end
     end
-    CONTEXT.awakeness = math.min(sumRadius / 100, 1)
 end

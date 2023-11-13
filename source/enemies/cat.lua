@@ -65,7 +65,7 @@ end
 function Cat:update_logic(CONTEXT)
     if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
         self:on_hit()
-        CONTEXT.awakeness = 1
+        CONTEXT.awakeness += 0.2
     end
 
     if self:is_touched_by_any_hand(CONTEXT) then
