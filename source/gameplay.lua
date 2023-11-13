@@ -30,6 +30,7 @@ ARM_R_SIGN = 1
 HEAD_X, HEAD_Y = 213, 82
 HEAD_RADIUS = 10
 
+DITHERED_BUBBLES = false
 DRAW_DEBUG = 0
 
 function init_gameplay()

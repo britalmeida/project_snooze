@@ -260,12 +260,14 @@ function calculate_light_areas()
         for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
             if enemy:isVisible() then
                 gfx.pushContext()
-                    local dither_type = gfxi.kDitherTypeBayer8x8
-                    local distance_to_head = math.sqrt((HEAD_X - enemy.x)^2 + (HEAD_Y - enemy.y)^2) - enemy.current_bubble_radius
-                    -- Circle becomes denser as it approaches the head, but maxes out at 0.8 opacity.
-                    local threat_level = math.max(0, distance_to_head / 100)
-                    local dither_level = threat_level
-                    gfx.setDitherPattern(dither_level, dither_type)
+                    if DITHERED_BUBBLES then
+                        local dither_type = gfxi.kDitherTypeBayer8x8
+                        local distance_to_head = math.sqrt((HEAD_X - enemy.x)^2 + (HEAD_Y - enemy.y)^2) - enemy.current_bubble_radius
+                        -- Circle becomes denser as it approaches the head, but maxes out at 0.8 opacity.
+                        local threat_level = math.max(0, distance_to_head / 100)
+                        local dither_level = threat_level
+                        gfx.setDitherPattern(dither_level, dither_type)
+                    end
                     gfx.fillCircleAtPoint(enemy.x, enemy.y, enemy.current_bubble_radius)
                 gfx.popContext()
             end
