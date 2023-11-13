@@ -53,6 +53,7 @@ function reset_gameplay()
     ENEMIES_MANAGER.last_spawned_enemy_time = 0
     playdate.resetElapsedTime()
     initProgressionLevel(PROGRESSION_PLAN.LVL1)
+    rampUpTheMusic(1, 8)
 end
 
 
