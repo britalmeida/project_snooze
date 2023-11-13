@@ -23,6 +23,15 @@ function Mosquito:init()
     self.anim_default = gfx.animation.loop.new(33.33333333, gfx.imagetable.new('images/animation_mosquito-fly') , true) -- Ring
 end
 
+function Mosquito:start()
+    Mosquito.super.start(self)
+    -- Spawn it somewhere slightly off-screen
+    local index = math.random(1, 2)
+    local x = {-20, 420}
+    local y = math.random(240)
+    self:moveTo(x[index], y)
+end
+
 function Mosquito:on_hit_by_player()
     Mosquito.super.on_hit_by_player(self)
     CONTEXT.enemies_snoozed += 1
