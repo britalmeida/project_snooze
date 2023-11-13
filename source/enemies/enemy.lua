@@ -91,6 +91,14 @@ function Enemy:circleCollision(x, y, radius)
     return math.sqrt((self.x - x)^2 + (self.y - y)^2) < radius
 end
 
+function self:is_out_of_reach()
+    for _, arm in ipairs(CONTEXT.player_arms)
+    if self:circleCollision(arm.x, arm.y, ARM_LENGTH_MAX) then
+        return true
+    end
+    return false
+end
+
 function Enemy:start()
     local repeats = 0
     repeat
@@ -106,7 +114,7 @@ function Enemy:start()
 
         self:moveTo(x, y)
         repeats += 1
-    until (self:is_near_player_face(self.current_bubble_radius) == false) or repeats > 10
+    until ((self:is_near_player_face(self.current_bubble_radius) or self:is_out_of_reach()) == false) or repeats > 10
 
     self:setVisible(true)
     if self.sound_loop then 
