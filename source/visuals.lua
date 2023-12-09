@@ -321,12 +321,6 @@ function draw_character()
     TEXTURES.armpit:draw(173, 103)
     TEXTURES.armpit:draw(211, 105)
     TEXTURES.body:draw(0, 0)
-
-    if CONTEXT.awakeness >= 0.97 then
-        TEXTURES.head_awake:draw(178, 48)
-    else
-        TEXTURES.head_asleep:draw(178, 48)
-    end
 end
 
 
@@ -376,8 +370,6 @@ function init_visuals()
     TEXTURES.bg = gfxi.new("images/bg")
     TEXTURES.body = gfxi.new("images/body")
     TEXTURES.armpit = gfxi.new("images/shoulder_stump")
-    TEXTURES.head_asleep = gfxi.new("images/animation_hero-asleep")
-    TEXTURES.head_awake = gfxi.new("images/animation_hero-awake")
 
     -- Make a (programmer) star.
     local size = 8
@@ -396,6 +388,7 @@ function init_visuals()
     setDrawPass(-40, draw_game_background)
     --setDrawPass(-30, draw_dream_world)
     setDrawPass(-20, draw_character)
+    --          -20, Head:draw()
     setDrawPass(-10, draw_arms)
     setDrawPass(  0, draw_light_areas) -- light bubbles are 0, so its easy to remember.
     setDrawPass(10, draw_hud)
