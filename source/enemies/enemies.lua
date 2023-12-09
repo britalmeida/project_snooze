@@ -4,7 +4,7 @@ import "alarm_phone"
 import "mosquito"
 import "cat"
 
-ENEMY_SEQUENCE = {Mosquito, Mosquito, Mosquito, Mosquito}
+ENEMY_SEQUENCE = {AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog}
 -- {AlarmAnalog, AlarmAnalog, AlarmDigital, AlarmAnalog, AlarmPhone, AlarmDigital, Mosquito, AlarmDigital, Mosquito, AlarmPhone, Cat, AlarmAnalog, AlarmDigital, AlarmPhone, Mosquito}
 
 ENEMIES = {}
@@ -18,7 +18,6 @@ function spawn_next_enemy()
   end
   next_enemy = next_enemy()
   print("Spawned enemy " .. next_enemy_idx .. " " .. next_enemy.name)
-  next_enemy:start()
   table.insert(ENEMIES, next_enemy)
   playdate.timer.new(ENEMY_SPAWN_GAP_SECONDS*1000, function()
       spawn_next_enemy()

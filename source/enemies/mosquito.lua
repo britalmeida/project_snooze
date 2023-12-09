@@ -27,8 +27,7 @@ function Mosquito:init()
     self:setImage(self.static_image)
 end
 
-function Mosquito:start()
-    Mosquito.super.start(self)
+function Mosquito:set_spawn_location()
     -- Spawn it somewhere slightly off-screen, left or right.
     local index = math.random(1, 2)
     local x = {-20, 420}

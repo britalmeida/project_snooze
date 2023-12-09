@@ -4,6 +4,7 @@ local Sprite = gfx.sprite
 class('Enemy').extends(Sprite)
 
 function Enemy:init()
+    -- Function to initialize OR re-initialize an enemy.
     Enemy.super.init(self)
 
     -- Threat
@@ -29,13 +30,19 @@ function Enemy:init()
     -- Sound
     self.sound_loop = nil
     self.sound_slap = nil
+    if self.sound_loop then 
+        self.sound_loop:play(0)
+    end
 
     -- Graphics
     self.static_image = nil
     self.anim_default = nil
     self.death_image = nil
     self:addSprite()
-    self:setVisible(false)
+    self:setVisible(true)
+
+    -- Spawn location
+    self:set_spawn_location()
 end
 
 function Enemy:jitter()
@@ -96,8 +103,7 @@ function Enemy:is_near_another_enemy()
     return false
 end
 
-function Enemy:start()
-    self:init()
+function Enemy:set_spawn_location()
     local repeats = 0
     repeat
         -- Pick an angle.
@@ -114,11 +120,8 @@ function Enemy:start()
         (self:is_out_of_reach() == false) or
         (repeats > 10)
     )
+    print("Spawned after " .. repeats .. " repeats.")
     self:clampPosition(20, 20, 380, 120)
-    self:setVisible(true)
-    if self.sound_loop then 
-        self.sound_loop:play(0)
-    end
 end
 
 function Enemy:is_near_player_face(threshold)
@@ -166,7 +169,7 @@ function Enemy:on_hit()
 
     -- Start a timer to respawn this enemy.
     playdate.timer.new(self.respawn_timer_seconds*1000, function()
-        self:start()
+        self:init()
     end)
 end
 

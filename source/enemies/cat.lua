@@ -8,14 +8,23 @@ class('Cat').extends(Enemy)
 
 function Cat:init()
     Cat.super.init(self)
+
+    -- Threat
+    self.collision_radius = 5
+    self.current_bubble_radius = 40
+    self.bubble_growth_speed = 0.1
+
+    -- Score
+    self.score_decay = 0
+
+    -- Movement
+    self.jitter_intensity = 0
+
     -- Sound
     self.name = 'cat'
     self.sound_loop = SOUND['ENEMY_CAT']
     self.sound_slap = SOUND['SLAP_CAT']
     self.sound_meow = SOUND['ENEMY_CAT_MEOW']
-    
-    self.collision_radius = 5
-    self.score_decay = 0
 
     -- Graphics
     self.static_image = still_img
@@ -28,17 +37,10 @@ function Cat:init()
     self.touch_bubble_growth_speed = -0.8
 end
 
-function Cat:start()
-    self:setVisible(true)
-
-    self.jitter_intensity = 0
-    self.current_bubble_radius = 40
-    self.bubble_growth_speed = 0.1
-    
+function Cat:set_spawn_location()
     repeat
         -- Pick an arm
         arm = CONTEXT.player_arms[math.random(1, 2)]
-
         -- Pick an angle.
         local angle = math.random(arm.angle_min, arm.angle_max)
         local radius = ARM_LENGTH_DEFAULT
@@ -48,11 +50,6 @@ function Cat:start()
 
         self:moveTo(x, y)
     until (self:is_near_player_face(50+self.current_bubble_radius) == false) and (self.x > 230) or (self.x < 170)
-
-    if self.sound_loop then 
-        self.sound_loop:play(0)
-    end
-
 end
 
 function Cat:on_hit_by_player()
