@@ -139,7 +139,7 @@ end
 function tick_enemies()
     -- Update enemies (jitter around, increase radius, ...).
     for key, enemy in ipairs(ENEMIES) do
-        if enemy:isVisible() and enemy.is_alive then
+        if enemy:isVisible() then
             enemy:tick(CONTEXT)
         end
     end

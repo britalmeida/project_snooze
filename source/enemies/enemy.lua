@@ -36,7 +36,9 @@ function Enemy:init()
 
     -- Graphics
     self.anim_current = nil
-    self.death_image = nil      -- Optional. If provided, drawn for 1 second before despawning.
+    self.anim_death = nil
+    self.img_death = nil        -- Optional. If provided, drawn for 1 second before despawning.
+    self.img_table_death = nil  -- Optional. If provided, drawn for 1 second before despawning.
     self:addSprite()
     self:setVisible(true)
 
@@ -55,7 +57,6 @@ function Enemy:start()
     self:setVisible(true)
 
     if self.sound_loop then 
-        print("Play sound loop of " .. self.name)
         self.sound_loop:play(0)
     end
 
@@ -151,27 +152,41 @@ function Enemy:is_near_player_face(threshold)
 end
 
 function Enemy:on_hit_by_player()
+    self:on_hit()
     if self.sound_slap then
         self.sound_slap:play()
     end
     CONTEXT.score += self.current_score
 
-    self.is_alive = false
-    self.current_bubble_radius = 0
+    if self.is_alive then
+        self.is_alive = false
+        self.current_bubble_radius = 0
 
-    local death_linger_time = 0
-    if self.death_image then
-        death_linger_time = 1000
-        self.death_image:setInverted(true)
-        self:setImage(self.death_image)
+        local death_linger_time = 0
+        if self.img_table_death then
+            death_linger_time = 1000
+            self.anim_death = gfx.animation.loop.new(3 * frame_ms, self.img_table_death, false)
+            self.anim_current = self.anim_death
+        elseif self.img_death then
+            death_linger_time = 1000
+            self.anim_current = nil
+            self:setImage(self.img_death)
+        end
+
+        playdate.timer.new(death_linger_time, function()
+            self:despawn_then_respawn()
+        end)
     end
+end
 
-    playdate.timer.new(death_linger_time, function()
-        self:despawn_then_respawn()
-    end)
+function Enemy:on_hit()
+    if self.sound_loop then
+        self.sound_loop:stop()
+    end
 end
 
 function Enemy:hit_the_player()
+    self:on_hit()
     CONTEXT.awakeness_rate_of_change = 0.035
     -- Start a timer to respawn this enemy.
     playdate.timer.new(200, function()
@@ -183,9 +198,6 @@ end
 
 function Enemy:despawn_then_respawn()
     -- Should be called whenever player hits enemy or enemy hits player.
-    if self.sound_loop then
-        self.sound_loop:stop()
-    end
 
     self:setVisible(false)
 
@@ -209,6 +221,17 @@ function Enemy:is_touched_by_any_hand(CONTEXT)
 end
 
 function Enemy:tick(CONTEXT)
+    -- This is only called when self:isVisible == true !!!
+
+    -- Set the image frame to display.
+    if self.anim_current then
+        self:setImage(self.anim_current:image():scaledImage(self.mirror, 1))
+    end
+
+    if not self.is_alive then
+        return
+    end
+
     for _, arm in ipairs(CONTEXT.player_arms) do
         if arm.slapping and self:is_touched_by_hand(arm.hand) then
             self:on_hit_by_player()
@@ -224,10 +247,4 @@ function Enemy:tick(CONTEXT)
     self.current_score = math.max(1, self.current_score - self.score_decay)
     self:jitter()
     self.current_bubble_radius += self.bubble_growth_speed
-
-    -- Set the image frame to display.
-    -- e.g. if chill then self:setImage(img), otherwise walk or ring.
-    if self.anim_current then
-        self:setImage(self.anim_current:image():scaledImage(self.mirror,1))
-    end
 end

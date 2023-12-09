@@ -17,6 +17,7 @@ function AlarmAnalog:init()
     self.sound_slap = SOUND['SLAP_ALARM']
 
     -- Graphics
+    self.img_table_death = gfx.imagetable.new('images/animation_alarm1-death') --gfx.imagetable.new('images/animation_mosquito-fly')
     self.anim_ringing = gfx.animation.loop.new(anim_ring_framerate * frame_ms, anim_ring_imgs, true)
     self.anim_idle = static_img
     self.anim_current = self.anim_ringing
@@ -33,6 +34,9 @@ function AlarmAnalog:behaviour_loop()
     self.bubble_growth_speed = 0.6
     self.anim_current = self.anim_ringing
     playdate.timer.new(1000, function()
+        if not self.is_alive then
+            return
+        end
         self.jitter_intensity = 0
         self.anim_current = self.anim_idle
         self.bubble_growth_speed = -0.1

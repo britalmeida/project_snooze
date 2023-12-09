@@ -33,7 +33,8 @@ function Mosquito:init()
     -- Graphics
     self.anim_fly = gfx.animation.loop.new(anim_fly_framerate * frame_ms, anim_fly_imgs, true)
     self.anim_current = self.anim_fly
-    self.death_image = img_dead_mosquito
+    self.img_death = img_dead_mosquito
+    self.img_death:setInverted(true)
 end
 
 function Mosquito:behaviour_loop()
