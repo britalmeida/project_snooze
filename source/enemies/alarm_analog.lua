@@ -1,8 +1,8 @@
 import "enemy"
 
 local static_img = gfx.image.new('images/animation-alarm1')
-local anim_ring_imgs = gfx.imagetable.new('images/animation_alarm1-ring')
-local anim_ring_framerate = 1
+local anim_ring_imgs = gfx.imagetable.new('images/animation_alarm1_with_arms-walk')
+local anim_ring_framerate = 5
 
 class('AlarmAnalog').extends(Enemy)
 
@@ -20,9 +20,6 @@ function AlarmAnalog:init()
     self.anim_ringing = gfx.animation.loop.new(anim_ring_framerate * frame_ms, anim_ring_imgs, true)
     self.anim_idle = static_img
     self.anim_current = self.anim_ringing
-    
-    -- Behaviour
-    self:behaviour_loop()
 end
 
 function AlarmAnalog:behaviour_loop()
@@ -47,11 +44,5 @@ function AlarmAnalog:behaviour_loop()
 end
 
 function AlarmAnalog:tick(CONTEXT)
-    if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
-        self:hit_the_player()
-    end
-
-    self.current_bubble_radius += self.bubble_growth_speed
-
     AlarmAnalog.super.tick(self, CONTEXT)
 end
