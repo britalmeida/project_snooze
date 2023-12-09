@@ -13,3 +13,6 @@ build_and_run.sh
 # Audio temp export folder
 source/sound/export/*
 project_snooze.code-workspace
+
+# (Ines) Remove these from the diff until sorting them
+screenshots/
