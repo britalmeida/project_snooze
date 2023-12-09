@@ -140,8 +140,6 @@ end
 
 function init_visuals()
 
-    CONTEXT.test_dither = false
-
     -- Load font.
     TEXTURES.font = gfx.font.new("fonts/alarmity")
 
