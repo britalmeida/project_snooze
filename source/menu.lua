@@ -33,7 +33,6 @@ function enter_menu_start()
 
     remove_system_menu_entries()
     stop_gameplay_sounds()
-    SOUND.BG_LOOP_CREDITS:stop()
 
     CONTEXT.menu_active_screen_texture = UI_TEXTURES.game_start
     if not SOUND.BG_LOOP_MENU:isPlaying() then
@@ -45,17 +44,12 @@ function enter_menu_howto()
     CONTEXT.menu_screen = MENU_SCREEN.howto
 
     CONTEXT.menu_active_screen_texture = UI_TEXTURES.how_to_play
-    if not SOUND.BG_LOOP_MENU:isPlaying() then
-        SOUND.BG_LOOP_MENU:play(0)
-    end
 end
 
 function enter_menu_credits()
     CONTEXT.menu_screen = MENU_SCREEN.credits
 
     CONTEXT.menu_active_screen_texture = UI_TEXTURES.credits
-    SOUND.BG_LOOP_MENU:stop()
-    SOUND.BG_LOOP_CREDITS:play(0)
 end
 
 function enter_menu_gameover()
@@ -73,7 +67,6 @@ end
 function enter_gameplay()
     CONTEXT.menu_screen = MENU_SCREEN.gameplay
     SOUND.BG_LOOP_MENU:stop()
-    SOUND.BG_LOOP_CREDITS:stop()
     add_system_menu_entries()
     reset_gameplay()
 end
