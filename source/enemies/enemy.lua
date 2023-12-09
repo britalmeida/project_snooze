@@ -5,6 +5,7 @@ class('Enemy').extends(Sprite)
 
 function Enemy:init()
     Enemy.super.init(self)
+    self.name = "enemy"
 
     -- Threat
     self.collision_radius = 15
@@ -53,6 +54,7 @@ function Enemy:start()
     self:init()
     
     if self.sound_loop then 
+        print("Play sound loop of " .. self.name)
         self.sound_loop:play(0)
     end
 

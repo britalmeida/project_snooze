@@ -18,6 +18,7 @@ function spawn_next_enemy()
       return
   end
   next_enemy = next_enemy()
+  next_enemy:start()
   print("Spawned enemy " .. next_enemy_idx .. " " .. next_enemy.name)
   table.insert(ENEMIES, next_enemy)
   playdate.timer.new(ENEMY_SPAWN_GAP_SECONDS*1000, function()
