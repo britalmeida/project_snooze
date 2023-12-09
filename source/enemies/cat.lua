@@ -1,3 +1,4 @@
+local still_img = gfx.image.new('images/animation_enemy_cat')
 local anim_walk_imgs = gfx.imagetable.new('images/animation_enemy_cat-walk')
 local anim_walk_framerate = 2
 local anim_meow_imgs = gfx.imagetable.new('images/animation_enemy_cat-meow')
@@ -22,19 +23,35 @@ function Cat:init()
 
     -- Sound
     self.name = 'cat'
-    self.sound_loop = SOUND['ENEMY_CAT']
+    self.sound_loop = nil --SOUND['ENEMY_CAT']
     self.sound_slap = SOUND['SLAP_CAT']
     self.sound_meow = SOUND['ENEMY_CAT_MEOW']
 
     -- Graphics
     self.anim_walk = gfx.animation.loop.new(anim_walk_framerate * frame_ms, anim_walk_imgs, true)
-    self.anim_meow = gfx.animation.loop.new(anim_meow_framerate * frame_ms, anim_meow_imgs, true)
+    self.anim_meow = nil
     self.anim_current = anim_walk
+    self:setSize(still_img:getSize())
 
     -- Cat
     self.touch_bubble_growth_speed = -0.8
     self.backup_bubble_growth_speed = self.bubble_growth_speed
 
+end
+
+Cat.draw = function(self, x, y, width, height)
+    if CONTEXT.menu_screen == MENU_SCREEN.gameplay then
+        local flip = playdate.graphics.kImageUnflipped
+        if self.mirror == -1 then
+            flip = playdate.graphics.kImageFlippedX
+        end
+        self.anim_walk:draw(0, 0, flip)
+        if self.anim_meow then
+            self.anim_meow:draw(0, 0, flip)
+        end
+    else
+        still_img:draw(0,0)
+    end
 end
 
 function Cat:set_spawn_location()
@@ -59,7 +76,7 @@ function Cat:on_hit_by_player()
     local bubble_growth_speed_bkp = self.bubble_growth_speed
     self.bubble_growth_speed = 5
     local touch_growth_speed_bkp = self.touch_bubble_growth_speed
-    self.touch_bubble_growth_speed = 0
+    self.touch_bubble_growth_speed = 5
     playdate.timer.new(400, function()
         self.jitter_intensity = 0
         self.touch_bubble_growth_speed = touch_growth_speed_bkp
@@ -68,11 +85,17 @@ function Cat:on_hit_by_player()
 end
 
 function Cat:tick(CONTEXT)
+    if self:distanceTo(self.movement_target_x, self.movement_target_y) > 5 then
+        self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
+    else
+        self.bubble_growth_speed = 0.3
+    end
+
     if self:is_touched_by_any_hand(CONTEXT) then
-        self.anim_current = self.anim_meow
         if not self.sound_meow:isPlaying() then
-            self.sound_loop:stop()
+            -- self.sound_loop:stop()
             self.sound_meow:play()
+            self.anim_meow = gfx.animation.loop.new(anim_meow_framerate * frame_ms, anim_meow_imgs, false)
         end
 
         self.backup_bubble_growth_speed = self.bubble_growth_speed
@@ -87,14 +110,8 @@ function Cat:tick(CONTEXT)
             end)
         end
     else
-        self.anim_current = self.anim_walk
         self.bubble_growth_speed = self.backup_bubble_growth_speed
     end
 
     Cat.super.tick(self, CONTEXT)
-    if self:distanceTo(self.movement_target_x, self.movement_target_y) > 5 then
-        self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
-    else
-        self.bubble_growth_speed = 0.3
-    end
 end
