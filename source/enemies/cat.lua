@@ -40,7 +40,7 @@ function Cat:init()
 
     -- Cat
     self.touch_bubble_growth_speed = -0.8
-    self.backup_bubble_growth_speed = self.bubble_growth_speed
+    self.no_touch_bubble_growth_speed = 0.3
 
 end
 
@@ -91,21 +91,18 @@ end
 
 function Cat:tick(CONTEXT)
     if self:distanceTo(self.movement_target_x, self.movement_target_y) > 5 then
+        -- While moving towards target location
         self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
         self.anim_current_cat = self.anim_walk
-    else
-        self.anim_current_cat = self.anim_sitting
-        self.bubble_growth_speed = 0.3
-    end
-
-    if self:is_touched_by_any_hand(CONTEXT) then
+        self.bubble_growth_speed = 0.0
+    elseif self:is_touched_by_any_hand(CONTEXT) then
+        -- While being petted
         if not self.sound_meow:isPlaying() then
             -- self.sound_loop:stop()
             self.sound_meow:play()
             self.anim_meow = gfx.animation.loop.new(anim_meow_framerate * frame_ms, anim_meow_imgs, false)
         end
 
-        self.backup_bubble_growth_speed = self.bubble_growth_speed
         self.bubble_growth_speed = self.touch_bubble_growth_speed
         if self.current_bubble_radius < 0 then
             self.movement_target_x = 200
@@ -117,7 +114,9 @@ function Cat:tick(CONTEXT)
             end)
         end
     else
-        self.bubble_growth_speed = self.backup_bubble_growth_speed
+        -- Waiting to be petted
+        self.anim_current_cat = self.anim_sitting
+        self.bubble_growth_speed = self.no_touch_bubble_growth_speed
     end
 
     Cat.super.tick(self, CONTEXT)
