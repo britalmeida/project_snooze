@@ -81,7 +81,7 @@ Cat.draw = function(self, x, y, width, height)
     end
 end
 
-function Cat:update_logic(CONTEXT)
+function Cat:tick(CONTEXT)
     if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
         self:hit_the_player()
     end
@@ -102,5 +102,5 @@ function Cat:update_logic(CONTEXT)
         self.current_bubble_radius += self.bubble_growth_speed
     end
 
-    Cat.super.update_logic(self, CONTEXT)
+    Cat.super.tick(self, CONTEXT)
 end

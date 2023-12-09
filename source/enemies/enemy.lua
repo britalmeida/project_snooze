@@ -124,7 +124,7 @@ function Enemy:set_spawn_location()
         (self:is_out_of_reach() == false) or
         (repeats > 10)
     )
-    print("Spawned after " .. repeats .. " repeats.")
+    -- print("Spawned after " .. repeats .. " repeats.")
     self:clampPosition(20, 20, 380, 120)
 end
 
@@ -189,7 +189,7 @@ function Enemy:is_touched_by_any_hand(CONTEXT)
     return false
 end
 
-function Enemy:update_logic(CONTEXT)
+function Enemy:tick(CONTEXT)
     for _, arm in ipairs(CONTEXT.player_arms) do
         if arm.slapping and self:is_touched_by_hand(arm.hand) then
             self:on_hit_by_player()

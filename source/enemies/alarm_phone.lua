@@ -49,6 +49,6 @@ function AlarmPhone:set_spawn_location()
         (self:is_out_of_reach() == false) or
         (repeats > 10)
     )
-    print("Spawned after " .. repeats .. " repeats.")
+    -- print("Spawned after " .. repeats .. " repeats.")
     self:clampPosition(20, 20, 380, 120)
 end

@@ -41,7 +41,7 @@ function AlarmDigital:set_spawn_location()
     self:moveTo(x[index_x], y[index_y])
 end
 
-function AlarmDigital:update_logic()
-    AlarmDigital.super.update_logic(self, CONTEXT)
+function AlarmDigital:tick()
+    AlarmDigital.super.tick(self, CONTEXT)
     self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
 end

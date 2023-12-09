@@ -106,7 +106,7 @@ function handle_input()
     end
 
     -- B button is to slap alarms/mosquitoes.
-    if CONTEXT.active_arm.slapping == false and playdate.buttonIsPressed(playdate.kButtonB) then
+    if CONTEXT.active_arm.slapping == false and playdate.buttonJustPressed(playdate.kButtonB) then
         CONTEXT.active_arm.slapping = true
         SOUND['SLAP_ALARM']:play()
         local arm = CONTEXT.active_arm
@@ -115,21 +115,27 @@ function handle_input()
         end)
     end
 
-    CONTEXT.active_arm:crank(playdate.getCrankChange())
+    CONTEXT.active_arm:crank()
 
-    if CONTEXT.active_arm.grow_rate == 0 and playdate.buttonIsPressed(playdate.kButtonUp) then
+    if CONTEXT.active_arm.grow_rate == 0 and playdate.buttonJustPressed(playdate.kButtonUp) then
         CONTEXT.active_arm:punch(20)
     end
-    if CONTEXT.active_arm.grow_rate == 0 and playdate.buttonIsPressed(playdate.kButtonDown) then
+    if CONTEXT.active_arm.grow_rate == 0 and playdate.buttonJustPressed(playdate.kButtonDown) then
         CONTEXT.active_arm:punch(-10)
     end
 end
 
-function update_enemies()
+function tick_arms()
+    for index, arm in ipairs(CONTEXT.player_arms) do
+        arm:tick()
+    end
+end
+
+function tick_enemies()
     -- Update enemies (jitter around, increase radius, ...).
     for key, enemy in ipairs(ENEMIES) do
         if enemy:isVisible() and enemy.is_alive then
-            enemy:update_logic(CONTEXT)
+            enemy:tick(CONTEXT)
         end
     end
 end
