@@ -96,15 +96,18 @@ end
 function handle_menu_input()
     if CONTEXT.menu_screen == MENU_SCREEN.gameover then
         if playdate.buttonIsPressed( playdate.kButtonA ) then
+            SOUND.MENU_CONFIRM:play()
             enter_gameplay()
         end
         if playdate.buttonJustReleased( playdate.kButtonB ) then
+            SOUND.MENU_CONFIRM:play()
             enter_menu_start()
         end
     end
     if CONTEXT.menu_screen == MENU_SCREEN.start then
         -- Select an Option.
         if playdate.buttonJustReleased( playdate.kButtonA ) then
+            SOUND.MENU_CONFIRM:play()
             if CONTEXT.menu_focus_option == 0 then
                 enter_gameplay()
             end
@@ -118,9 +121,11 @@ function handle_menu_input()
         -- Cycle Options.
         if playdate.buttonJustReleased( playdate.kButtonDown ) then
             CONTEXT.menu_focus_option += 1
+            SOUND.MENU_HIGHLIGHT:play()
         end
         if playdate.buttonJustReleased( playdate.kButtonUp ) then
             CONTEXT.menu_focus_option -= 1
+            SOUND.MENU_HIGHLIGHT:play()
         end
         local crankTicks = playdate.getCrankTicks(3)
         if crankTicks == 1 then
@@ -134,11 +139,13 @@ function handle_menu_input()
     end
     if CONTEXT.menu_screen == MENU_SCREEN.howto then
         if playdate.buttonJustReleased( playdate.kButtonB ) then
+            SOUND.MENU_CONFIRM:play()
             enter_menu_start()
         end
     end
     if CONTEXT.menu_screen == MENU_SCREEN.credits then
         if playdate.buttonJustReleased( playdate.kButtonB ) then
+            SOUND.MENU_CONFIRM:play()
             enter_menu_start()
         end
     end
