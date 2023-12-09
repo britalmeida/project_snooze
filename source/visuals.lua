@@ -54,11 +54,11 @@ function calculate_light_areas()
 
         -- Draw sunray as a healthbar.
         local intensity = math.min(0.95, 1.0-CONTEXT.awakeness)
-        local sun_growth = 50 * CONTEXT.awakeness + math.random(0,2)
+        local sun_growth = 70 * CONTEXT.awakeness + math.random(0,2)
         gfx.setDitherPattern(intensity, gfxi.kDitherTypeBayer8x8)
         --ray
         gfx.fillPolygon(199, 32, 203, 32,
-                        360+sun_growth, 240, 350, 240)
+                        380, 240, 370-sun_growth, 240)
         -- window
         gfx.fillPolygon(199, 26, 203, 26,
                         201, 0, 200, 0)
@@ -139,8 +139,6 @@ function draw_debug_overlay()
 end
 
 function init_visuals()
-
-    CONTEXT.test_dither = false
 
     -- Load font.
     TEXTURES.font = gfx.font.new("fonts/alarmity")
