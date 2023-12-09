@@ -54,19 +54,17 @@ function Arm:reset()
     self:crank(0)
 end
 
-function Arm:crank(crank_change)
-    self.angle_degrees += playdate.getCrankChange()
-    if self.angle_degrees > self.angle_max then
-        self.angle_degrees = self.angle_max
-    elseif self.angle_degrees < self.angle_min then
-        self.angle_degrees = self.angle_min
+function Arm:tick()
+    self.current_length += self.grow_rate
+    if self.grow_rate ~= 0 then
+        print("Tick " .. tostring(self.is_left) .. " " .. tostring(self.grow_rate))
     end
 
-    -- Compute transforms for both arms
+    self:clampLength()
+
+    -- Compute transforms
     local x = self.line_segment.x + self.current_length * math.cos(math.rad(self.angle_degrees))
     local y = self.line_segment.y + self.current_length * math.sin(math.rad(self.angle_degrees))
-
-    self.current_length += self.grow_rate
 
     self.line_segment.x2 = x
     self.line_segment.y2 = y
@@ -78,20 +76,13 @@ function Arm:crank(crank_change)
     self.hand:setRotation(self.angle_degrees + offset)
 end
 
-function Arm:setLength(newLength)
-    if newLength > ARM_LENGTH_MAX then
-        newLength = ARM_LENGTH_MAX
-    elseif newLength < ARM_LENGTH_MIN then
-        newLength = ARM_LENGTH_MIN
+function Arm:crank()
+    self.angle_degrees += playdate.getCrankChange()
+    if self.angle_degrees > self.angle_max then
+        self.angle_degrees = self.angle_max
+    elseif self.angle_degrees < self.angle_min then
+        self.angle_degrees = self.angle_min
     end
-
-    local currentLength = math.sqrt((self.line_segment.x2 - self.line_segment.x)^2 + (self.line_segment.y2 - self.line_segment.y)^2)
-
-    -- Calculate the scaling factor
-    local scaleFactor = newLength / currentLength
-
-    self.line_segment.x2 = self.line_segment.x + (self.line_segment.x2 - self.line_segment.x) * scaleFactor
-    self.line_segment.y2 = self.line_segment.y + (self.line_segment.y2 - self.line_segment.y) * scaleFactor
 end
 
 function Arm:punch(speed)
@@ -108,6 +99,7 @@ function Arm:punch(speed)
 end
 
 function Arm:clampLength()
+    -- We ideally shouldn't rely on this, but instead tweak the punch speed timings.
     if self.line_segment.x2 > ARM_LENGTH_MAX then
         self.line_segment.x2 = ARM_LENGTH_MAX
     elseif self.line_segment.x2 < ARM_LENGTH_MIN then

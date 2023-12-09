@@ -49,6 +49,7 @@ function playdate.update()
     if CONTEXT.menu_screen == MENU_SCREEN.gameplay then
         -- In gameplay.
         handle_input()
+        tick_arms()
         update_enemies()
         calculate_light_areas()
         update_gameplay_score()
