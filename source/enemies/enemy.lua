@@ -52,7 +52,8 @@ function Enemy:start()
     -- Important to keep this separate from init(), so subclasses can define things in their own init, 
     -- such as self.sound_loop, which can be accessed here.
     self:init()
-    
+    self:setVisible(true)
+
     if self.sound_loop then 
         print("Play sound loop of " .. self.name)
         self.sound_loop:play(0)

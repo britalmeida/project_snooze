@@ -3,6 +3,8 @@ local anim_walk_imgs = gfx.imagetable.new('images/animation_enemy_cat-walk')
 local anim_walk_framerate = 2
 local anim_meow_imgs = gfx.imagetable.new('images/animation_enemy_cat-meow')
 local anim_meow_framerate = 6.5
+local anim_sit_imgs = gfx.imagetable.new('images/animation_enemy_cat-sit')
+local anim_sit_framerate = 3
 
 class('Cat').extends(Enemy)
 
@@ -29,9 +31,12 @@ function Cat:init()
 
     -- Graphics
     self.anim_walk = gfx.animation.loop.new(anim_walk_framerate * frame_ms, anim_walk_imgs, true)
+    self.anim_sitting = gfx.animation.loop.new(anim_sit_framerate * frame_ms, anim_sit_imgs, true)
     self.anim_meow = nil
-    self.anim_current = anim_walk
+    self.anim_current = nil -- Don't set this, because we don't want to use the drawing logic inherited from Enemy.
+    self.anim_current_cat = anim_walk
     self:setSize(still_img:getSize())
+    self:setVisible(false)
 
     -- Cat
     self.touch_bubble_growth_speed = -0.8
@@ -45,7 +50,7 @@ Cat.draw = function(self, x, y, width, height)
         if self.mirror == -1 then
             flip = playdate.graphics.kImageFlippedX
         end
-        self.anim_walk:draw(0, 0, flip)
+        self.anim_current_cat:draw(0, 0, flip)
         if self.anim_meow then
             self.anim_meow:draw(0, 0, flip)
         end
@@ -87,7 +92,9 @@ end
 function Cat:tick(CONTEXT)
     if self:distanceTo(self.movement_target_x, self.movement_target_y) > 5 then
         self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
+        self.anim_current_cat = self.anim_walk
     else
+        self.anim_current_cat = self.anim_sitting
         self.bubble_growth_speed = 0.3
     end
 
