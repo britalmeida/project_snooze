@@ -81,12 +81,12 @@ function Arm:crank()
     end
 end
 
-function Arm:punch(speed)
+function Arm:punch(speed, duration)
     self.grow_rate = speed
     self.slapping = true
-    playdate.timer.new(100, function()
+    playdate.timer.new(duration, function()
         self.grow_rate = -speed
-        playdate.timer.new(100, function()
+        playdate.timer.new(duration, function()
             self.current_length = ARM_LENGTH_DEFAULT
             self.grow_rate = 0
             self.slapping = false
@@ -96,9 +96,9 @@ end
 
 function Arm:clampLength()
     -- We ideally shouldn't rely on this, but instead tweak the punch speed timings.
-    if self.line_segment.x2 > ARM_LENGTH_MAX then
-        self.line_segment.x2 = ARM_LENGTH_MAX
-    elseif self.line_segment.x2 < ARM_LENGTH_MIN then
-        self.line_segment.x2 = ARM_LENGTH_MIN
+    if self.current_length > ARM_LENGTH_MAX then
+        self.current_length = ARM_LENGTH_MAX
+    elseif self.current_length < ARM_LENGTH_MIN then
+        self.current_length = ARM_LENGTH_MIN
     end
 end

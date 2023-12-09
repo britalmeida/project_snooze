@@ -133,7 +133,8 @@ end
 function Enemy:set_spawn_location()
     -- Pick an angle.
     local angle = math.random(360)
-    local radius = math.random(100, ARM_LENGTH_MAX)
+    -- Pick a radius near max arm length
+    local radius = math.random(ARM_LENGTH_MAX-30, ARM_LENGTH_MAX)
 
     local x = 200 + (radius * math.cos(math.rad(angle)))
     local y = 120 + (radius * math.sin(math.rad(angle)))
