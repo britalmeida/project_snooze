@@ -1,9 +1,7 @@
-import "alarm_analog"
-
 local anim_ring_imgs = gfx.imagetable.new('images/animation_alarm3-ring')
 local anim_ring_framerate = 1
 
-class('AlarmPhone').extends(AlarmAnalog)
+class('AlarmPhone').extends(Enemy)
 
 function AlarmPhone:init()
     -- Phones spawn close to the player's face, but their bubble grows VERY slowly.
@@ -48,5 +46,4 @@ function AlarmPhone:set_spawn_location()
         (repeats > 10)
     )
     -- print("Spawned after " .. repeats .. " repeats.")
-    self:clampPosition(20, 20, 380, 120)
 end

@@ -1,9 +1,9 @@
-import "alarm_analog"
+import "enemy"
 
 local anim_walk_imgs = gfx.imagetable.new('images/animation_alarm2-move')
 local anim_walk_framerate = 15
 
-class('AlarmDigital').extends(AlarmAnalog)
+class('AlarmDigital').extends(Enemy)
 
 function AlarmDigital:init()
     AlarmDigital.super.init(self)
