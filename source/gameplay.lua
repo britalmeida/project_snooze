@@ -6,6 +6,7 @@ import "CoreLibs/timer"
 import "music"
 import "enemies/enemies"
 import "arm"
+import "snore"
 
 gfx = playdate.graphics
 
@@ -37,6 +38,7 @@ MUSIC_CHANGE_RATE = 8 -- Every this many seconds, the music ramps up.
 
 function init_gameplay()
     -- Done only once on start of the game, to load and setup const resources.
+    CONTEXT.player_head = Head()
     CONTEXT.player_arm_left = Arm(false)
     CONTEXT.player_arm_right = Arm(true)
     CONTEXT.player_arms = {CONTEXT.player_arm_left, CONTEXT.player_arm_right}
@@ -64,6 +66,7 @@ function reset_gameplay()
     CONTEXT.is_left_arm_active = true
     CONTEXT.player_arm_left:reset()
     CONTEXT.player_arm_right:reset()
+    CONTEXT.player_head:reset()
     CONTEXT.score = 0
     CONTEXT.awakeness_rate_of_change = AWAKENESS_DECAY
 
