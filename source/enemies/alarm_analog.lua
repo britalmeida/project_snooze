@@ -17,9 +17,28 @@ function AlarmAnalog:init()
     self.sound_slap = SOUND['SLAP_ALARM']
 
     -- Graphics
-    self.static_image = still_img
-    self.anim_default = gfx.animation.loop.new(anim_ring_framerate * frame_ms, anim_ring_imgs, true)
-    self:setImage(self.static_image)
+
+    -- Behaviour
+    self:behaviour_loop()
+end
+
+function AlarmAnalog:behaviour_loop()
+    -- Periodically change movement properties and whatnot.
+    if not self:isVisible() or not self.is_alive then
+        return
+    end
+
+    -- Go back and forth between jittering and moving and being static.
+    self.jitter_intensity = 1
+    self.bubble_growth_speed = 0.6
+    playdate.timer.new(1000, function()
+        self.jitter_intensity = 0
+        self.bubble_growth_speed = -0.1
+        playdate.timer.new(1000, function()
+            self:behaviour_loop()
+        end)
+    end)
+
 end
 
 function AlarmAnalog:update_logic(CONTEXT)
