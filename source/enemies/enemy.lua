@@ -40,7 +40,7 @@ function Enemy:init()
     -- Graphics
     self.static_image = nil
     self.anim_default = nil
-    self.death_image = nil
+    self.death_image = nil      -- Optional. If provided, drawn for 1 second before despawning.
     self:addSprite()
     self:setVisible(true)
     self.mirror = 1

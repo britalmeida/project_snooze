@@ -35,12 +35,6 @@ function Mosquito:set_spawn_location()
     self:moveTo(x[index], y)
 end
 
-function Mosquito:on_hit_by_player()
-    Mosquito.super.on_hit_by_player(self)
-    CONTEXT.enemies_snoozed += 1
-    self:despawn_then_respawn()
-end
-
 function Mosquito:update_logic(CONTEXT)
     if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.collision_radius) then
         self:hit_the_player()

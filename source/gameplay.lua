@@ -69,7 +69,6 @@ function reset_gameplay()
 
     -- Fresh Score.
     CONTEXT.awakeness = 0
-    CONTEXT.enemies_snoozed = 0
 
     -- Start Progression.
     playdate.timer.new(1000, spawn_next_enemy)

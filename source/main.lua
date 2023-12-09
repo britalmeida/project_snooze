@@ -19,7 +19,6 @@ frame_ms = 1000 / 30
 CONTEXT = {
     -- Game State
     awakeness = 0,
-    enemies_snoozed = 0,
 }
 
 

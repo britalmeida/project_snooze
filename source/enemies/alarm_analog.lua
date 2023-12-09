@@ -22,19 +22,6 @@ function AlarmAnalog:init()
     self:setImage(self.static_image)
 end
 
-function AlarmAnalog:on_hit_by_player()
-    CONTEXT.enemies_snoozed += 1
-    AlarmAnalog.super.on_hit_by_player(self)
-end
-
-function AlarmAnalog:despawn_then_respawn()
-    -- Should be called whenever player hits enemy or enemy hits player
-
-    self.current_bubble_radius = 0.0
-
-    AlarmAnalog.super.despawn_then_respawn(self)
-end
-
 function AlarmAnalog:update_logic(CONTEXT)
     if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
         self:hit_the_player()
