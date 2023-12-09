@@ -3,6 +3,10 @@ gfx = playdate.graphics
 MENU_SCREEN = { gameplay = 0, gameover = 1, start = 2, howto = 3, credits = 4 }
 local UI_TEXTURES = {}
 
+-- Load fonts.
+UI_TEXTURES.uifont_small = gfx.font.new("fonts/alarmity")
+UI_TEXTURES.uifont_medium = gfx.font.new("fonts/alarmity_outline38x38")
+UI_TEXTURES.uifont_large = gfx.font.new("fonts/alarmity_outline72x72")
 
 -- System Menu
 
@@ -88,6 +92,16 @@ function draw_ui()
         gfx.pushContext()
             gfx.setColor(gfx.kColorWhite)
             gfx.fillCircleAtPoint(73, 110 + 27*CONTEXT.menu_focus_option, 7)
+        gfx.popContext()
+    elseif CONTEXT.menu_screen == MENU_SCREEN.gameover then
+        gfx.pushContext()
+            gfx.setColor(gfx.kColorWhite)
+            gfx.setFont(UI_TEXTURES.uifont_medium)
+            gfx.drawTextAligned("GAME OVER", 200, 60, kTextAlignment.center)
+            local formattedNumber = string.format("%04d", math.floor(math.min(9999, CONTEXT.score)))
+            formattedNumber = formattedNumber:sub(1, 2) .. ":" .. formattedNumber:sub(3)
+            gfx.setFont(UI_TEXTURES.uifont_large)
+            gfx.drawTextAligned(formattedNumber, 200, 100, kTextAlignment.center)
         gfx.popContext()
     end
 end
