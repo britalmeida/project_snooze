@@ -18,6 +18,7 @@ SOUND = {
   DEATH = sp.new("sound/death"),
   MENU_HIGHLIGHT = sp.new("sound/menu_item_highlight"),
   MENU_CONFIRM = sp.new("sound/menu_item_confirm"),
+  ENEMY_POP = sp.new("sound/enemy_pop"),
 }
 
 

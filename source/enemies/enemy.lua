@@ -177,6 +177,7 @@ function Enemy:hit_the_player()
         CONTEXT.awakeness_rate_of_change = AWAKENESS_DECAY
     end)
     self:despawn_then_respawn()
+    SOUND['ENEMY_POP']:play()
 end
 
 function Enemy:despawn_then_respawn()
