@@ -1,5 +1,6 @@
 import "enemy"
 
+local static_img = gfx.image.new('images/animation-alarm1')
 local anim_ring_imgs = gfx.imagetable.new('images/animation_alarm1-ring')
 local anim_ring_framerate = 1
 
@@ -17,6 +18,7 @@ function AlarmAnalog:init()
 
     -- Graphics
     self.anim_ringing = gfx.animation.loop.new(anim_ring_framerate * frame_ms, anim_ring_imgs, true)
+    self.anim_idle = static_img
     self.anim_current = self.anim_ringing
 
     -- Behaviour
@@ -32,8 +34,10 @@ function AlarmAnalog:behaviour_loop()
     -- Go back and forth between jittering and moving and being static.
     self.jitter_intensity = 1
     self.bubble_growth_speed = 0.6
+    self.anim_current = self.anim_ringing
     playdate.timer.new(1000, function()
         self.jitter_intensity = 0
+        self.anim_current = self.anim_idle
         self.bubble_growth_speed = -0.1
         playdate.timer.new(1000, function()
             self:behaviour_loop()
