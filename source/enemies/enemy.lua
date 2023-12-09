@@ -5,6 +5,7 @@ class('Enemy').extends(Sprite)
 
 function Enemy:init()
     Enemy.super.init(self)
+    self.name = "enemy"
 
     -- Threat
     self.collision_radius = 15
@@ -53,6 +54,7 @@ function Enemy:start()
     self:init()
     
     if self.sound_loop then 
+        print("Play sound loop of " .. self.name)
         self.sound_loop:play(0)
     end
 
@@ -133,7 +135,8 @@ end
 function Enemy:set_spawn_location()
     -- Pick an angle.
     local angle = math.random(360)
-    local radius = math.random(100, ARM_LENGTH_MAX)
+    -- Pick a radius near max arm length
+    local radius = math.random(ARM_LENGTH_MAX-30, ARM_LENGTH_MAX)
 
     local x = 200 + (radius * math.cos(math.rad(angle)))
     local y = 120 + (radius * math.sin(math.rad(angle)))

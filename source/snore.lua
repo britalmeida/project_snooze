@@ -43,6 +43,9 @@ Head.draw = function(self, x, y, width, height)
     if CONTEXT.awakeness >= 0.97 then
         -- Draw awake face.
         head_awake:draw(0, 0)
+    elseif CONTEXT.awakeness >= 0.7 then
+        -- Draw asleep non snoring face.
+        head_asleep:draw(0, 0)
     else
         -- Draw snoring.
         head_snore_imgs:drawImage(self.anim_frame + 1, 0, 0)
