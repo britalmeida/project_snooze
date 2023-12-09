@@ -1,10 +1,16 @@
 local still_img = gfx.image.new('images/animation_enemy_cat')
+
 local anim_walk_imgs = gfx.imagetable.new('images/animation_enemy_cat-walk')
 local anim_walk_framerate = 2
+
 local anim_meow_imgs = gfx.imagetable.new('images/animation_enemy_cat-meow')
 local anim_meow_framerate = 6.5
+
 local anim_sit_imgs = gfx.imagetable.new('images/animation_enemy_cat-sit')
 local anim_sit_framerate = 3
+
+local anim_scream_imgs = gfx.imagetable.new('images/animation_enemy_cat-scream')
+local anim_scream_framerate = 2
 
 class('Cat').extends(Enemy)
 
@@ -32,6 +38,7 @@ function Cat:init()
     -- Graphics
     self.anim_walk = gfx.animation.loop.new(anim_walk_framerate * frame_ms, anim_walk_imgs, true)
     self.anim_sitting = gfx.animation.loop.new(anim_sit_framerate * frame_ms, anim_sit_imgs, true)
+    self.anim_scream = gfx.animation.loop.new(anim_scream_framerate * frame_ms, anim_scream_imgs, true)
     self.anim_meow = nil
     self.anim_current = nil -- Don't set this, because we don't want to use the drawing logic inherited from Enemy.
     self.anim_current_cat = anim_walk
@@ -78,14 +85,11 @@ function Cat:on_hit_by_player()
     self.sound_slap:play()
     -- Make the cat jitter to tell the player they did something bad.
     self.jitter_intensity = 1
-    local bubble_growth_speed_bkp = self.bubble_growth_speed
-    self.bubble_growth_speed = 5
-    local touch_growth_speed_bkp = self.touch_bubble_growth_speed
-    self.touch_bubble_growth_speed = 5
-    playdate.timer.new(400, function()
+    self.bubble_growth_speed = 3
+    self.anim_current_cat = self.anim_scream
+    playdate.timer.new(300, function()
         self.jitter_intensity = 0
-        self.touch_bubble_growth_speed = touch_growth_speed_bkp
-        self.bubble_growth_speed = bubble_growth_speed_bkp
+        self.bubble_growth_speed = self.no_touch_bubble_growth_speed
     end)
 end
 
@@ -93,8 +97,11 @@ function Cat:tick(CONTEXT)
     if self:distanceTo(self.movement_target_x, self.movement_target_y) > 5 then
         -- While moving towards target location
         self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
-        self.anim_current_cat = self.anim_walk
-        self.bubble_growth_speed = 0.0
+        if self.jitter_intensity == 0 then
+            -- If not being punched
+            self.anim_current_cat = self.anim_walk
+            self.bubble_growth_speed = 0.0
+        end
     elseif self:is_touched_by_any_hand(CONTEXT) then
         -- While being petted
         if not self.sound_meow:isPlaying() then
@@ -103,7 +110,11 @@ function Cat:tick(CONTEXT)
             self.anim_meow = gfx.animation.loop.new(anim_meow_framerate * frame_ms, anim_meow_imgs, false)
         end
 
-        self.bubble_growth_speed = self.touch_bubble_growth_speed
+        if self.jitter_intensity == 0 then
+            -- If not being punched
+            self.bubble_growth_speed = self.touch_bubble_growth_speed
+            self.anim_current_cat = self.anim_sitting
+        end
         if self.current_bubble_radius < 0 then
             self.movement_target_x = 200
             self.movement_target_y = 280
@@ -115,8 +126,11 @@ function Cat:tick(CONTEXT)
         end
     else
         -- Waiting to be petted
-        self.anim_current_cat = self.anim_sitting
-        self.bubble_growth_speed = self.no_touch_bubble_growth_speed
+        if self.jitter_intensity == 0 then
+            -- If not being punched
+            self.anim_current_cat = self.anim_sitting
+            self.bubble_growth_speed = self.no_touch_bubble_growth_speed
+        end
     end
 
     Cat.super.tick(self, CONTEXT)
