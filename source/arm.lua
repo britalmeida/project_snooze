@@ -9,12 +9,16 @@ function Arm:init(is_left)
     self.is_left = is_left
 
     local image_hand = gfx.image.new("images/hand")
+    local image_punch = gfx.image.new("images/hand_fist")
     if is_left then
         image_hand = image_hand:scaledImage(-1,1)
+        image_punch = image_punch:scaledImage(-1,1)
     end
 
+    self.image_hand = image_hand
+    self.image_punch = image_punch
     self.hand = gfx.sprite.new()
-    self.hand:setImage(image_hand)
+    self.hand:setImage(self.image_hand)
     self.hand:setZIndex(-1)
     self.hand:add()
 
@@ -84,12 +88,14 @@ end
 function Arm:punch(speed, duration)
     self.grow_rate = speed
     self.slapping = true
+    self.hand:setImage(self.image_punch)
     playdate.timer.new(duration, function()
         self.grow_rate = -speed
         playdate.timer.new(duration, function()
             self.current_length = ARM_LENGTH_DEFAULT
             self.grow_rate = 0
             self.slapping = false
+            self.hand:setImage(self.image_hand)
         end)
     end)
 end
