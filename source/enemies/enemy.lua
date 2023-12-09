@@ -84,8 +84,16 @@ function Enemy:clampPosition(min_x, min_y, max_x, max_y)
     end
 end
 
+function Enemy:distanceTo(x, y)
+    return math.sqrt((self.x - x)^2 + (self.y - y)^2)
+end
+
+function Enemy:angleTo(x, y)
+    return math.atan2(self.y - y, self.x - x)
+end
+
 function Enemy:circleCollision(x, y, radius)
-    return math.sqrt((self.x - x)^2 + (self.y - y)^2) < radius
+    return self:distanceTo(x, y) < radius
 end
 
 function Enemy:is_out_of_reach()

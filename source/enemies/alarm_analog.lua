@@ -20,7 +20,7 @@ function AlarmAnalog:init()
     self.anim_ringing = gfx.animation.loop.new(anim_ring_framerate * frame_ms, anim_ring_imgs, true)
     self.anim_idle = static_img
     self.anim_current = self.anim_ringing
-
+    
     -- Behaviour
     self:behaviour_loop()
 end

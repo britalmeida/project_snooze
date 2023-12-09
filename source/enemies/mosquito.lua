@@ -10,13 +10,21 @@ class('Mosquito').extends(Enemy)
 function Mosquito:init()
     Mosquito.super.init(self)
     self.name = 'mosquito'
-    self.collision_radius = 15
-    self.jitter_intensity = 1
 
+    -- Threat
+    self.collision_radius = 15
+    self.jitter_intensity = 0.5
     self.current_bubble_radius = 15
     self.bubble_growth_speed = 0
-    self.movement_speed = 0.6
+
+    -- Movement
+    self.movement_speed = 1.5
     self.initial_score = 20
+    self.movement_target_x = HEAD_X
+    self.movement_target_y = HEAD_Y
+    self.move_clockwise = (math.random(0, 1) - 0.5) * 2
+    self.spiral_strength = 6
+    self.towards_head_strength = 2
 
     -- Sound
     self.sound_loop = SOUND['ENEMY_MOSQUITO']
@@ -26,6 +34,23 @@ function Mosquito:init()
     self.anim_fly = gfx.animation.loop.new(anim_fly_framerate * frame_ms, anim_fly_imgs, true)
     self.anim_current = self.anim_fly
     self.death_image = img_dead_mosquito
+
+    -- Behaviour
+    self:behaviour_loop()
+end
+
+function Mosquito:behaviour_loop()
+    -- Sometimes, change direction!
+    self.move_clockwise = (math.random(0, 1) - 0.5) * 2
+    -- Slow down direction towards the head, down to a minimum.
+    self.towards_head_strength -= 0.5
+    if self.towards_head_strength < 1 then
+        self.towards_head_strength = 1
+    end
+
+    playdate.timer.new(1000, function()
+        self:behaviour_loop()
+    end)
 end
 
 function Mosquito:set_spawn_location()
@@ -42,5 +67,16 @@ function Mosquito:tick(CONTEXT)
         return
     end
     Mosquito.super.tick(self, CONTEXT)
+
+    local distance = self:distanceTo(HEAD_X, HEAD_Y) - self.towards_head_strength
+    local angle = self:angleTo(HEAD_X, HEAD_Y) + self.spiral_strength * self.move_clockwise
+
+    self.movement_target_x = HEAD_X + (distance * math.cos(angle))
+    self.movement_target_y = HEAD_Y + (distance * math.sin(angle))
     self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
+    
+    self.mirror = 1
+    if self.x > 200 then
+        self.mirror = -1
+    end
 end
