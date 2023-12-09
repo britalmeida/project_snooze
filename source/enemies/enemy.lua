@@ -42,6 +42,8 @@ function Enemy:init()
     self.death_image = nil      -- Optional. If provided, drawn for 1 second before despawning.
     self:addSprite()
     self:setVisible(true)
+
+    -- Flip the sprite. Different enemy types may need to be flipped in different cases.
     self.mirror = 1
     if self.x > 200 then
         self.mirror = -1
@@ -196,12 +198,10 @@ function Enemy:tick(CONTEXT)
     end
     self.current_score = math.max(1, self.current_score - self.score_decay)
     self:jitter()
-    self:clampPosition(0, 0, 400, 240)
+    self.current_bubble_radius += self.bubble_growth_speed
 
     -- Set the image frame to display.
     -- e.g. if chill then self:setImage(img), otherwise walk or ring.
-    -- Make the enemies face the player depending if they're on the left or right side of the screen.
-
     if self.anim_current then
         self:setImage(self.anim_current:image():scaledImage(self.mirror,1))
     end

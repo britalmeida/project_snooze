@@ -13,7 +13,7 @@ function AlarmDigital:init()
     self.sound_slap = SOUND['SLAP_ALARM']
 
     self.bubble_growth_speed = 0
-    self.current_bubble_radius = 20
+    self.current_bubble_radius = 30
 
     self.jitter_intensity = 0
 

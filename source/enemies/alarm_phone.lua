@@ -10,7 +10,7 @@ function AlarmPhone:init()
 
     -- Threat
     self.current_bubble_radius = 10
-    self.bubble_growth_speed = 0.15
+    self.bubble_growth_speed = 0.2
 
     -- Movement
     self.jitter_intensity = 0.2

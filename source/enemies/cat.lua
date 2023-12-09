@@ -10,14 +10,15 @@ function Cat:init()
 
     -- Threat
     self.collision_radius = 5
-    self.current_bubble_radius = 40
-    self.bubble_growth_speed = 0.1
+    self.current_bubble_radius = 30
+    self.bubble_growth_speed = 0.0
 
     -- Score
     self.score_decay = 0
 
     -- Movement
     self.jitter_intensity = 0
+    self.movement_speed = 1
 
     -- Sound
     self.name = 'cat'
@@ -32,21 +33,20 @@ function Cat:init()
 
     -- Cat
     self.touch_bubble_growth_speed = -0.8
+    self.backup_bubble_growth_speed = self.bubble_growth_speed
+
 end
 
 function Cat:set_spawn_location()
-    repeat
-        -- Pick an arm
-        arm = CONTEXT.player_arms[math.random(1, 2)]
-        -- Pick an angle.
-        local angle = math.random(arm.angle_min, arm.angle_max)
-        local radius = ARM_LENGTH_DEFAULT
+    local spawns_x = {-20, 420}
+    local spawns_y = {200, 200}
+    local rand = math.random(1, 2)
+    self:moveTo(spawns_x[rand], spawns_y[rand])
 
-        local x = arm.line_segment.x + radius * math.cos(math.rad(angle))
-        local y = arm.line_segment.y + radius * math.sin(math.rad(angle))
-
-        self:moveTo(x, y)
-    until (self:is_near_player_face(50+self.current_bubble_radius) == false) and (self.x > 230) or (self.x < 170)
+    local target_x = {150, 240}
+    local target_y = {150, 150}
+    self.movement_target_x = target_x[rand]
+    self.movement_target_y = target_y[rand]
 end
 
 function Cat:on_hit_by_player()
@@ -67,18 +67,6 @@ function Cat:on_hit_by_player()
     end)
 end
 
--- Suspicious code, let's see if removing it breaks anything. :)
--- Cat.draw = function(self, x, y, width, height)
---     if CONTEXT.menu_screen == MENU_SCREEN.gameplay then
---         self.anim_walk:draw(0, 0)
---         if self.anim_meow then
---             self.anim_meow:draw(0, 0)
---         end
---     else
---         still_img:draw(0,0)
---     end
--- end
-
 function Cat:tick(CONTEXT)
     if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
         self:hit_the_player()
@@ -91,15 +79,26 @@ function Cat:tick(CONTEXT)
             self.sound_meow:play()
         end
 
-        self.current_bubble_radius += self.touch_bubble_growth_speed
+        self.backup_bubble_growth_speed = self.bubble_growth_speed
+        self.bubble_growth_speed = self.touch_bubble_growth_speed
         if self.current_bubble_radius < 0 then
+            self.movement_target_x = 200
+            self.movement_target_y = 280
+            self.movement_speed = 2
             CONTEXT.score += self.current_score
-            self:despawn_then_respawn()
+            playdate.timer.new(2000, function()
+                self:despawn_then_respawn()
+            end)
         end
     else
         self.anim_current = self.anim_walk
-        self.current_bubble_radius += self.bubble_growth_speed
+        self.bubble_growth_speed = self.backup_bubble_growth_speed
     end
 
     Cat.super.tick(self, CONTEXT)
+    if self:distanceTo(self.movement_target_x, self.movement_target_y) > 5 then
+        self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
+    else
+        self.bubble_growth_speed = 0.3
+    end
 end
