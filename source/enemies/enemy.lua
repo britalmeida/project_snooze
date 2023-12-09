@@ -3,7 +3,7 @@ local Sprite = gfx.sprite
 
 class('Enemy').extends(Sprite)
 
-function Enemy:init(sound_name)
+function Enemy:init()
     Enemy.super.init(self)
 
     -- Threat
@@ -23,6 +23,7 @@ function Enemy:init(sound_name)
     self.movement_target_y = HEAD_Y
 
     -- Life cycle
+    self.is_alive = true
     self.respawn_timer_seconds = 8
 
     -- Sound
@@ -32,6 +33,7 @@ function Enemy:init(sound_name)
     -- Graphics
     self.static_image = nil
     self.anim_default = nil
+    self.death_image = nil
     self:addSprite()
     self:setVisible(false)
 end
@@ -114,7 +116,7 @@ function Enemy:is_near_another_enemy()
 end
 
 function Enemy:start()
-    self.current_score = self.initial_score
+    self:init()
     local repeats = 0
     repeat
         -- Pick an angle.
@@ -147,6 +149,13 @@ function Enemy:on_hit_by_player()
         self.sound_slap:play()
     end
     CONTEXT.score += self.current_score
+
+    self.is_alive = false
+    self.current_bubble_radius = 0
+    if self.death_image then
+        self.death_image:setInverted(true)
+        self:setImage(self.death_image)
+    end
     self:on_hit()
 end
 
@@ -164,7 +173,15 @@ function Enemy:on_hit()
     if self.sound_loop then
         self.sound_loop:stop()
     end
-    self:setVisible(false)
+
+    local death_anim_timer = 0
+    if self.death_image then
+        death_anim_timer = 1000
+    end
+
+    playdate.timer.new(death_anim_timer, function()
+        self:setVisible(false)
+    end)
 
     -- Start a timer to respawn this enemy.
     playdate.timer.new(self.respawn_timer_seconds*1000, function()

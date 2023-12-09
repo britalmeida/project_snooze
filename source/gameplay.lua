@@ -144,7 +144,7 @@ function manage_enemies()
     -- ENEMIES_MANAGER:spawnRandomEnemy()
     -- Update enemies (jitter around, increase radius, ...).
     for key, enemy in ipairs(ENEMIES_MANAGER.enemies) do
-        if enemy:isVisible() == true then
+        if enemy:isVisible() and enemy.is_alive then
             enemy:update_logic(CONTEXT)
         end
     end
