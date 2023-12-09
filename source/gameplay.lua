@@ -3,7 +3,7 @@ import "CoreLibs/graphics"
 import "CoreLibs/sprites"
 import "CoreLibs/timer"
 
-import "progression"
+import "music"
 import "enemies/enemies"
 import "arm"
 
@@ -33,6 +33,8 @@ HEAD_RADIUS = 10
 DITHERED_BUBBLES = false
 DRAW_DEBUG = 0
 
+MUSIC_CHANGE_RATE = 8 -- Every this many seconds, the music ramps up.
+
 function init_gameplay()
     -- Done only once on start of the game, to load and setup const resources.
     CONTEXT.player_arm_left = Arm(false)
@@ -50,11 +52,10 @@ function reset_gameplay()
 
     stop_gameplay_sounds()
 
-    for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
+    for _, enemy in ipairs(ENEMIES) do
         enemy:remove()
     end
-    ENEMIES_MANAGER.enemies = {}
-    ENEMIES_MANAGER.last_spawned_enemy_time = 0
+    ENEMIES = {}
 
     playdate.resetElapsedTime()
 
@@ -71,9 +72,8 @@ function reset_gameplay()
     CONTEXT.enemies_snoozed = 0
 
     -- Start Progression.
-    -- initProgressionLevel(PROGRESSION_PLAN.LVL1)
     playdate.timer.new(1000, spawn_next_enemy)
-    rampUpTheMusic(1, 8)
+    rampUpTheMusic(1, MUSIC_CHANGE_RATE)
 end
 
 
@@ -83,8 +83,10 @@ function stop_gameplay_sounds()
         t:remove()
     end
 
-    PROGRESSION.MUSIC:stop()
-    for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
+    if CURRENT_BG_MUSIC then
+        CURRENT_BG_MUSIC:stop()
+    end
+    for _, enemy in ipairs(ENEMIES) do
         if enemy.sound_loop:isPlaying() then
             enemy.sound_loop:stop()
         end
@@ -124,35 +126,11 @@ function handle_input()
     end
 end
 
-function spawn_next_enemy()
-    local next_enemy_idx = #ENEMIES_MANAGER.enemies + 1
-    local next_enemy = ENEMY_SEQUENCE[next_enemy_idx]
-    if next_enemy == nil then
-        print("All enemies spawned. Game won't get any harder.")
-        return
-    end
-    next_enemy = next_enemy()
-    print("Spawned enemy " .. next_enemy_idx .. " " .. next_enemy.name)
-    next_enemy:start()
-    table.insert(ENEMIES_MANAGER.enemies, next_enemy)
-    playdate.timer.new(ENEMY_SPAWN_GAP_SECONDS*1000, function()
-        spawn_next_enemy()
-    end)
-end
-
-function manage_enemies()
-    -- ENEMIES_MANAGER:spawnRandomEnemy()
+function update_enemies()
     -- Update enemies (jitter around, increase radius, ...).
-    for key, enemy in ipairs(ENEMIES_MANAGER.enemies) do
+    for key, enemy in ipairs(ENEMIES) do
         if enemy:isVisible() and enemy.is_alive then
             enemy:update_logic(CONTEXT)
-        end
-    end
-
-    local sumRadius = 0
-    for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
-        if enemy:isVisible() then
-            sumRadius = sumRadius + enemy.current_bubble_radius
         end
     end
 end

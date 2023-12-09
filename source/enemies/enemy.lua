@@ -74,25 +74,6 @@ function Enemy:clampPosition(min_x, min_y, max_x, max_y)
     end
 end
 
-function Enemy:__isTouchedByActiveArm(CONTEXT)
-    -- Dead code for now, we only want touch detection on the hands, not the whole arm.
-
-    -- Detect contact between alarm clock and the active arm.
-    active_arm = CONTEXT.active_arm
-    self_p = playdate.geometry.point.new(self.x, self.y)
-    hand_p = playdate.geometry.point.new(active_arm.x2, active_arm.y2)
-    -- If self point is more than ARM_EXTEND_SPEED pixels away, no contact.
-    if self_p:squaredDistanceToPoint(hand_p) > ARM_EXTEND_SPEED * ARM_EXTEND_SPEED then
-        return false
-    end
-    closest_p = active_arm:closestPointOnLineToPoint(self_p)
-    -- If closest point on arm from self is more than HAND_TOUCH_RADIUS pixels away, no contact.
-    if self_p:squaredDistanceToPoint(closest_p) > HAND_TOUCH_RADIUS * HAND_TOUCH_RADIUS then
-        return false
-    end
-    return true
-end
-
 function Enemy:circleCollision(x, y, radius)
     return math.sqrt((self.x - x)^2 + (self.y - y)^2) < radius
 end
@@ -107,7 +88,7 @@ function Enemy:is_out_of_reach()
 end
 
 function Enemy:is_near_another_enemy()
-    for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
+    for _, enemy in ipairs(ENEMIES) do
         if enemy ~= self and self:circleCollision(enemy.x, enemy.y, 25) then
             return true
         end

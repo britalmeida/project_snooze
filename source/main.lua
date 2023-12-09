@@ -10,7 +10,6 @@ import "enemies/enemies"
 import "gameplay"
 import "menu"
 import "visuals"
-import "progression"
 
 gfx = playdate.graphics
 frame_ms = 1000 / 30
@@ -50,9 +49,8 @@ function playdate.update()
     -- Intentionally check again (no else), the menu might have just started gameplay
     if CONTEXT.menu_screen == MENU_SCREEN.gameplay then
         -- In gameplay.
-        updateProgression()
         handle_input()
-        manage_enemies()
+        update_enemies()
         calculate_light_areas()
         update_gameplay_score()
     end

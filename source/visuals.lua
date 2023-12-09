@@ -257,7 +257,7 @@ function calculate_light_areas()
 
         -- Draw light bubbles for the visible enemies.
         gfx.setColor(gfx.kColorWhite)
-        for _, enemy in ipairs(ENEMIES_MANAGER.enemies) do
+        for _, enemy in ipairs(ENEMIES) do
             if enemy:isVisible() then
                 gfx.pushContext()
                     if DITHERED_BUBBLES then
