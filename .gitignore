@@ -9,6 +9,8 @@ build_and_run.sh
 
 # OS Specific
 .DS_Store
+*.kra~
+*.png~
 
 # Audio temp export folder
 source/sound/export/*

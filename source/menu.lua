@@ -94,7 +94,7 @@ function draw_ui()
     if CONTEXT.menu_screen == MENU_SCREEN.start then
         gfx.pushContext()
             gfx.setColor(gfx.kColorWhite)
-            gfx.fillCircleAtPoint(90, 110 + 25*CONTEXT.menu_focus_option, 5)
+            gfx.fillCircleAtPoint(73, 110 + 27*CONTEXT.menu_focus_option, 7)
         gfx.popContext()
     end
 end
