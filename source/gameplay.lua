@@ -117,10 +117,10 @@ function handle_input()
 
     CONTEXT.active_arm:crank(playdate.getCrankChange())
 
-    if CONTEXT.active_arm.grow_rate == 0 and playdate.buttonIsPressed(playdate.kButtonUp) then
+    if CONTEXT.active_arm.grow_rate == 0 and playdate.buttonJustPressed(playdate.kButtonUp) then
         CONTEXT.active_arm:punch(20)
     end
-    if CONTEXT.active_arm.grow_rate == 0 and playdate.buttonIsPressed(playdate.kButtonDown) then
+    if CONTEXT.active_arm.grow_rate == 0 and playdate.buttonJustPressed(playdate.kButtonDown) then
         CONTEXT.active_arm:punch(-10)
     end
 end
