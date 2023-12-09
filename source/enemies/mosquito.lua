@@ -23,13 +23,13 @@ function Mosquito:init()
     -- Graphics
     self.static_image = anim_walk_imgs:getImage(1)
     self.anim_default = gfx.animation.loop.new(anim_walk_framerate * frame_ms, anim_walk_imgs, true)
-
+    self.death_image = gfx.image.new("images/animations_mosquito-dead")
     self:setImage(self.static_image)
 end
 
 function Mosquito:start()
     Mosquito.super.start(self)
-    -- Spawn it somewhere slightly off-screen
+    -- Spawn it somewhere slightly off-screen, left or right.
     local index = math.random(1, 2)
     local x = {-20, 420}
     local y = math.random(240)
