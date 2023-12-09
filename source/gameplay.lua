@@ -89,8 +89,10 @@ function stop_gameplay_sounds()
         CURRENT_BG_MUSIC:stop()
     end
     for _, enemy in ipairs(ENEMIES) do
-        if enemy.sound_loop:isPlaying() then
-            enemy.sound_loop:stop()
+        if enemy.sound_loop then 
+            if enemy.sound_loop:isPlaying() then
+                enemy.sound_loop:stop()
+            end
         end
     end
   end
