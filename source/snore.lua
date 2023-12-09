@@ -36,7 +36,6 @@ function Head:reset()
     self.anim_snore = gfx.animation.loop.new(6 * frame_ms, head_snore_imgs, true)
     self.frame_count = 0
     self.anim_frame = 0
-    print("anim frame start: frame 0 - img 1")
 end
 
 
@@ -47,7 +46,6 @@ Head.draw = function(self, x, y, width, height)
     else
         -- Draw snoring.
         head_snore_imgs:drawImage(self.anim_frame + 1, 0, 0)
-        print("anim frame start: frame ", self.frame_count, " - img ", self.anim_frame + 1)
 
         -- Update the animation frame we should be in.
         if self.frame_count == head_snore_timings[self.anim_frame + 1] then
