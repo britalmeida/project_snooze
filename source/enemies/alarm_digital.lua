@@ -1,6 +1,6 @@
 import "enemy"
 
-local anim_walk_imgs = gfx.imagetable.new('images/animation_alarm2-move')
+local anim_walk_imgs = gfx.imagetable.new('images/animation_alarm2-walk')
 local anim_walk_framerate = 15
 
 class('AlarmDigital').extends(Enemy)
@@ -13,13 +13,14 @@ function AlarmDigital:init()
     self.sound_slap = SOUND['SLAP_ALARM']
 
     self.bubble_growth_speed = 0
-    self.current_bubble_radius = 30
+    self.current_bubble_radius = 20
 
     self.jitter_intensity = 0
 
     -- Graphics
     self.anim_ringing = gfx.animation.loop.new(anim_walk_framerate * frame_ms, anim_walk_imgs, true)
     self.anim_current = self.anim_ringing
+    self.img_table_death = gfx.imagetable.new('images/animation_alarm2-death')
 
     self.mirror = 1
     if self.x > 200 and self.y > 100 then

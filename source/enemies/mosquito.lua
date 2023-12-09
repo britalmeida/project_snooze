@@ -14,7 +14,7 @@ function Mosquito:init()
     -- Threat
     self.collision_radius = 15
     self.jitter_intensity = 0.5
-    self.current_bubble_radius = 15
+    self.current_bubble_radius = 20
     self.bubble_growth_speed = 0
 
     -- Movement
