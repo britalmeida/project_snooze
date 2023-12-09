@@ -50,7 +50,7 @@ function playdate.update()
         -- In gameplay.
         handle_input()
         tick_arms()
-        update_enemies()
+        tick_enemies()
         calculate_light_areas()
         update_gameplay_score()
     end

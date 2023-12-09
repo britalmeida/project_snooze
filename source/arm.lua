@@ -56,10 +56,6 @@ end
 
 function Arm:tick()
     self.current_length += self.grow_rate
-    if self.grow_rate ~= 0 then
-        print("Tick " .. tostring(self.is_left) .. " " .. tostring(self.grow_rate))
-    end
-
     self:clampLength()
 
     -- Compute transforms

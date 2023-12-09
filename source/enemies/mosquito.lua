@@ -35,11 +35,11 @@ function Mosquito:set_spawn_location()
     self:moveTo(x[index], y)
 end
 
-function Mosquito:update_logic(CONTEXT)
+function Mosquito:tick(CONTEXT)
     if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.collision_radius) then
         self:hit_the_player()
         return
     end
-    Mosquito.super.update_logic(self, CONTEXT)
+    Mosquito.super.tick(self, CONTEXT)
     self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
 end
