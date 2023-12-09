@@ -38,8 +38,7 @@ function Enemy:init()
     self:set_spawn_location()
 
     -- Graphics
-    self.static_image = nil
-    self.anim_default = nil
+    self.anim_current = nil
     self.death_image = nil      -- Optional. If provided, drawn for 1 second before despawning.
     self:addSprite()
     self:setVisible(true)
@@ -108,24 +107,15 @@ function Enemy:is_near_another_enemy()
 end
 
 function Enemy:set_spawn_location()
-    local repeats = 0
-    repeat
-        -- Pick an angle.
-        local angle = math.random(360)
-        local radius = math.random(70, ARM_LENGTH_MAX)
+    -- Pick an angle.
+    local angle = math.random(360)
+    local radius = math.random(100, 200)
 
-        local x = 200 + radius * math.cos(math.rad(angle))
-        local y = 120 + radius * math.sin(math.rad(angle))
+    local x = 200 + (radius * math.cos(math.rad(angle)))
+    local y = 120 + (radius * math.sin(math.rad(angle)))
 
-        self:moveTo(x, y)
-        repeats += 1
-    until (
-        (self:is_near_player_face(50 + self.current_bubble_radius) == false) and 
-        (self:is_out_of_reach() == false) or
-        (repeats > 10)
-    )
-    -- print("Spawned after " .. repeats .. " repeats.")
-    self:clampPosition(20, 20, 380, 120)
+    self:moveTo(x, y)
+    self:clampPosition(20, 20, 380, 220)
 end
 
 function Enemy:is_near_player_face(threshold)
@@ -204,7 +194,7 @@ function Enemy:tick(CONTEXT)
     -- e.g. if chill then self:setImage(img), otherwise walk or ring.
     -- Make the enemies face the player depending if they're on the left or right side of the screen.
 
-    if self.anim_default then
-        self:setImage(self.anim_default:image():scaledImage(self.mirror,1))
+    if self.anim_current then
+        self:setImage(self.anim_current:image():scaledImage(self.mirror,1))
     end
 end

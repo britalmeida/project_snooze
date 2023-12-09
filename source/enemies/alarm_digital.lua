@@ -1,6 +1,5 @@
 import "alarm_analog"
 
-local still_img = gfx.image.new('images/animation_alarm2')
 local anim_walk_imgs = gfx.imagetable.new('images/animation_alarm2-move')
 local anim_walk_framerate = 15
 
@@ -19,10 +18,9 @@ function AlarmDigital:init()
     self.jitter_intensity = 0
 
     -- Graphics
-    self.static_image = still_img
-    self.anim_default = gfx.animation.loop.new(anim_walk_framerate * frame_ms, anim_walk_imgs, true)
-    self:setImage(self.static_image)
-    
+    self.anim_ringing = gfx.animation.loop.new(anim_walk_framerate * frame_ms, anim_walk_imgs, true)
+    self.anim_current = self.anim_ringing
+
     self.mirror = 1
     if self.x > 200 and self.y > 100 then
         self.mirror = -1

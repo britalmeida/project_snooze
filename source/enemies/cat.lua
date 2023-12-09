@@ -1,4 +1,3 @@
-local still_img = gfx.image.new('images/animation_enemy_cat')
 local anim_walk_imgs = gfx.imagetable.new('images/animation_enemy_cat-walk')
 local anim_walk_framerate = 2
 local anim_meow_imgs = gfx.imagetable.new('images/animation_enemy_cat-meow')
@@ -27,11 +26,9 @@ function Cat:init()
     self.sound_meow = SOUND['ENEMY_CAT_MEOW']
 
     -- Graphics
-    self.static_image = still_img
     self.anim_walk = gfx.animation.loop.new(anim_walk_framerate * frame_ms, anim_walk_imgs, true)
-    self.anim_meow = nil
-    self.anim_default = anim_walk
-    self:setSize(still_img:getSize())
+    self.anim_meow = gfx.animation.loop.new(anim_meow_framerate * frame_ms, anim_meow_imgs, true)
+    self.anim_current = anim_walk
 
     -- Cat
     self.touch_bubble_growth_speed = -0.8
@@ -70,16 +67,17 @@ function Cat:on_hit_by_player()
     end)
 end
 
-Cat.draw = function(self, x, y, width, height)
-    if CONTEXT.menu_screen == MENU_SCREEN.gameplay then
-        self.anim_walk:draw(0, 0)
-        if self.anim_meow then
-            self.anim_meow:draw(0, 0)
-        end
-    else
-        still_img:draw(0,0)
-    end
-end
+-- Suspicious code, let's see if removing it breaks anything. :)
+-- Cat.draw = function(self, x, y, width, height)
+--     if CONTEXT.menu_screen == MENU_SCREEN.gameplay then
+--         self.anim_walk:draw(0, 0)
+--         if self.anim_meow then
+--             self.anim_meow:draw(0, 0)
+--         end
+--     else
+--         still_img:draw(0,0)
+--     end
+-- end
 
 function Cat:tick(CONTEXT)
     if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
@@ -87,10 +85,10 @@ function Cat:tick(CONTEXT)
     end
 
     if self:is_touched_by_any_hand(CONTEXT) then
+        self.anim_current = self.anim_meow
         if not self.sound_meow:isPlaying() then
             self.sound_loop:stop()
             self.sound_meow:play()
-            self.anim_meow = gfx.animation.loop.new(anim_meow_framerate * frame_ms, anim_meow_imgs, true)
         end
 
         self.current_bubble_radius += self.touch_bubble_growth_speed
@@ -99,6 +97,7 @@ function Cat:tick(CONTEXT)
             self:despawn_then_respawn()
         end
     else
+        self.anim_current = self.anim_walk
         self.current_bubble_radius += self.bubble_growth_speed
     end
 

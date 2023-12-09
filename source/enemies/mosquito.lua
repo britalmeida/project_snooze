@@ -1,7 +1,9 @@
 import "enemy"
 
-local anim_walk_imgs = gfx.imagetable.new('images/animation_mosquito-fly')
-local anim_walk_framerate = 1
+local anim_fly_imgs = gfx.imagetable.new('images/animation_mosquito-fly')
+local anim_fly_framerate = 1
+
+local img_dead_mosquito = gfx.image.new("images/animations_mosquito-dead")
 
 class('Mosquito').extends(Enemy)
 
@@ -21,10 +23,9 @@ function Mosquito:init()
     self.sound_slap = SOUND['SLAP_MOSQUITO']
 
     -- Graphics
-    self.static_image = anim_walk_imgs:getImage(1)
-    self.anim_default = gfx.animation.loop.new(anim_walk_framerate * frame_ms, anim_walk_imgs, true)
-    self.death_image = gfx.image.new("images/animations_mosquito-dead")
-    self:setImage(self.static_image)
+    self.anim_fly = gfx.animation.loop.new(anim_fly_framerate * frame_ms, anim_fly_imgs, true)
+    self.anim_current = self.anim_fly
+    self.death_image = img_dead_mosquito
 end
 
 function Mosquito:set_spawn_location()
