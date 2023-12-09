@@ -34,9 +34,6 @@ function Mosquito:init()
     self.anim_fly = gfx.animation.loop.new(anim_fly_framerate * frame_ms, anim_fly_imgs, true)
     self.anim_current = self.anim_fly
     self.death_image = img_dead_mosquito
-
-    -- Behaviour
-    self:behaviour_loop()
 end
 
 function Mosquito:behaviour_loop()
@@ -62,10 +59,6 @@ function Mosquito:set_spawn_location()
 end
 
 function Mosquito:tick(CONTEXT)
-    if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.collision_radius) then
-        self:hit_the_player()
-        return
-    end
     Mosquito.super.tick(self, CONTEXT)
 
     local distance = self:distanceTo(HEAD_X, HEAD_Y) - self.towards_head_strength

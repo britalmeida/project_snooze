@@ -4,7 +4,6 @@ local Sprite = gfx.sprite
 class('Enemy').extends(Sprite)
 
 function Enemy:init()
-    -- Function to initialize OR re-initialize an enemy.
     Enemy.super.init(self)
 
     -- Threat
@@ -30,9 +29,6 @@ function Enemy:init()
     -- Sound
     self.sound_loop = nil
     self.sound_slap = nil
-    if self.sound_loop then 
-        self.sound_loop:play(0)
-    end
 
     -- Spawn location
     self:set_spawn_location()
@@ -48,6 +44,24 @@ function Enemy:init()
     if self.x > 200 then
         self.mirror = -1
     end
+end
+
+function Enemy:start()
+    -- Function to re-initialize an enemy.
+    -- Important to keep this separate from init(), so subclasses can define things in their own init, 
+    -- such as self.sound_loop, which can be accessed here.
+    self:init()
+    
+    if self.sound_loop then 
+        self.sound_loop:play(0)
+    end
+
+    -- Behaviour
+    self:behaviour_loop()
+end
+
+function Enemy:behaviour_loop()
+    -- Subclasses can put stuff here to change behaviour properties with timers.
 end
 
 function Enemy:jitter()
@@ -172,7 +186,7 @@ function Enemy:despawn_then_respawn()
 
     -- Start a timer to respawn this enemy.
     playdate.timer.new(self.respawn_timer_seconds*1000, function()
-        self:init()
+        self:start()
     end)
 end
 
@@ -196,6 +210,12 @@ function Enemy:tick(CONTEXT)
             return
         end
     end
+
+    if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
+        self:hit_the_player()
+        return
+    end
+
     self.current_score = math.max(1, self.current_score - self.score_decay)
     self:jitter()
     self.current_bubble_radius += self.bubble_growth_speed

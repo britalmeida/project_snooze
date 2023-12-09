@@ -68,10 +68,6 @@ function Cat:on_hit_by_player()
 end
 
 function Cat:tick(CONTEXT)
-    if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
-        self:hit_the_player()
-    end
-
     if self:is_touched_by_any_hand(CONTEXT) then
         self.anim_current = self.anim_meow
         if not self.sound_meow:isPlaying() then
