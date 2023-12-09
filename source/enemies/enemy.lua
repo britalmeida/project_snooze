@@ -34,15 +34,19 @@ function Enemy:init()
         self.sound_loop:play(0)
     end
 
+    -- Spawn location
+    self:set_spawn_location()
+
     -- Graphics
     self.static_image = nil
     self.anim_default = nil
     self.death_image = nil
     self:addSprite()
     self:setVisible(true)
-
-    -- Spawn location
-    self:set_spawn_location()
+    self.mirror = 1
+    if self.x > 200 then
+        self.mirror = -1
+    end
 end
 
 function Enemy:jitter()
@@ -199,11 +203,8 @@ function Enemy:update_logic(CONTEXT)
     -- Set the image frame to display.
     -- e.g. if chill then self:setImage(img), otherwise walk or ring.
     -- Make the enemies face the player depending if they're on the left or right side of the screen.
-    local mirror = 1
-    if self.x > 200 then
-        mirror = -1
-    end
+
     if self.anim_default then
-        self:setImage(self.anim_default:image():scaledImage(mirror,1))
+        self:setImage(self.anim_default:image():scaledImage(self.mirror,1))
     end
 end

@@ -22,15 +22,23 @@ function AlarmDigital:init()
     self.static_image = still_img
     self.anim_default = gfx.animation.loop.new(anim_walk_framerate * frame_ms, anim_walk_imgs, true)
     self:setImage(self.static_image)
+    
+    self.mirror = 1
+    if self.x > 200 and self.y > 100 then
+        self.mirror = -1
+    elseif self.x < 200 and self.y < 100 then 
+        self.mirror = -1
+    end
 end
 
 function AlarmDigital:set_spawn_location()
-    -- Spawn it in the bottom-left or bottom-right corner.
-    -- If it starts from other locations, the animation doesn't fit well with the movement.
-    local index = math.random(1, 2)
+    -- Spawn it in one of the 4 corners. 
+    -- Otherwise the animation doesn't fit well with the movement.
+    local index_x = math.random(1, 2)
+    local index_y = math.random(1, 2)
     local x = {-20, 420}
-    local y = 220
-    self:moveTo(x[index], y)
+    local y = {-20, 220}
+    self:moveTo(x[index_x], y[index_y])
 end
 
 function AlarmDigital:update_logic()
