@@ -41,5 +41,9 @@ end
 
 function AlarmDigital:tick()
     AlarmDigital.super.tick(self, CONTEXT)
-    self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
+
+    if not self.is_alive then
+        return
+    end
+        self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
 end

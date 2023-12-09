@@ -62,6 +62,10 @@ end
 function Mosquito:tick(CONTEXT)
     Mosquito.super.tick(self, CONTEXT)
 
+    if not self.is_alive then
+        return
+    end
+
     local distance = self:distanceTo(HEAD_X, HEAD_Y) - self.towards_head_strength
     local angle = self:angleTo(HEAD_X, HEAD_Y) + self.spiral_strength * self.move_clockwise
 

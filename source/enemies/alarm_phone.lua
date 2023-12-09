@@ -23,6 +23,7 @@ function AlarmPhone:init()
     -- Graphics
     self.anim_ringing = gfx.animation.loop.new(anim_ring_framerate * frame_ms, anim_ring_imgs, true)
     self.anim_current = self.anim_ringing
+    self.img_table_death = gfx.imagetable.new('images/animation_alarm3-death')
 end
 
 function AlarmPhone:set_spawn_location()

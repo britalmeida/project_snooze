@@ -159,24 +159,28 @@ function Enemy:on_hit_by_player()
     CONTEXT.score += self.current_score
 
     if self.is_alive then
-        self.is_alive = false
-        self.current_bubble_radius = 0
-
-        local death_linger_time = 0
-        if self.img_table_death then
-            death_linger_time = 1000
-            self.anim_death = gfx.animation.loop.new(3 * frame_ms, self.img_table_death, false)
-            self.anim_current = self.anim_death
-        elseif self.img_death then
-            death_linger_time = 1000
-            self.anim_current = nil
-            self:setImage(self.img_death)
-        end
-
-        playdate.timer.new(death_linger_time, function()
-            self:despawn_then_respawn()
-        end)
+        self:die()
     end
+end
+
+function Enemy:die()
+    self.is_alive = false
+    self.current_bubble_radius = 0
+
+    local death_linger_time = 0
+    if self.img_table_death then
+        death_linger_time = 1000
+        self.anim_death = gfx.animation.loop.new(3 * frame_ms, self.img_table_death, false)
+        self.anim_current = self.anim_death
+    elseif self.img_death then
+        death_linger_time = 1000
+        self.anim_current = nil
+        self:setImage(self.img_death)
+    end
+
+    playdate.timer.new(death_linger_time, function()
+        self:despawn_then_respawn()
+    end)
 end
 
 function Enemy:on_hit()
