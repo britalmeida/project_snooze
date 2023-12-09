@@ -116,7 +116,7 @@ function Enemy:set_spawn_location()
         self:moveTo(x, y)
         repeats += 1
     until (
-        (self:is_near_player_face(30 + self.current_bubble_radius) == false) and 
+        (self:is_near_player_face(50 + self.current_bubble_radius) == false) and 
         (self:is_out_of_reach() == false) or
         (repeats > 10)
     )
@@ -136,11 +136,17 @@ function Enemy:on_hit_by_player()
 
     self.is_alive = false
     self.current_bubble_radius = 0
+
+    local death_linger_time = 0
     if self.death_image then
+        death_linger_time = 1000
         self.death_image:setInverted(true)
         self:setImage(self.death_image)
     end
-    self:on_hit()
+
+    playdate.timer.new(death_linger_time, function()
+        self:despawn_then_respawn()
+    end)
 end
 
 function Enemy:hit_the_player()
@@ -149,23 +155,16 @@ function Enemy:hit_the_player()
     playdate.timer.new(200, function()
         CONTEXT.awakeness_rate_of_change = AWAKENESS_DECAY
     end)
-    self:on_hit()
+    self:despawn_then_respawn()
 end
 
-function Enemy:on_hit()
+function Enemy:despawn_then_respawn()
     -- Should be called whenever player hits enemy or enemy hits player.
     if self.sound_loop then
         self.sound_loop:stop()
     end
 
-    local death_anim_timer = 0
-    if self.death_image then
-        death_anim_timer = 1000
-    end
-
-    playdate.timer.new(death_anim_timer, function()
-        self:setVisible(false)
-    end)
+    self:setVisible(false)
 
     -- Start a timer to respawn this enemy.
     playdate.timer.new(self.respawn_timer_seconds*1000, function()

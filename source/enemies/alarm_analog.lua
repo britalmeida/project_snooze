@@ -27,12 +27,12 @@ function AlarmAnalog:on_hit_by_player()
     AlarmAnalog.super.on_hit_by_player(self)
 end
 
-function AlarmAnalog:on_hit()
+function AlarmAnalog:despawn_then_respawn()
     -- Should be called whenever player hits enemy or enemy hits player
 
     self.current_bubble_radius = 0.0
 
-    AlarmAnalog.super.on_hit(self)
+    AlarmAnalog.super.despawn_then_respawn(self)
 end
 
 function AlarmAnalog:update_logic(CONTEXT)

@@ -4,7 +4,8 @@ import "alarm_phone"
 import "mosquito"
 import "cat"
 
-ENEMY_SEQUENCE = {AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog}
+ENEMY_SEQUENCE = {AlarmAnalog, AlarmAnalog, AlarmDigital, AlarmPhone, AlarmPhone, Mosquito, Mosquito, AlarmDigital, Mosquito, AlarmPhone, Cat, AlarmAnalog, AlarmDigital, AlarmPhone, Mosquito}
+-- {AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog, AlarmAnalog}
 -- {AlarmAnalog, AlarmAnalog, AlarmDigital, AlarmAnalog, AlarmPhone, AlarmDigital, Mosquito, AlarmDigital, Mosquito, AlarmPhone, Cat, AlarmAnalog, AlarmDigital, AlarmPhone, Mosquito}
 
 ENEMIES = {}

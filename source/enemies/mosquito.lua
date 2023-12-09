@@ -38,7 +38,7 @@ end
 function Mosquito:on_hit_by_player()
     Mosquito.super.on_hit_by_player(self)
     CONTEXT.enemies_snoozed += 1
-    self:on_hit()
+    self:despawn_then_respawn()
 end
 
 function Mosquito:update_logic(CONTEXT)

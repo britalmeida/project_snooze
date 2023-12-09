@@ -96,7 +96,7 @@ function Cat:update_logic(CONTEXT)
         self.current_bubble_radius += self.touch_bubble_growth_speed
         if self.current_bubble_radius < 0 then
             CONTEXT.score += self.current_score
-            self:on_hit()
+            self:despawn_then_respawn()
         end
     else
         self.current_bubble_radius += self.bubble_growth_speed

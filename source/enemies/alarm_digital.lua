@@ -25,10 +25,11 @@ function AlarmDigital:init()
 end
 
 function AlarmDigital:set_spawn_location()
-    -- Spawn it somewhere slightly off-screen
+    -- Spawn it in the bottom-left or bottom-right corner.
+    -- If it starts from other locations, the animation doesn't fit well with the movement.
     local index = math.random(1, 2)
     local x = {-20, 420}
-    local y = math.random(240)
+    local y = 220
     self:moveTo(x[index], y)
 end
 
