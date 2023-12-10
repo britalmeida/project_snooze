@@ -121,6 +121,13 @@ function draw_game_background( x, y, width, height )
 
 end
 
+
+function get_formatted_score()
+    local formattedNumber = string.format("%04d", math.floor(math.min(9999, CONTEXT.score)))
+    formattedNumber = formattedNumber:sub(1, 2) .. ":" .. formattedNumber:sub(3)
+    return formattedNumber
+end
+
 function draw_hud()
     if CONTEXT.menu_screen == MENU_SCREEN.gameplay then
         gfx.pushContext()
@@ -130,9 +137,16 @@ function draw_hud()
             gfx.setImageDrawMode(gfx.kDrawModeFillWhite)
             gfx.setColor(gfx.kColorWhite)
             gfx.setFont(TEXTURES.font)
-            local formattedNumber = string.format("%04d", math.floor(math.min(9999, CONTEXT.score)))
-            formattedNumber = formattedNumber:sub(1, 2) .. ":" .. formattedNumber:sub(3)
-            gfx.drawText(formattedNumber, 10, 10)
+            gfx.drawText(get_formatted_score(), 10, 10)
+        gfx.popContext()
+    elseif CONTEXT.menu_screen == MENU_SCREEN.gameover then
+        gfx.pushContext()
+            -- Big score in the screen center.
+            gfx.setColor(gfx.kColorWhite)
+            gfx.setFont(TEXTURES.uifont_medium)
+            gfx.drawTextAligned("GAME OVER", 200, 60, kTextAlignment.center)
+            gfx.setFont(TEXTURES.uifont_large)
+            gfx.drawTextAligned(get_formatted_score(), 200, 100, kTextAlignment.center)
         gfx.popContext()
     end
 end
@@ -152,8 +166,10 @@ end
 
 function init_visuals()
 
-    -- Load font.
+    -- Load fonts.
     TEXTURES.font = gfx.font.new("fonts/alarmity16x16")
+    TEXTURES.uifont_medium = gfx.font.new("fonts/alarmity_outline38x38")
+    TEXTURES.uifont_large = gfx.font.new("fonts/alarmity_outline72x72")
 
     -- Load image layers.
     TEXTURES.bg = gfxi.new("images/bg")
