@@ -141,7 +141,7 @@ end
 function init_visuals()
 
     -- Load font.
-    TEXTURES.font = gfx.font.new("fonts/alarmity")
+    TEXTURES.font = gfx.font.new("fonts/alarmity16x16")
 
     -- Load image layers.
     TEXTURES.bg = gfxi.new("images/bg")
