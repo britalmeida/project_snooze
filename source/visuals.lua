@@ -116,12 +116,14 @@ end
 function draw_hud()
     gfx.pushContext()
         -- Top left corner: Score!
+        gfx.setColor(gfx.kColorBlack)
+        gfx.fillRoundRect(7, 6, 78, 22, 3)
         gfx.setImageDrawMode(gfx.kDrawModeFillWhite)
         gfx.setColor(gfx.kColorWhite)
         gfx.setFont(TEXTURES.font)
         local formattedNumber = string.format("%04d", math.floor(math.min(9999, CONTEXT.score)))
         formattedNumber = formattedNumber:sub(1, 2) .. ":" .. formattedNumber:sub(3)
-        gfx.drawText(formattedNumber, 12, 12)
+        gfx.drawText(formattedNumber, 10, 10)
     gfx.popContext()
 end
 
