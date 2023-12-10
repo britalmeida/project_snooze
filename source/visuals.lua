@@ -34,20 +34,24 @@ function calculate_light_areas()
     TEXTURES.light_areas:clear(gfx.kColorClear)
     gfx.pushContext(TEXTURES.light_areas)
 
+        -- Value from 0 to 1 triggered on game over for animating visuals.
+        local gameover_anim_t = CONTEXT.gameover_anim_timer and CONTEXT.gameover_anim_timer.value or 0
+
         -- Draw light bubbles for the visible enemies.
         gfx.setColor(gfx.kColorWhite)
         for _, enemy in ipairs(ENEMIES) do
             if enemy:isVisible() then
+                local radius = enemy.current_bubble_radius * (1 + gameover_anim_t * 27)
                 gfx.pushContext()
                     if DITHERED_BUBBLES then
                         local dither_type = gfxi.kDitherTypeBayer8x8
-                        local distance_to_head = math.sqrt((HEAD_X - enemy.x)^2 + (HEAD_Y - enemy.y)^2) - enemy.current_bubble_radius
+                        local distance_to_head = math.sqrt((HEAD_X - enemy.x)^2 + (HEAD_Y - enemy.y)^2) - radius
                         -- Circle becomes denser as it approaches the head, but maxes out at 0.8 opacity.
                         local threat_level = math.max(0, distance_to_head / 100)
                         local dither_level = threat_level
                         gfx.setDitherPattern(dither_level, dither_type)
                     end
-                    gfx.fillCircleAtPoint(enemy.x, enemy.y, enemy.current_bubble_radius)
+                    gfx.fillCircleAtPoint(enemy.x, enemy.y, radius)
                 gfx.popContext()
             end
         end
@@ -62,14 +66,6 @@ function calculate_light_areas()
         -- window
         gfx.fillPolygon(199, 26, 203, 26,
                         201, 0, 200, 0)
-
-        -- Flood fill the bedroom with light when the game ends.
-        if CONTEXT.menu_screen == MENU_SCREEN.gameover then
-            gfx.setColor(gfx.kColorWhite)
-            local hw = 200 * CONTEXT.gameover_anim_timer.value
-            local hh = 120 * CONTEXT.gameover_anim_timer.value
-            gfx.fillRect(200-hw, 120-hh, hw*2, hh*2)
-        end
 
     gfx.popContext()
 end

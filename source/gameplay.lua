@@ -58,6 +58,9 @@ function reset_gameplay()
     ENEMIES = {}
 
     playdate.resetElapsedTime()
+    if CONTEXT.gameover_anim_timer then
+        CONTEXT.gameover_anim_timer:reset()
+    end
 
     -- Setup Character.
     CONTEXT.active_arm = CONTEXT.player_arm_left
