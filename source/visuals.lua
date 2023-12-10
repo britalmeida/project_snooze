@@ -63,6 +63,14 @@ function calculate_light_areas()
         gfx.fillPolygon(199, 26, 203, 26,
                         201, 0, 200, 0)
 
+        -- Flood fill the bedroom with light when the game ends.
+        if CONTEXT.menu_screen == MENU_SCREEN.gameover then
+            gfx.setColor(gfx.kColorWhite)
+            gfx.fillRect(0, 0, 400, 240)
+        end
+
+        
+
     gfx.popContext()
 end
 
@@ -114,17 +122,19 @@ function draw_game_background( x, y, width, height )
 end
 
 function draw_hud()
-    gfx.pushContext()
-        -- Top left corner: Score!
-        gfx.setColor(gfx.kColorBlack)
-        gfx.fillRoundRect(7, 6, 78, 22, 3)
-        gfx.setImageDrawMode(gfx.kDrawModeFillWhite)
-        gfx.setColor(gfx.kColorWhite)
-        gfx.setFont(TEXTURES.font)
-        local formattedNumber = string.format("%04d", math.floor(math.min(9999, CONTEXT.score)))
-        formattedNumber = formattedNumber:sub(1, 2) .. ":" .. formattedNumber:sub(3)
-        gfx.drawText(formattedNumber, 10, 10)
-    gfx.popContext()
+    if CONTEXT.menu_screen == MENU_SCREEN.gameplay then
+        gfx.pushContext()
+            -- Top left corner: Score!
+            gfx.setColor(gfx.kColorBlack)
+            gfx.fillRoundRect(7, 6, 78, 22, 3)
+            gfx.setImageDrawMode(gfx.kDrawModeFillWhite)
+            gfx.setColor(gfx.kColorWhite)
+            gfx.setFont(TEXTURES.font)
+            local formattedNumber = string.format("%04d", math.floor(math.min(9999, CONTEXT.score)))
+            formattedNumber = formattedNumber:sub(1, 2) .. ":" .. formattedNumber:sub(3)
+            gfx.drawText(formattedNumber, 10, 10)
+        gfx.popContext()
+    end
 end
 
 
