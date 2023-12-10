@@ -122,10 +122,15 @@ function draw_game_background( x, y, width, height )
 end
 
 
-function get_formatted_score()
-    local formattedNumber = string.format("%04d", math.floor(math.min(9999, CONTEXT.score)))
-    formattedNumber = formattedNumber:sub(1, 2) .. ":" .. formattedNumber:sub(3)
-    return formattedNumber
+function get_24h_formatted_score()
+    -- Style score like a 24h clock.
+    -- +500 to start at 5am instead of midnight.
+    -- +0.5 and floor because lua doesn't have 'round'.
+    -- max out at 1440 to not go above 24h.
+    local capped_score = math.min(math.floor(500+CONTEXT.score + 0.5), 1440)
+    local mins = string.format("%02d", capped_score % 60)
+    local hours = string.format("%02d", math.floor(capped_score / 60))
+    return hours .. ":" .. mins
 end
 
 function draw_hud()
@@ -137,7 +142,7 @@ function draw_hud()
             gfx.setImageDrawMode(gfx.kDrawModeFillWhite)
             gfx.setColor(gfx.kColorWhite)
             gfx.setFont(TEXTURES.font)
-            gfx.drawText(get_formatted_score(), 10, 10)
+            gfx.drawText(get_24h_formatted_score(), 10, 10)
         gfx.popContext()
     elseif CONTEXT.menu_screen == MENU_SCREEN.gameover then
         gfx.pushContext()
@@ -146,7 +151,7 @@ function draw_hud()
             gfx.setFont(TEXTURES.uifont_medium)
             gfx.drawTextAligned("GAME OVER", 200, 60, kTextAlignment.center)
             gfx.setFont(TEXTURES.uifont_large)
-            gfx.drawTextAligned(get_formatted_score(), 200, 100, kTextAlignment.center)
+            gfx.drawTextAligned(get_24h_formatted_score(), 200, 100, kTextAlignment.center)
         gfx.popContext()
     end
 end
