@@ -58,14 +58,12 @@ function enter_menu_gameover()
     CONTEXT.menu_active_screen_texture = UI_TEXTURES.game_over
     SOUND.DEATH:play()
     stop_gameplay_sounds()
-    -- Bg loop for game over?
-    --if not SOUND.BG_LOOP_MENU:isPlaying() then
-    --    SOUND.BG_LOOP_MENU:play(0)
-    --end
+    CONTEXT.gameover_anim_timer = playdate.timer.new(500, 0, 1, playdate.easingFunctions.outCubic)
 end
 
 function enter_gameplay()
     CONTEXT.menu_screen = MENU_SCREEN.gameplay
+
     SOUND.BG_LOOP_MENU:stop()
     add_system_menu_entries()
     reset_gameplay()

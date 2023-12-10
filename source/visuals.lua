@@ -66,10 +66,10 @@ function calculate_light_areas()
         -- Flood fill the bedroom with light when the game ends.
         if CONTEXT.menu_screen == MENU_SCREEN.gameover then
             gfx.setColor(gfx.kColorWhite)
-            gfx.fillRect(0, 0, 400, 240)
+            local hw = 200 * CONTEXT.gameover_anim_timer.value
+            local hh = 120 * CONTEXT.gameover_anim_timer.value
+            gfx.fillRect(200-hw, 120-hh, hw*2, hh*2)
         end
-
-        
 
     gfx.popContext()
 end
