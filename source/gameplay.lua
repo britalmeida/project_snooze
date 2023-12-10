@@ -44,8 +44,6 @@ function init_gameplay()
     CONTEXT.player_arms = {CONTEXT.player_arm_left, CONTEXT.player_arm_right}
     CONTEXT.player_hand_l = sprite_hand_l
     CONTEXT.player_hand_r = sprite_hand_r
-    CONTEXT.score = 0
-    CONTEXT.awakeness_rate_of_change = AWAKENESS_DECAY
 end
 
 
@@ -67,10 +65,10 @@ function reset_gameplay()
     CONTEXT.player_arm_left:reset()
     CONTEXT.player_arm_right:reset()
     CONTEXT.player_head:reset()
-    CONTEXT.score = 0
-    CONTEXT.awakeness_rate_of_change = AWAKENESS_DECAY
 
     -- Fresh Score.
+    CONTEXT.score = 0
+    CONTEXT.awakeness_rate_of_change = AWAKENESS_DECAY
     CONTEXT.awakeness = 0
 
     -- Start Progression.
