@@ -72,8 +72,8 @@ function Cat:set_spawn_location()
     local rand = math.random(1, 2)
     self:moveTo(spawns_x[rand], spawns_y[rand])
 
-    local target_x = {150, 240}
-    local target_y = {150, 150}
+    local target_x = {140, 245}
+    local target_y = {152, 155}
     self.movement_target_x = target_x[rand]
     self.movement_target_y = target_y[rand]
 end

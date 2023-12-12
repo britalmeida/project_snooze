@@ -308,11 +308,11 @@ function draw_debug_character_hitzones()
         local HEAD_XX = 205
         local HEAD_YY = 77
         gfx.drawCircleAtPoint(HEAD_XX, HEAD_YY, 16)
-        gfx.drawCircleAtPoint(206, 98, 10)
-        gfx.drawCircleAtPoint(201, 117, 16)
-        gfx.drawCircleAtPoint(197, 137, 12)
+        gfx.drawCircleAtPoint(206, 98, 9)
+        gfx.drawCircleAtPoint(201, 117, 14)
+        gfx.drawCircleAtPoint(197, 137, 10)
         -- AABB
-        local character_AABB_x1 = 185
+        local character_AABB_x1 = 186
         local character_AABB_x2 = 220
         local character_AABB_y1 = 60
         local character_AABB_y2 = 150
@@ -321,6 +321,7 @@ function draw_debug_character_hitzones()
         gfx.drawLine(character_AABB_x1, character_AABB_y1, character_AABB_x2, character_AABB_y1)
         -- Groin
         gfx.drawCircleAtPoint(192, 160, 25)
+
     gfx.popContext()
 end
 
@@ -328,6 +329,11 @@ end
 function draw_debug_spawn_locations()
     gfx.pushContext()
         gfx.setColor(gfx.kColorWhite)
+        -- Cat targets
+        gfx.drawCircleAtPoint(140, 152, 2)
+        gfx.drawCircleAtPoint(245, 155, 2)
+    
+        -- phone
         local character_AABB_x1 = 185
         local character_AABB_x2 = 220
         local character_AABB_y1 = 60

@@ -135,9 +135,9 @@ function Enemy:is_on_character_hitzone()
     if self:is_on_character_AABB() then
         -- Pass more precise collision volumes around the chest, neck and head.
         if (self:circleCollision(205, 77, 16 + self.current_bubble_radius) or
-            self:circleCollision(206, 98, 10 + self.current_bubble_radius) or
-            self:circleCollision(201, 117, 16 + self.current_bubble_radius) or
-            self:circleCollision(197, 137, 12 + self.current_bubble_radius)
+            self:circleCollision(206, 98, 9 + self.current_bubble_radius) or
+            self:circleCollision(201, 117, 14 + self.current_bubble_radius) or
+            self:circleCollision(197, 137, 10 + self.current_bubble_radius)
         ) then
             return true
         end
@@ -147,7 +147,7 @@ function Enemy:is_on_character_hitzone()
 end
 
 function Enemy:is_on_character_AABB()
-    local character_AABB_x1 = 185
+    local character_AABB_x1 = 186
     local character_AABB_x2 = 220
     local character_AABB_y1 =  60
     local character_AABB_y2 = 150
@@ -159,6 +159,15 @@ function Enemy:is_on_character_AABB()
     end
 
     return false
+end
+
+function Enemy:is_roughly_on_character()
+    if (self:circleCollision(205, 77, 28 + self.current_bubble_radius) or
+        self:circleCollision(201, 117, 30 + self.current_bubble_radius) or
+        self:circleCollision(197, 137, 29 + self.current_bubble_radius)
+    ) then
+        return true
+    end
 end
 
 function Enemy:is_on_character_groin()
@@ -236,6 +245,8 @@ end
 
 
 function Enemy:hit_the_player()
+    print("Hit by", self.name)
+
     -- Stop updating this enemy.
     self.is_alive = false
 

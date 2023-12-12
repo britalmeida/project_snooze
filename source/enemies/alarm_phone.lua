@@ -44,7 +44,7 @@ function AlarmPhone:set_spawn_location()
         self:moveTo(x, y)
         repeats += 1
     until (
-        (self:is_on_character_AABB() or self:is_on_character_groin() or self:is_out_of_reach()) == false or
+        (self:is_roughly_on_character() or self:is_on_character_groin() or self:is_out_of_reach()) == false or
         (repeats > 10)
     )
     -- print("Spawned after " .. repeats .. " repeats.")
