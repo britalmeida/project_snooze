@@ -94,13 +94,53 @@ end
 
 -- Draw passes
 
+function calculate_light_areas()
+    -- Calculate the light regions onto an offscreen texture.
+
+    TEXTURES.light_areas:clear(gfx.kColorClear)
+    gfx.pushContext(TEXTURES.light_areas)
+
+        -- Value from 0 to 1 triggered on game over for animating visuals.
+        local gameover_anim_t = CONTEXT.gameover_anim_timer and CONTEXT.gameover_anim_timer.value or 0
+
+        -- Draw light bubbles for the visible enemies.
+        gfx.setColor(gfx.kColorWhite)
+        for _, enemy in ipairs(ENEMIES) do
+            if enemy:isVisible() then
+                local radius = enemy.current_bubble_radius * (1 + gameover_anim_t * 27)
+                gfx.pushContext()
+                    gfx.fillCircleAtPoint(enemy.x, enemy.y, radius)
+                gfx.popContext()
+            end
+        end
+
+        -- Draw sunray as a healthbar.
+        local intensity = math.min(0.95, 1.0-CONTEXT.awakeness)
+        local sun_growth = fx.sunray.max_grow * CONTEXT.awakeness
+
+        gfx.setDitherPattern(intensity, gfxi.kDitherTypeBayer8x8)
+        --ray
+        gfx.fillPolygon(fx.sunray.top_x1,            fx.sunray.top_y, -- top left
+                        fx.sunray.top_x2,            fx.sunray.top_y, -- top right
+                        fx.sunray.bot_x2,            fx.sunray.bot_y, -- bottom right
+                        fx.sunray.bot_x1-sun_growth, fx.sunray.bot_y) -- bottom left
+        -- window
+        gfx.fillPolygon(fx.sunray.top_x1, 26, fx.sunray.top_x2, 26, 201, 0, 200, 0)
+
+    gfx.popContext()
+end
+
+
 function draw_light_areas()
     -- Apply the light areas to inverse the color of the background and character already drawn.
     gfx.pushContext()
         gfx.setImageDrawMode(gfx.kDrawModeXOR)
         TEXTURES.light_areas:draw(0, 0)
     gfx.popContext()
+end
 
+
+function draw_light_borders()
     -- Draw dither borders around the light areas.
     gfx.pushContext()
         -- Draw dithering only around the light areas (i.e.: light bubbles should look like metaballs).
@@ -145,38 +185,8 @@ function draw_light_areas()
     gfx.popContext()
 end
 
-function calculate_light_areas()
-    TEXTURES.light_areas:clear(gfx.kColorClear)
-    gfx.pushContext(TEXTURES.light_areas)
 
-        -- Value from 0 to 1 triggered on game over for animating visuals.
-        local gameover_anim_t = CONTEXT.gameover_anim_timer and CONTEXT.gameover_anim_timer.value or 0
-
-        -- Draw light bubbles for the visible enemies.
-        gfx.setColor(gfx.kColorWhite)
-        for _, enemy in ipairs(ENEMIES) do
-            if enemy:isVisible() then
-                local radius = enemy.current_bubble_radius * (1 + gameover_anim_t * 27)
-                gfx.pushContext()
-                    gfx.fillCircleAtPoint(enemy.x, enemy.y, radius)
-                gfx.popContext()
-            end
-        end
-
-        -- Draw sunray as a healthbar.
-        local intensity = math.min(0.95, 1.0-CONTEXT.awakeness)
-        local sun_growth = fx.sunray.max_grow * CONTEXT.awakeness
-
-        gfx.setDitherPattern(intensity, gfxi.kDitherTypeBayer8x8)
-        --ray
-        gfx.fillPolygon(fx.sunray.top_x1,            fx.sunray.top_y, -- top left
-                        fx.sunray.top_x2,            fx.sunray.top_y, -- top right
-                        fx.sunray.bot_x2,            fx.sunray.bot_y, -- bottom right
-                        fx.sunray.bot_x1-sun_growth, fx.sunray.bot_y) -- bottom left
-        -- window
-        gfx.fillPolygon(fx.sunray.top_x1, 26, fx.sunray.top_x2, 26, 201, 0, 200, 0)
-
-    gfx.popContext()
+function draw_bubble_pops()
 end
 
 
@@ -295,6 +305,8 @@ function init_visuals()
     --          -20, Head:draw()
     setDrawPass(-10, draw_arms)
     setDrawPass(  0, draw_light_areas) -- light bubbles are 0, so its easy to remember.
+    setDrawPass(  1, draw_light_borders)
+    setDrawPass(  2, draw_bubble_pops)
     setDrawPass(10, draw_hud)
     --setDrawPass(20, draw_test_dither_patterns)
 end
