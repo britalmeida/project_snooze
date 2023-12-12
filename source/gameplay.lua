@@ -147,7 +147,6 @@ end
 function update_gameplay_score()
     -- Update player health.
     CONTEXT.awakeness = math.max(0, CONTEXT.awakeness + AWAKENESS_DECAY + CONTEXT.awakeness_hits)
-    print(CONTEXT.awakeness, CONTEXT.awakeness_hits)
 
     CONTEXT.awakeness_hits = 0
 
