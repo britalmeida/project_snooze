@@ -27,23 +27,24 @@ function AlarmPhone:init()
 end
 
 function AlarmPhone:set_spawn_location()
+    local arms_x = {ARM_R_X, ARM_L_X}
+    local arms_y = {ARM_R_Y, ARM_R_Y}
+    local arm_idx = math.random(1, 2)
+
     local repeats = 0
     repeat
-        -- Pick an angle.
+        -- Pick a random spot in polar coordinates, within short arm's reach.
         local angle = math.random(360)
-        local radius = math.random(ARM_LENGTH_MIN, ARM_LENGTH_DEFAULT)
-        local arms_x = {ARM_R_X, ARM_L_X}
-        local arms_y = {ARM_R_Y, ARM_R_Y}
-        local arm_idx = math.random(1, 2)
+        local radius = math.random(ARM_LENGTH_MIN+20, ARM_LENGTH_DEFAULT)
 
+        -- Convert to cartesian.
         local x = arms_x[arm_idx] + radius * math.cos(math.rad(angle))
         local y = arms_y[arm_idx] + radius * math.sin(math.rad(angle))
 
         self:moveTo(x, y)
         repeats += 1
     until (
-        (self:is_near_player_face(50 + self.current_bubble_radius) == false) and 
-        (self:is_out_of_reach() == false) or
+        (self:is_on_character_AABB() or self:is_on_character_groin() or self:is_out_of_reach()) == false or
         (repeats > 10)
     )
     -- print("Spawned after " .. repeats .. " repeats.")
