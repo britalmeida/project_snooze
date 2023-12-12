@@ -58,7 +58,7 @@ function enter_menu_gameover()
     CONTEXT.menu_active_screen_texture = UI_TEXTURES.game_over
     SOUND.DEATH:play()
     stop_gameplay_sounds()
-    CONTEXT.gameover_anim_timer = playdate.timer.new(1000, 0, 1, playdate.easingFunctions.outCubic)
+    CONTEXT.gameover_anim_timer = playdate.timer.new(1500, 0, 1, playdate.easingFunctions.outCubic)
 end
 
 function enter_gameplay()
