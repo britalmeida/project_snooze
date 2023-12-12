@@ -268,10 +268,10 @@ end
 
 function get_24h_formatted_score()
     -- Style score like a 24h clock.
-    -- +300 to start at 5am instead of midnight.
+    -- +360 to start at 5am instead of midnight.
     -- +0.5 and floor because lua doesn't have 'round'.
     -- max out at 1440 to not go above 24h.
-    local capped_score = math.min(math.floor(300+CONTEXT.score + 0.5), 1440)
+    local capped_score = math.min(math.floor(360+CONTEXT.score + 0.5), 1440)
     local mins = string.format("%02d", capped_score % 60)
     local hours = string.format("%02d", math.floor(capped_score / 60))
     return hours .. ":" .. mins
