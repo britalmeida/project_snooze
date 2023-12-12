@@ -55,8 +55,8 @@ function playdate.update()
         handle_input()
         tick_arms()
         tick_enemies()
-        calculate_light_areas()
         update_gameplay_score()
+        calculate_light_areas()
     end
 
     -- Always redraw and update entities (sprites) and timers.

@@ -4,6 +4,77 @@ gfxi = playdate.graphics.image
 -- Image Passes
 TEXTURES = {}
 
+-- Procedural Effects
+local fx = {
+    sunray = {
+        top_y = 32,
+        bot_y = 240,
+        top_x1 = 199,
+        top_x2 = 203,
+        bot_x1 = 370,
+        bot_x2 = 380,
+        max_grow = 70
+    }
+}
+
+-- Development
+
+function draw_test_dither_patterns()
+
+    local dither_types = {
+        gfxi.kDitherTypeNone,
+        gfxi.kDitherTypeDiagonalLine,
+        gfxi.kDitherTypeVerticalLine,
+        gfxi.kDitherTypeHorizontalLine,
+        gfxi.kDitherTypeScreen,
+        gfxi.kDitherTypeBayer2x2,
+        gfxi.kDitherTypeBayer4x4,
+        gfxi.kDitherTypeBayer8x8,
+        gfxi.kDitherTypeFloydSteinberg,
+        gfxi.kDitherTypeBurkes,
+        gfxi.kDitherTypeAtkinson
+    }
+    local size = 20
+    local x = 2
+    local y = 2
+
+    gfx.pushContext()
+        gfx.setColor(gfx.kColorWhite)
+
+        -- kDitherTypeBayer8x8 gradient
+        local dither_type = gfxi.kDitherTypeBayer8x8
+        local pattern_img = gfxi.new(size, size, gfx.kColorBlack)
+        for i = 0, 10, 1 do
+            pattern_img:clear(gfx.kColorBlack)
+            gfx.pushContext(pattern_img)
+                gfx.setDitherPattern(i/10, dither_type)
+                gfx.fillRect(0, 0, size, size)
+            gfx.popContext()
+            pattern_img:draw(x, y)
+            y += size+2
+        end
+
+        -- different types
+        local alpha = 0.0
+        for a = 0, 10, 1 do
+            y = 2
+            x += size
+            for i = 0, 10, 1 do
+                pattern_img:clear(gfx.kColorBlack)
+                gfx.pushContext(pattern_img)
+                    gfx.setDitherPattern(alpha, dither_types[i+1])
+                    gfx.fillRect(0, 0, size, size)
+                gfx.popContext()
+                pattern_img:draw(x, y)
+                y += size+2
+            end
+            alpha += 0.1
+        end
+     gfx.popContext()
+
+end
+
+
 -- Set a pass on Z depth
 
 function setDrawPass(z, drawCallback)
@@ -24,9 +95,53 @@ end
 -- Draw passes
 
 function draw_light_areas()
+    -- Apply the light areas to inverse the color of the background and character already drawn.
     gfx.pushContext()
         gfx.setImageDrawMode(gfx.kDrawModeXOR)
         TEXTURES.light_areas:draw(0, 0)
+    gfx.popContext()
+
+    -- Draw dither borders around the light areas.
+    gfx.pushContext()
+        -- Draw dithering only around the light areas (i.e.: light bubbles should look like metaballs).
+        TEXTURES.light_areas:setInverted(true)
+        gfx.setStencilImage(TEXTURES.light_areas)
+        gfx.setStrokeLocation(gfx.kStrokeOutside)
+
+        -- Set dither pattern.
+        gfx.setColor(gfx.kColorWhite)
+        gfx.setDitherPattern(0.6, gfxi.kDitherTypeBayer8x8)
+
+        -- Draw a circle around each enemy bubble.
+        for _, enemy in ipairs(ENEMIES) do
+            if enemy:isVisible() then
+                -- Borders are thinner for small bubbles and get ticker up to a maximum.
+                -- 'x+1' sets it so a 0 radius bubble has a 0 thick border,
+                -- '*1.1' makes the thickness tend to ~5px for a 50px radius and ~6px for 150px radius.
+                local radius = enemy.current_bubble_radius
+                local line_width = math.log(radius+1)*1.1
+                gfx.setLineWidth(line_width)
+                gfx.drawCircleAtPoint(enemy.x, enemy.y, radius)
+            end
+        end
+
+        -- Draw the sunray borders.
+        local intensity = 1-math.log(CONTEXT.awakeness+1)
+        gfx.setColor(gfx.kColorWhite)
+        gfx.setDitherPattern(intensity, gfxi.kDitherTypeBayer8x8)
+        local sun_growth = fx.sunray.max_grow * CONTEXT.awakeness
+        local line_width = math.sqrt(sun_growth) * 0.7 + math.random(0,2)
+        -- right side border.
+        gfx.fillTriangle(fx.sunray.top_x2,            fx.sunray.top_y, -- top
+                         fx.sunray.bot_x2,            fx.sunray.bot_y, -- bottom left
+                         fx.sunray.bot_x2+line_width, fx.sunray.bot_y) -- bottom right
+        -- left side border.
+        gfx.fillTriangle(fx.sunray.top_x1,            fx.sunray.top_y, -- top
+                         fx.sunray.bot_x1-sun_growth, fx.sunray.bot_y, -- bottom right
+                         fx.sunray.bot_x1-sun_growth-line_width, fx.sunray.bot_y) -- bottom left
+
+        -- Restore the light texture to normal.
+        TEXTURES.light_areas:setInverted(false)
     gfx.popContext()
 end
 
@@ -43,14 +158,6 @@ function calculate_light_areas()
             if enemy:isVisible() then
                 local radius = enemy.current_bubble_radius * (1 + gameover_anim_t * 27)
                 gfx.pushContext()
-                    if DITHERED_BUBBLES then
-                        local dither_type = gfxi.kDitherTypeBayer8x8
-                        local distance_to_head = math.sqrt((HEAD_X - enemy.x)^2 + (HEAD_Y - enemy.y)^2) - radius
-                        -- Circle becomes denser as it approaches the head, but maxes out at 0.8 opacity.
-                        local threat_level = math.max(0, distance_to_head / 100)
-                        local dither_level = threat_level
-                        gfx.setDitherPattern(dither_level, dither_type)
-                    end
                     gfx.fillCircleAtPoint(enemy.x, enemy.y, radius)
                 gfx.popContext()
             end
@@ -58,14 +165,16 @@ function calculate_light_areas()
 
         -- Draw sunray as a healthbar.
         local intensity = math.min(0.95, 1.0-CONTEXT.awakeness)
-        local sun_growth = 70 * CONTEXT.awakeness + math.random(0,2)
+        local sun_growth = fx.sunray.max_grow * CONTEXT.awakeness
+
         gfx.setDitherPattern(intensity, gfxi.kDitherTypeBayer8x8)
         --ray
-        gfx.fillPolygon(199, 32, 203, 32,
-                        380, 240, 370-sun_growth, 240)
+        gfx.fillPolygon(fx.sunray.top_x1,            fx.sunray.top_y, -- top left
+                        fx.sunray.top_x2,            fx.sunray.top_y, -- top right
+                        fx.sunray.bot_x2,            fx.sunray.bot_y, -- bottom right
+                        fx.sunray.bot_x1-sun_growth, fx.sunray.bot_y) -- bottom left
         -- window
-        gfx.fillPolygon(199, 26, 203, 26,
-                        201, 0, 200, 0)
+        gfx.fillPolygon(fx.sunray.top_x1, 26, fx.sunray.top_x2, 26, 201, 0, 200, 0)
 
     gfx.popContext()
 end
@@ -187,4 +296,5 @@ function init_visuals()
     setDrawPass(-10, draw_arms)
     setDrawPass(  0, draw_light_areas) -- light bubbles are 0, so its easy to remember.
     setDrawPass(10, draw_hud)
+    --setDrawPass(20, draw_test_dither_patterns)
 end
