@@ -301,25 +301,64 @@ function draw_hud()
 end
 
 
-function draw_debug_overlay()
+function draw_debug_character_hitzones()
     gfx.pushContext()
         gfx.setColor(gfx.kColorWhite)
+
         local HEAD_XX = 205
         local HEAD_YY = 77
         gfx.drawCircleAtPoint(HEAD_XX, HEAD_YY, 16)
         gfx.drawCircleAtPoint(206, 98, 10)
         gfx.drawCircleAtPoint(201, 117, 16)
         gfx.drawCircleAtPoint(197, 137, 12)
+        -- AABB
         local character_AABB_x1 = 185
         local character_AABB_x2 = 220
         local character_AABB_y1 = 60
         local character_AABB_y2 = 150
-        --gfx.drawLine(character_AABB_x1, character_AABB_y1, character_AABB_x1, character_AABB_y2)
-        --gfx.drawLine(character_AABB_x2, character_AABB_y1, character_AABB_x2, character_AABB_y2)
+        gfx.drawLine(character_AABB_x1, character_AABB_y1, character_AABB_x1, character_AABB_y2)
+        gfx.drawLine(character_AABB_x2, character_AABB_y1, character_AABB_x2, character_AABB_y2)
         gfx.drawLine(character_AABB_x1, character_AABB_y1, character_AABB_x2, character_AABB_y1)
+        -- Groin
+        gfx.drawCircleAtPoint(192, 160, 25)
+    gfx.popContext()
+end
+
+
+function draw_debug_spawn_locations()
+    gfx.pushContext()
+        gfx.setColor(gfx.kColorWhite)
+        local character_AABB_x1 = 185
+        local character_AABB_x2 = 220
+        local character_AABB_y1 = 60
+        local character_AABB_y2 = 150
+        local arms_x = {ARM_R_X, ARM_L_X}
+        local arms_y = {ARM_R_Y, ARM_R_Y}
+        local arm_idx = math.random(1, 2)
+        local x, y
+        local repeats = 0
+        repeat
+            -- Pick a random spot in polar coordinates, within short arm's reach.
+            local angle = math.random(360)
+            local radius = math.random(ARM_LENGTH_MIN+20, ARM_LENGTH_DEFAULT)
+    
+            -- Convert to cartesian.
+            x = arms_x[arm_idx] + radius * math.cos(math.rad(angle))
+            y = arms_y[arm_idx] + radius * math.sin(math.rad(angle))
+    
+            repeats += 1
+        until (
+            (x + 10 > character_AABB_x1 and
+            x - 10 < character_AABB_x2 and
+            y + 10 > character_AABB_y1 and
+            y - 10 < character_AABB_y2) == false or
+            (repeats > 10)
+        )
+        gfx.drawCircleAtPoint(x, y, 2)
 
     gfx.popContext()
 end
+
 
 function init_visuals()
 
@@ -345,6 +384,7 @@ function init_visuals()
     setDrawPass(  1, draw_light_borders)
     setDrawPass(  2, draw_bubble_pops)
     setDrawPass(10, draw_hud)
-    --setDrawPass(20, draw_debug_overlay)
+    --setDrawPass(20, draw_debug_character_hitzones)
+    --setDrawPass(20, draw_debug_spawn_locations)
     --setDrawPass(20, draw_test_dither_patterns)
 end
