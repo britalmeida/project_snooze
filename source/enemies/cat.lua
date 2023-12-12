@@ -4,7 +4,9 @@ local anim_walk_imgs = gfx.imagetable.new('images/animation_enemy_cat-walk')
 local anim_walk_framerate = 2
 
 local anim_meow_imgs = gfx.imagetable.new('images/animation_enemy_cat-meow')
-local anim_meow_framerate = 6.5
+local anim_meow_num_imgs = anim_meow_imgs:getLength()
+local anim_meow_timings = { 8, 11, 29, 35, 40, 44, 52, 55, 60 }
+local anim_meow_framelength = 61
 
 local anim_sit_imgs = gfx.imagetable.new('images/animation_enemy_cat-sit')
 local anim_sit_framerate = 3
@@ -40,9 +42,12 @@ function Cat:init()
     self.anim_walk = gfx.animation.loop.new(anim_walk_framerate * frame_ms, anim_walk_imgs, true)
     self.anim_sitting = gfx.animation.loop.new(anim_sit_framerate * frame_ms, anim_sit_imgs, true)
     self.anim_scream = gfx.animation.loop.new(anim_scream_framerate * frame_ms, anim_scream_imgs, true)
-    self.anim_meow = nil
+    self.is_meowing = false
     self.anim_current = nil -- Don't set this, because we don't want to use the drawing logic inherited from Enemy.
     self.anim_current_cat = anim_walk
+    self.frame_count_facial = 0
+    self.anim_frame_facial = 0
+
     self:setSize(still_img:getSize())
     self:setVisible(false)
 
@@ -58,11 +63,29 @@ Cat.draw = function(self, x, y, width, height)
         if self.mirror == -1 then
             flip = playdate.graphics.kImageFlippedX
         end
+
         self.anim_current_cat:draw(0, 0, flip)
-        if self.anim_meow then
-            self.anim_meow:draw(0, 0, flip)
+
+        -- Overlay facial animation.
+        if self.is_meowing then
+            anim_meow_imgs:drawImage(self.anim_frame_facial + 1, 0, 0, flip)
+
+            -- Update the animation frame we should be in.
+            if self.frame_count_facial == anim_meow_timings[self.anim_frame_facial + 1] then
+                self.anim_frame_facial = (self.anim_frame_facial + 1) % anim_meow_num_imgs
+            end
+            self.frame_count_facial = self.frame_count_facial + 1
+            -- Don't repeat.
+            if  self.frame_count_facial >= anim_meow_framelength then
+                self.is_meowing = false
+                self.frame_count_facial = 0
+                self.anim_frame_facial = 0
+            end
+
         end
-    else
+
+
+    else -- gameover
         still_img:draw(0,0)
     end
 end
@@ -88,6 +111,7 @@ function Cat:on_hit_by_player()
     self.jitter_intensity = 1
     self.bubble_growth_speed = 3
     self.anim_current_cat = self.anim_scream
+    self.is_meowing = false
     playdate.timer.new(300, function()
         self.jitter_intensity = 0
         self.bubble_growth_speed = self.no_touch_bubble_growth_speed
@@ -108,7 +132,7 @@ function Cat:tick(CONTEXT)
         if not self.sound_meow:isPlaying() then
             -- self.sound_loop:stop()
             self.sound_meow:play()
-            self.anim_meow = gfx.animation.loop.new(anim_meow_framerate * frame_ms, anim_meow_imgs, false)
+            self.is_meowing = true
         end
 
         if self.jitter_intensity == 0 then

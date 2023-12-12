@@ -33,7 +33,6 @@ end
 
 function Head:reset()
     -- (Re)-start the read state
-    self.anim_snore = gfx.animation.loop.new(6 * frame_ms, head_snore_imgs, true)
     self.frame_count = 0
     self.anim_frame = 0
 end
