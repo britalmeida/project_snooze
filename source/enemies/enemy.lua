@@ -151,22 +151,30 @@ function Enemy:is_near_player_face(threshold)
     return self:circleCollision(HEAD_X, HEAD_Y, threshold)
 end
 
-function Enemy:on_hit_by_player()
-    self:on_hit()
-    if self.sound_slap then
-        self.sound_slap:play()
-    end
-    CONTEXT.score += self.current_score
 
+function Enemy:on_hit_by_player()
     if self.is_alive then
-        self:die()
+        -- Stop updating this enemy.
+        self.is_alive = false
+
+        -- SFX
+        if self.sound_loop then
+            self.sound_loop:stop()
+        end
+        if self.sound_slap then
+            self.sound_slap:play()
+        end
+
+        -- Increase score.
+        CONTEXT.score += self.current_score
+
+        self.current_bubble_radius = 0
+        self:play_death_animation()
     end
 end
 
-function Enemy:die()
-    self.is_alive = false
-    self.current_bubble_radius = 0
 
+function Enemy:play_death_animation()
     local death_linger_time = 0
     if self.img_table_death then
         death_linger_time = 1000
@@ -183,21 +191,33 @@ function Enemy:die()
     end)
 end
 
-function Enemy:on_hit()
+
+function Enemy:hit_the_player()
+    -- Stop updating this enemy.
+    self.is_alive = false
+
+    -- SFX
     if self.sound_loop then
         self.sound_loop:stop()
     end
-end
+    SOUND['ENEMY_POP']:play()
+    table.insert(BUBBLE_POPS, {
+        x=self.x, y=self.y,
+        radius=self.current_bubble_radius,
+        -- Animation for the bubble pop. Keep duration the same.
+        timer_r=playdate.timer.new(300, 0, 1, playdate.easingFunctions.inCirc), -- radius expansion
+        timer_w=playdate.timer.new(300, 0, 1, playdate.easingFunctions.inBack)  -- thickness reduction
+    })
+    self.current_bubble_radius = 0
 
-function Enemy:hit_the_player()
-    self:on_hit()
+    -- Decrease player health.
     CONTEXT.awakeness_rate_of_change = 0.035
+
     -- Start a timer to respawn this enemy.
     playdate.timer.new(200, function()
         CONTEXT.awakeness_rate_of_change = AWAKENESS_DECAY
     end)
     self:despawn_then_respawn()
-    SOUND['ENEMY_POP']:play()
 end
 
 function Enemy:despawn_then_respawn()

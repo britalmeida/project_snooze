@@ -17,6 +17,9 @@ local fx = {
     }
 }
 
+BUBBLE_POPS = {}
+
+
 -- Development
 
 function draw_test_dither_patterns()
@@ -187,6 +190,32 @@ end
 
 
 function draw_bubble_pops()
+    gfx.pushContext()
+        -- Set dither pattern.
+        gfx.setColor(gfx.kColorWhite)
+        gfx.setDitherPattern(0.6, gfxi.kDitherTypeBayer8x8)
+
+        for _, bubble in ipairs(BUBBLE_POPS) do
+            -- Border with becomes thinner until it disappears using easing curve from timer_w.
+            -- Original thickness is constant according to radius, same as when normally drawing the bubble border.
+            local original_line_width = math.log(bubble.radius+1)*1.3
+            local line_width = original_line_width * (1 - bubble.timer_w.value)
+            if line_width > 0.001 then
+                gfx.setLineWidth(line_width)
+                gfx.drawCircleAtPoint(bubble.x, bubble.y,
+                                      -- Radius expands to +10px using easing curve from timer_r.
+                                      bubble.radius + bubble.timer_r.value * 10)
+            end
+        end
+
+    gfx.popContext()
+
+    -- Remove completed bubble pops
+    for i=#BUBBLE_POPS, 1, -1 do
+        if BUBBLE_POPS[i].timer_w.timeLeft <= 0 then
+            table.remove(BUBBLE_POPS, i)
+        end
+    end
 end
 
 

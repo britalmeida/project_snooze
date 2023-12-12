@@ -56,6 +56,7 @@ function reset_gameplay()
         enemy:remove()
     end
     ENEMIES = {}
+    BUBBLE_POPS = {}
 
     playdate.resetElapsedTime()
     if CONTEXT.gameover_anim_timer then
