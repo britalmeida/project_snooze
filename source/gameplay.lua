@@ -20,7 +20,7 @@ HAND_TOUCH_RADIUS = 10
 
 ENEMY_SPAWN_GAP_SECONDS = 2
 
-AWAKENESS_DECAY = -0.001
+AWAKENESS_DECAY = -0.0001
 
 ARM_L_X, ARM_L_Y = 180, 111
 ARM_R_X, ARM_R_Y = 222, 114
@@ -68,7 +68,7 @@ function reset_gameplay()
 
     -- Fresh Score.
     CONTEXT.score = 0
-    CONTEXT.awakeness_rate_of_change = AWAKENESS_DECAY
+    CONTEXT.awakeness_hits = 0
     CONTEXT.awakeness = 0
 
     -- Start Progression.
@@ -145,7 +145,11 @@ end
 
 
 function update_gameplay_score()
-    CONTEXT.awakeness = math.max(0, CONTEXT.awakeness + CONTEXT.awakeness_rate_of_change)
+    -- Update player health.
+    CONTEXT.awakeness = math.max(0, CONTEXT.awakeness + AWAKENESS_DECAY + CONTEXT.awakeness_hits)
+    print(CONTEXT.awakeness, CONTEXT.awakeness_hits)
+
+    CONTEXT.awakeness_hits = 0
 
     -- Game Over!
     if CONTEXT.awakeness >= 1 then

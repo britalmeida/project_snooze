@@ -12,6 +12,7 @@ function AlarmDigital:init()
     self.sound_loop = SOUND['ENEMY_ALARM_DIGITAL']
     self.sound_slap = SOUND['SLAP_ALARM']
 
+    self.current_score = 10
     self.bubble_growth_speed = 0
     self.current_bubble_radius = 20
 

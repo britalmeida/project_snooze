@@ -13,7 +13,6 @@ function Enemy:init()
     self.bubble_growth_speed = 0.3
     
     -- Score
-    self.initial_score = 10
     self.score_decay = 0.05
     self.current_score = 10
 
@@ -177,6 +176,7 @@ function Enemy:is_on_character_groin()
     return false
 end
 
+
 function Enemy:is_near_another_enemy()
     for _, enemy in ipairs(ENEMIES) do
         if enemy ~= self and self:circleCollision(enemy.x, enemy.y, 25) then
@@ -265,12 +265,9 @@ function Enemy:hit_the_player()
     self.current_bubble_radius = 0
 
     -- Decrease player health.
-    CONTEXT.awakeness_rate_of_change = 0.035
+    CONTEXT.awakeness_hits += 0.15
 
     -- Start a timer to respawn this enemy.
-    playdate.timer.new(200, function()
-        CONTEXT.awakeness_rate_of_change = AWAKENESS_DECAY
-    end)
     self:despawn_then_respawn()
 end
 
@@ -322,7 +319,10 @@ function Enemy:tick(CONTEXT)
         return
     end
 
+    -- Enemies give less score over timer, but always at least 1 point.
     self.current_score = math.max(1, self.current_score - self.score_decay)
-    self:jitter()
+    -- Increase threat.
     self.current_bubble_radius += self.bubble_growth_speed
+
+    self:jitter()
 end

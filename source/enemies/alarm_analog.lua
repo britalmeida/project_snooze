@@ -10,7 +10,8 @@ function AlarmAnalog:init()
     AlarmAnalog.super.init(self)
 
     self.name = 'alarm_analog'
-    self.current_bubble_radius = 0.0
+    self.current_score = 10
+    self.current_bubble_radius = 5.0
     self.bubble_growth_speed = 0.3
 
     self.sound_loop = SOUND['ENEMY_ALARM_ANALOG']

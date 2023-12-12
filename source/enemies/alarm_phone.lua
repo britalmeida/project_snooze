@@ -9,6 +9,7 @@ function AlarmPhone:init()
     AlarmPhone.super.init(self)
 
     -- Threat
+    self.current_score = 10
     self.current_bubble_radius = 10
     self.bubble_growth_speed = 0.2
 

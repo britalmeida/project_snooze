@@ -19,7 +19,7 @@ function Mosquito:init()
 
     -- Movement
     self.movement_speed = 1.5
-    self.initial_score = 20
+    self.current_score = 10
     self.movement_target_x = HEAD_X
     self.movement_target_y = HEAD_Y
     self.move_clockwise = (math.random(0, 1) - 0.5) * 2

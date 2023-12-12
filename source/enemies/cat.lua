@@ -23,6 +23,7 @@ function Cat:init()
     self.bubble_growth_speed = 0.0
 
     -- Score
+    self.current_score = 20
     self.score_decay = 0
 
     -- Movement
