@@ -108,12 +108,16 @@ function Enemy:distanceTo(x, y)
     return math.sqrt((self.x - x)^2 + (self.y - y)^2)
 end
 
+function Enemy:squareDistanceTo(x, y)
+    return (self.x - x)^2 + (self.y - y)^2
+end
+
 function Enemy:angleTo(x, y)
     return math.atan2(self.y - y, self.x - x)
 end
 
 function Enemy:circleCollision(x, y, radius)
-    return self:distanceTo(x, y) < radius
+    return self:squareDistanceTo(x, y) < radius^2
 end
 
 function Enemy:is_out_of_reach()
@@ -122,6 +126,30 @@ function Enemy:is_out_of_reach()
             return true
         end
     end
+    return false
+end
+
+-- <>
+function Enemy:is_on_character_hitzone()
+    -- Pass quick gross AABB test before more precise tests.
+    local character_AABB_x1 = 185
+    local character_AABB_x2 = 220
+    local character_AABB_y1 =  60
+    local character_AABB_y2 = 150
+    if (self.x + self.current_bubble_radius > character_AABB_x1 and
+        self.x - self.current_bubble_radius < character_AABB_x2 and
+        self.y + self.current_bubble_radius > character_AABB_y1 and
+        self.y - self.current_bubble_radius< character_AABB_y2) then
+        -- Pass more precise collision volumes around the chest, neck and head.
+        if (self:circleCollision(205, 77, 16 + self.current_bubble_radius) or
+            self:circleCollision(206, 98, 10 + self.current_bubble_radius) or
+            self:circleCollision(201, 117, 16 + self.current_bubble_radius) or
+            self:circleCollision(197, 137, 12 + self.current_bubble_radius)
+        ) then
+            return true
+        end
+    end
+
     return false
 end
 
@@ -263,7 +291,7 @@ function Enemy:tick(CONTEXT)
         end
     end
 
-    if self:circleCollision(HEAD_X, HEAD_Y, HEAD_RADIUS + self.current_bubble_radius) then
+    if self:is_on_character_hitzone() then
         self:hit_the_player()
         return
     end

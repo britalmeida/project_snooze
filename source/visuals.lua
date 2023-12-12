@@ -302,14 +302,22 @@ end
 
 
 function draw_debug_overlay()
-    if DRAW_DEBUG == 0 then
-        return
-    end
     gfx.pushContext()
         gfx.setColor(gfx.kColorWhite)
-        gfx.fillRect(10, 10, 50, 20)
-        gfx.setColor(gfx.kColorBlack)
-        gfx.drawText(string.format("%.3f", CONTEXT.awakeness), 12, 12)
+        local HEAD_XX = 205
+        local HEAD_YY = 77
+        gfx.drawCircleAtPoint(HEAD_XX, HEAD_YY, 16)
+        gfx.drawCircleAtPoint(206, 98, 10)
+        gfx.drawCircleAtPoint(201, 117, 16)
+        gfx.drawCircleAtPoint(197, 137, 12)
+        local character_AABB_x1 = 185
+        local character_AABB_x2 = 220
+        local character_AABB_y1 = 60
+        local character_AABB_y2 = 150
+        --gfx.drawLine(character_AABB_x1, character_AABB_y1, character_AABB_x1, character_AABB_y2)
+        --gfx.drawLine(character_AABB_x2, character_AABB_y1, character_AABB_x2, character_AABB_y2)
+        gfx.drawLine(character_AABB_x1, character_AABB_y1, character_AABB_x2, character_AABB_y1)
+
     gfx.popContext()
 end
 
@@ -337,5 +345,6 @@ function init_visuals()
     setDrawPass(  1, draw_light_borders)
     setDrawPass(  2, draw_bubble_pops)
     setDrawPass(10, draw_hud)
+    --setDrawPass(20, draw_debug_overlay)
     --setDrawPass(20, draw_test_dither_patterns)
 end

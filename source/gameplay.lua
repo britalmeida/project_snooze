@@ -28,11 +28,7 @@ ARM_R_X, ARM_R_Y = 222, 114
 ARM_L_SIGN = -1
 ARM_R_SIGN = 1
 
-HEAD_X, HEAD_Y = 213, 82
-HEAD_RADIUS = 10
-
-DITHERED_BUBBLES = false
-DRAW_DEBUG = 0
+HEAD_X, HEAD_Y = 205, 77
 
 MUSIC_CHANGE_RATE = 8 -- Every this many seconds, the music ramps up.
 
