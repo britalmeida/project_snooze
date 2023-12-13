@@ -89,18 +89,8 @@ function Enemy:moveTowardsTarget(x, y, speed)
     self:moveTo(self.x + directionX * speed, self.y + directionY * speed)
 end
 
-function Enemy:clampPosition(min_x, min_y, max_x, max_y)
-    if self.x < min_x then
-        self.x = min_x
-    elseif self.x > max_x then
-        self.x = max_x
-    end
-
-    if self.y < min_y then
-        self.y = min_y
-    elseif self.y > max_y then
-        self.y = max_y
-    end
+local function clamp(value, min, max)
+    return math.max(math.min(value, max), min)
 end
 
 function Enemy:distanceTo(x, y)
@@ -192,11 +182,12 @@ function Enemy:set_spawn_location()
     -- Pick a radius near max arm length
     local radius = math.random(ARM_LENGTH_MAX-30, ARM_LENGTH_MAX)
 
+    -- Pick cartesian coordinates in a donut area centered on the character.
     local x = 200 + (radius * math.cos(math.rad(angle)))
     local y = 120 + (radius * math.sin(math.rad(angle)))
 
-    self:moveTo(x, y)
-    self:clampPosition(20, 20, 380, 220)
+    -- Bring closer positions spawned offscreen at top and bottom due to non circular screen aspect ratio.
+    self:moveTo(x, clamp(y, 20, 280))
 end
 
 function Enemy:is_near_player_face(threshold)

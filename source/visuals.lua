@@ -328,6 +328,10 @@ end
 function draw_debug_spawn_locations()
     gfx.pushContext()
         gfx.setColor(gfx.kColorWhite)
+        -- arm length
+        gfx.drawCircleAtPoint(200, 120, ARM_LENGTH_MAX-30)
+        gfx.drawCircleAtPoint(200, 120, ARM_LENGTH_MAX)
+
         -- Cat targets
         gfx.drawCircleAtPoint(140, 152, 2)
         gfx.drawCircleAtPoint(245, 155, 2)
