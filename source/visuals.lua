@@ -291,7 +291,11 @@ function draw_hud()
             -- Big score in the screen center.
             gfx.setColor(gfx.kColorWhite)
             gfx.setFont(TEXTURES.uifont_medium)
-            gfx.drawTextAligned("GAME OVER", 200, 60, kTextAlignment.center)
+            if CONTEXT.score >= 1440 then
+                gfx.drawTextAligned("WELL SLEPT", 200, 60, kTextAlignment.center)
+            else
+                gfx.drawTextAligned("GAME OVER", 200, 60, kTextAlignment.center)
+            end
             gfx.setFont(TEXTURES.uifont_large)
             gfx.drawTextAligned(get_24h_formatted_score(), 200, 100, kTextAlignment.center)
         gfx.popContext()
