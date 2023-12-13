@@ -150,20 +150,14 @@ function Enemy:is_on_character_AABB()
     return false
 end
 
-function Enemy:is_roughly_on_character()
-    if (self:circleCollision(205, 77, 28 + self.current_bubble_radius) or
-        self:circleCollision(201, 117, 30 + self.current_bubble_radius) or
-        self:circleCollision(197, 137, 29 + self.current_bubble_radius)
+function Enemy:is_roughly_on_character(tolerance)
+    if (self:circleCollision(205,  77, 29 + tolerance) or
+        self:circleCollision(201, 117, 32 + tolerance) or
+        self:circleCollision(197, 137, 29 + tolerance) or
+        self:circleCollision(192, 170, 28 + tolerance)
     ) then
         return true
     end
-end
-
-function Enemy:is_on_character_groin()
-    if self:circleCollision(192, 160, 25) then
-        return true
-    end
-    return false
 end
 
 

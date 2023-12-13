@@ -302,7 +302,7 @@ end
 function draw_debug_character_hitzones()
     gfx.pushContext()
         gfx.setColor(gfx.kColorWhite)
-
+        -- hitzone
         local HEAD_XX = 206
         local HEAD_YY = 78
         gfx.drawCircleAtPoint(HEAD_XX, HEAD_YY, 15)
@@ -318,9 +318,6 @@ function draw_debug_character_hitzones()
         gfx.drawLine(character_AABB_x2, character_AABB_y1, character_AABB_x2, character_AABB_y2)
         gfx.drawLine(character_AABB_x1, character_AABB_y1, character_AABB_x2, character_AABB_y1)
         gfx.drawLine(character_AABB_x1, character_AABB_y2, character_AABB_x2, character_AABB_y2)
-        -- Groin
-        gfx.drawCircleAtPoint(192, 160, 25)
-
     gfx.popContext()
 end
 
@@ -335,7 +332,13 @@ function draw_debug_spawn_locations()
         -- Cat targets
         gfx.drawCircleAtPoint(140, 152, 2)
         gfx.drawCircleAtPoint(245, 155, 2)
-    
+
+        -- Roughly on character
+        gfx.drawCircleAtPoint(205,  77, 29 + 10)
+        gfx.drawCircleAtPoint(201, 117, 32 + 10)
+        gfx.drawCircleAtPoint(197, 137, 29 + 10)
+        gfx.drawCircleAtPoint(192, 170, 28 + 10)
+
         -- phone
         local character_AABB_x1 = 185
         local character_AABB_x2 = 220
