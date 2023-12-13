@@ -230,7 +230,7 @@ end
 
 
 function Enemy:hit_the_player()
-    print("Hit by", self.name)
+    --print("Hit by", self.name)
 
     -- Stop updating this enemy.
     self.is_alive = false
