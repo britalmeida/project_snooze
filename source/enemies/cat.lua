@@ -29,7 +29,6 @@ function Cat:init()
     self.score_decay = 0
 
     -- Movement
-    self.jitter_intensity = 0
     self.movement_speed = 1
 
     -- Sound
@@ -42,7 +41,6 @@ function Cat:init()
     self.anim_walk = gfx.animation.loop.new(anim_walk_framerate * frame_ms, anim_walk_imgs, true)
     self.anim_sitting = gfx.animation.loop.new(anim_sit_framerate * frame_ms, anim_sit_imgs, true)
     self.anim_scream = gfx.animation.loop.new(anim_scream_framerate * frame_ms, anim_scream_imgs, true)
-    self.is_meowing = false
     self.anim_current = nil -- Don't set this, because we don't want to use the drawing logic inherited from Enemy.
     self.anim_current_cat = anim_walk
     self.frame_count_facial = 0
@@ -54,6 +52,11 @@ function Cat:init()
     -- Cat
     self.touch_bubble_growth_speed = -0.8
     self.no_touch_bubble_growth_speed = 0.3
+
+    -- State
+    self.jitter_intensity = 0
+    self.got_petted_already = false
+    self.is_meowing = false
 
 end
 
@@ -81,7 +84,7 @@ Cat.draw = function(self, x, y, width, height)
 
 
     else -- gameover
-        still_img:draw(0,0)
+        still_img:draw(0,0, self.mirror)
     end
 end
 
@@ -99,57 +102,70 @@ end
 
 function Cat:on_hit_by_player()
     if self.jitter_intensity == 1 then
+        -- Already being punched.
         return
     end
-    self.sound_slap:play()
+
     -- Make the cat jitter to tell the player they did something bad.
     self.jitter_intensity = 1
-    self.bubble_growth_speed = 3
+
+    -- FX
+    self.sound_slap:play()
     self.anim_current_cat = self.anim_scream
     self.is_meowing = false
+    if self.sound_meow:isPlaying() then
+        self.sound_meow:stop()
+    end
+
+    self.bubble_growth_speed = 3
+
     playdate.timer.new(300, function()
         self.jitter_intensity = 0
         self.bubble_growth_speed = self.no_touch_bubble_growth_speed
     end)
 end
 
+
 function Cat:tick(CONTEXT)
-    if self:distanceTo(self.movement_target_x, self.movement_target_y) > 5 then
-        -- While moving towards target location
-        self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
-        if self.jitter_intensity == 0 then
-            -- If not being punched
+    if self.jitter_intensity == 1 then
+        -- If being punched
+
+    else
+        if self:distanceTo(self.movement_target_x, self.movement_target_y) > 5 then
+            -- While moving towards target location
+            self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
+
             self.anim_current_cat = self.anim_walk
             self.bubble_growth_speed = 0.0
-        end
-    elseif self:is_touched_by_any_hand(CONTEXT) then
-        -- While being petted
-        if not self.sound_meow:isPlaying() then
-            -- self.sound_loop:stop()
-            self.sound_meow:play()
-            self.is_meowing = true
-        end
 
-        if self.jitter_intensity == 0 then
-            -- If not being punched
-            self.bubble_growth_speed = self.touch_bubble_growth_speed
-            self.anim_current_cat = self.anim_sitting
-        end
-        if self.current_bubble_radius < 0 then
-            self.movement_target_x = 200
-            self.movement_target_y = 280
-            self.movement_speed = 2
-            CONTEXT.score += self.current_score
-            playdate.timer.new(2000, function()
-                self:despawn_then_respawn()
-            end)
-        end
-    else
-        -- Waiting to be petted
-        if self.jitter_intensity == 0 then
-            -- If not being punched
-            self.anim_current_cat = self.anim_sitting
-            self.bubble_growth_speed = self.no_touch_bubble_growth_speed
+        elseif self.got_petted_already == false then
+
+            if self:is_touched_by_any_hand(CONTEXT) then
+                -- While being petted
+                if not self.sound_meow:isPlaying() then
+                    self.sound_meow:play()
+                    self.is_meowing = true
+                end
+
+                self.anim_current_cat = self.anim_sitting
+                self.bubble_growth_speed = self.touch_bubble_growth_speed
+
+                -- Success! score the cat and make it go away.
+                if self.current_bubble_radius < 0 then
+                    self.got_petted_already = true
+                    self.movement_target_x = 200
+                    self.movement_target_y = 280
+                    self.movement_speed = 2
+                    CONTEXT.score += self.current_score
+                    playdate.timer.new(2000, function()
+                        self:despawn_then_respawn()
+                    end)
+                end
+            else
+                -- Waiting to be petted
+                self.anim_current_cat = self.anim_sitting
+                self.bubble_growth_speed = self.no_touch_bubble_growth_speed
+            end
         end
     end
 
