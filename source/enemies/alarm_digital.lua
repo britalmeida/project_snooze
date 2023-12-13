@@ -23,11 +23,11 @@ function AlarmDigital:init()
     self.anim_current = self.anim_ringing
     self.img_table_death = gfx.imagetable.new('images/animation_alarm2-death')
 
-    self.mirror = 1
+    self.mirror = gfx.kImageUnflipped
     if self.x > 200 and self.y > 100 then
-        self.mirror = -1
+        self.mirror = gfx.kImageFlippedX
     elseif self.x < 200 and self.y < 100 then 
-        self.mirror = -1
+        self.mirror = gfx.kImageFlippedX
     end
 end
 

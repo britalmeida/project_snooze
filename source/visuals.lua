@@ -111,9 +111,7 @@ function calculate_light_areas()
         for _, enemy in ipairs(ENEMIES) do
             if enemy:isVisible() then
                 local radius = enemy.current_bubble_radius * (1 + gameover_anim_t * 15)
-                gfx.pushContext()
-                    gfx.fillCircleAtPoint(enemy.x, enemy.y, radius)
-                gfx.popContext()
+                gfx.fillCircleAtPoint(enemy.x, enemy.y, radius)
             end
         end
 

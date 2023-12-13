@@ -59,16 +59,11 @@ end
 
 Cat.draw = function(self, x, y, width, height)
     if CONTEXT.menu_screen == MENU_SCREEN.gameplay then
-        local flip = playdate.graphics.kImageUnflipped
-        if self.mirror == -1 then
-            flip = playdate.graphics.kImageFlippedX
-        end
-
-        self.anim_current_cat:draw(0, 0, flip)
+        self.anim_current_cat:draw(0, 0, self.mirror)
 
         -- Overlay facial animation.
         if self.is_meowing then
-            anim_meow_imgs:drawImage(self.anim_frame_facial + 1, 0, 0, flip)
+            anim_meow_imgs:drawImage(self.anim_frame_facial + 1, 0, 0, self.mirror)
 
             -- Update the animation frame we should be in.
             if self.frame_count_facial == anim_meow_timings[self.anim_frame_facial + 1] then

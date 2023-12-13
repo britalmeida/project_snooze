@@ -42,9 +42,9 @@ function Enemy:init()
     self:setVisible(true)
 
     -- Flip the sprite. Different enemy types may need to be flipped in different cases.
-    self.mirror = 1
+    self.mirror = gfx.kImageUnflipped
     if self.x > 200 then
-        self.mirror = -1
+        self.mirror = gfx.kImageFlippedX
     end
 end
 
@@ -300,7 +300,7 @@ function Enemy:tick(CONTEXT)
 
     -- Set the image frame to display.
     if self.anim_current then
-        self:setImage(self.anim_current:image():scaledImage(self.mirror, 1))
+        self:setImage(self.anim_current:image(), self.mirror)
     end
 
     if not self.is_alive then

@@ -11,7 +11,7 @@ import "gameplay"
 import "menu"
 import "visuals"
 
-gfx = playdate.graphics
+local gfx <const> = playdate.graphics
 frame_ms = 1000 / 30
 
 -- Global logic context, storing the game data.
@@ -45,8 +45,11 @@ function playdate.update()
         -- In Menu system.
         handle_menu_input()
 
+        -- Update the animated transition to gameover.
         if CONTEXT.menu_screen == MENU_SCREEN.gameover then
-            calculate_light_areas()
+            if CONTEXT.gameover_anim_timer and CONTEXT.gameover_anim_timer.value < 1 then
+                calculate_light_areas()
+            end
         end
     end
     -- Intentionally check again (no else), the menu might have just started gameplay

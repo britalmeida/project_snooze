@@ -73,8 +73,8 @@ function Mosquito:tick(CONTEXT)
     self.movement_target_y = HEAD_Y + (distance * math.sin(angle))
     self:moveTowardsTarget(self.movement_target_x, self.movement_target_y, self.movement_speed)
     
-    self.mirror = 1
+    self.mirror = gfx.kImageUnflipped
     if self.x > 200 then
-        self.mirror = -1
+        self.mirror = gfx.kImageFlippedX
     end
 end
