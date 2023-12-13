@@ -133,10 +133,10 @@ function Enemy:is_on_character_hitzone()
     -- Pass quick gross AABB test before more precise tests.
     if self:is_on_character_AABB() then
         -- Pass more precise collision volumes around the chest, neck and head.
-        if (self:circleCollision(205, 77, 16 + self.current_bubble_radius) or
-            self:circleCollision(206, 98, 9 + self.current_bubble_radius) or
-            self:circleCollision(201, 117, 14 + self.current_bubble_radius) or
-            self:circleCollision(197, 137, 10 + self.current_bubble_radius)
+        if (self:circleCollision(206,  78, 15 + self.current_bubble_radius) or
+            self:circleCollision(206,  98,  8 + self.current_bubble_radius) or
+            self:circleCollision(201, 116, 12 + self.current_bubble_radius) or
+            self:circleCollision(197, 134, 10 + self.current_bubble_radius)
         ) then
             return true
         end
@@ -148,8 +148,8 @@ end
 function Enemy:is_on_character_AABB()
     local character_AABB_x1 = 186
     local character_AABB_x2 = 220
-    local character_AABB_y1 =  60
-    local character_AABB_y2 = 150
+    local character_AABB_y1 =  62
+    local character_AABB_y2 = 143
     if (self.x + self.current_bubble_radius > character_AABB_x1 and
         self.x - self.current_bubble_radius < character_AABB_x2 and
         self.y + self.current_bubble_radius > character_AABB_y1 and

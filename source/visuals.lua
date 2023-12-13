@@ -303,20 +303,21 @@ function draw_debug_character_hitzones()
     gfx.pushContext()
         gfx.setColor(gfx.kColorWhite)
 
-        local HEAD_XX = 205
-        local HEAD_YY = 77
-        gfx.drawCircleAtPoint(HEAD_XX, HEAD_YY, 16)
-        gfx.drawCircleAtPoint(206, 98, 9)
-        gfx.drawCircleAtPoint(201, 117, 14)
-        gfx.drawCircleAtPoint(197, 137, 10)
+        local HEAD_XX = 206
+        local HEAD_YY = 78
+        gfx.drawCircleAtPoint(HEAD_XX, HEAD_YY, 15)
+        gfx.drawCircleAtPoint(206, 98, 8)
+        gfx.drawCircleAtPoint(201, 116, 12)
+        gfx.drawCircleAtPoint(197, 134, 10)
         -- AABB
         local character_AABB_x1 = 186
         local character_AABB_x2 = 220
-        local character_AABB_y1 = 60
-        local character_AABB_y2 = 150
+        local character_AABB_y1 = 62
+        local character_AABB_y2 = 143
         gfx.drawLine(character_AABB_x1, character_AABB_y1, character_AABB_x1, character_AABB_y2)
         gfx.drawLine(character_AABB_x2, character_AABB_y1, character_AABB_x2, character_AABB_y2)
         gfx.drawLine(character_AABB_x1, character_AABB_y1, character_AABB_x2, character_AABB_y1)
+        gfx.drawLine(character_AABB_x1, character_AABB_y2, character_AABB_x2, character_AABB_y2)
         -- Groin
         gfx.drawCircleAtPoint(192, 160, 25)
 
